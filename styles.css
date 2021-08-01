@@ -2,11 +2,18 @@ table, tr, th, td {
     border: black 1px solid;
     border-collapse: collapse;
 }
-table, body, html {
-    height: 100%;
-}
 table {
-  overflow: scroll;
+    width: 100%;
+}
+.scroll-bar {
+  height: 96vh;
+  overflow-y: scroll;
+}
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: gray;
 }
 tr[data-address-section-expanded='false'],
 td[data-address-section-expanded='false'],
@@ -21,4 +28,7 @@ tr[data-address-section-expanded='true'] {
 td[data-address-section-expanded='true'],
 td[data-address-section-closed='true'] {
   display: table-cell;
+}
+.row0 {
+  display: none;
 }
