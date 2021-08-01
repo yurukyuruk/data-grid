@@ -1,0 +1,24 @@
+table, tr, th, td {
+    border: black 1px solid;
+    border-collapse: collapse;
+}
+table, body, html {
+    height: 100%;
+}
+table {
+  overflow: scroll;
+}
+tr[data-address-section-expanded='false'],
+td[data-address-section-expanded='false'],
+td[data-address-section-closed='false'] {
+  display: none;
+}
+
+tr[data-address-section-expanded='true'] {
+  display: table-row;
+}
+
+td[data-address-section-expanded='true'],
+td[data-address-section-closed='true'] {
+  display: table-cell;
+}
