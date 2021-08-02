@@ -14,10 +14,15 @@ thead {
 tr, td, th {
     border: black 1px solid;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9rem;
     text-align: center;
 }
 th {
   padding: 12px;
+}
+.header:hover {
+  color: white;
+  cursor: pointer;
 }
 .row0 {
   display: none;
@@ -36,5 +41,8 @@ td[data-address-section-closed='true'] {
   display: table-cell;
 }
 th[data-address-section-expanded='true'] {
+  padding: 1px;
+}
+tr[data-address-section-expanded='true'] > * {
   padding: 1px;
 }
