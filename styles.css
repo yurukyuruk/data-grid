@@ -24,8 +24,8 @@ th {
   color: white;
   cursor: pointer;
 }
-.row0 {
-  display: none;
+.colored-row {
+  background-color: rgb(253, 206, 184);
 }
 
 tr[data-address-section-expanded='false'],
