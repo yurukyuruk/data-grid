@@ -87,3 +87,34 @@ addressSection.addEventListener("click", () => {
 
 })
 
+const sortAddingButton = document.querySelector(".sort-adding-button");
+sortAddingButton.addEventListener("click", () => {
+    const submitButtons = document.querySelector(".submit-buttons");
+    const sorting = document.querySelector(".sorting");
+    const sortOptions = document.querySelector(".sort-options");
+    const sortOptionsCloned = sortOptions.cloneNode(true);
+    sortOptionsCloned.classList = "sort-options-cloned";
+    sorting.insertBefore(sortOptionsCloned, submitButtons);
+    const additionSymbol = document.createElement("p");
+    additionSymbol.innerText = "+";
+    additionSymbol.classList = "addition-symbol";
+    sorting.insertBefore(additionSymbol, sortOptionsCloned);
+})
+
+const resetButton = document.querySelector(".reset-button");
+resetButton.addEventListener("click", () => {
+    let allSortOptionsCloned = document.querySelectorAll(".sort-options-cloned");
+    allSortOptionsCloned.forEach(element => element.remove());
+    let allAdditionSymbols = document.querySelectorAll(".addition-symbol");
+    allAdditionSymbols.forEach(element => element.remove());
+    let sortFields = document.querySelector(".sort-fields");
+    sortFields.selectedIndex = 0;
+    let sortDirections = document.querySelector(".sort-directions");
+    sortDirections.selectedIndex = 0;
+})
+
+const closeButton = document.querySelector(".close-button");
+closeButton.addEventListener("click", () => {
+    const sorting = document.querySelector(".sorting");
+    sorting.classList.add("sort-hidden");
+})

@@ -6,6 +6,35 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <section class="sorting">
+        <input class="close-button" type="button" value="x">
+        <div class="sort-line">
+            <input class="sort-adding-button" type="button" value="+">
+            <div class="sort-options">
+                <select class="sort-fields" name="fields">
+                    <option>sort by</option>
+                    <option value="id">id</option>
+                    <option value="gender">gender</option>
+                    <option value="first name">first name</option>
+                    <option value="last name">last name</option>
+                    <option value="birth date">birth date</option>
+                    <option value="age">age</option>
+                    <option value="e-mail">e-mail</option>
+                    <option value="address">address</option>
+                </select>
+                <select class="sort-directions" name="direction">
+                    <option>sort direction</option>
+                    <option value="ascending">ascending</option>
+                    <option value="descending ">descending</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="submit-buttons">
+            <input class="reset-button" type="reset" value="clear">
+            <input class="submit-button" type="submit" value="apply">
+        </div>
+    </section>
     <div class="scroll-bar">
         <table>
             <thead>

@@ -1,6 +1,25 @@
 table {
   width: 100%;
 }
+.sorting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.close-button {
+  align-self: flex-end;
+}
+.sort-line {
+  display: flex;
+}
+.sort-hidden {
+  display: none;
+}
+.sort-fields, .sort-directions, .close-button, .reset-button, .submit-button, .sort-options-cloned {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+}
 .scroll-bar {
   height: 96vh;
   overflow-y: scroll;
