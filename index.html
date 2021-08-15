@@ -6,7 +6,10 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <section class="sorting">
+    <div class="sort-data-button-area" data-sort-button-area-visible="true">
+        <input class="sort-data-button" data-sort-button-visible="true" type="button" value="SORT DATA">
+    </div>
+    <section class="sorting" data-sort-fields-visible="false">
         <input class="close-button" type="button" value="x">
         <input class="sort-adding-button" type="button" value="+">
         <div class="sort-line"> 
@@ -38,14 +41,14 @@
         <table>
             <thead>
                 <tr>
-                    <th data-address-section-expanded="false" rowspan="2">id</th>
-                    <th data-address-section-expanded="false" rowspan="2">gender</th>
-                    <th data-address-section-expanded="false" rowspan="2">first name</th>
-                    <th data-address-section-expanded="false" rowspan="2">last name</th>
-                    <th data-address-section-expanded="false" rowspan="2">birth date</th>
-                    <th data-address-section-expanded="false" rowspan="2">age</th>
-                    <th data-address-section-expanded="false" rowspan="2">e-mail</th>
-                    <th class="header" id="address-section" data-address-section-expanded="false" colspan="5">address</th>
+                    <th data-address-section-expanded="false" rowspan="2">ID</th>
+                    <th data-address-section-expanded="false" rowspan="2">GENDER</th>
+                    <th data-address-section-expanded="false" rowspan="2">FIRST NAME</th>
+                    <th data-address-section-expanded="false" rowspan="2">LAST NAME</th>
+                    <th data-address-section-expanded="false" rowspan="2">BIRTH DATE</th>
+                    <th data-address-section-expanded="false" rowspan="2">AGE</th>
+                    <th data-address-section-expanded="false" rowspan="2">E-MAIL</th>
+                    <th class="header" id="address-section" data-address-section-expanded="false" colspan="5">ADRESS</th>
                 </tr>
                 <tr data-address-section-expanded="false">
                     <th data-address-section-expanded="false">country</th>

@@ -103,6 +103,10 @@ sortAddingButton.addEventListener("click", () => {
 
 const resetButton = document.querySelector(".reset-button");
 resetButton.addEventListener("click", () => {
+    buttonResets();
+})
+
+function buttonResets() {
     let allSortOptionsCloned = document.querySelectorAll(".sort-options-cloned");
     allSortOptionsCloned.forEach(element => element.remove());
     let allAdditionSymbols = document.querySelectorAll(".addition-symbol");
@@ -111,10 +115,21 @@ resetButton.addEventListener("click", () => {
     sortFields.selectedIndex = 0;
     let sortDirections = document.querySelector(".sort-directions");
     sortDirections.selectedIndex = 0;
+}
+
+let sortDataButton = document.querySelector(".sort-data-button");
+let sortingArea = document.querySelector(".sorting");
+let sortDataButtonArea = document.querySelector(".sort-data-button-area");
+sortDataButton.addEventListener("click", () => {
+    sortDataButtonArea.setAttribute("data-sort-button-area-visible", "false");
+    sortDataButton.setAttribute("data-sort-button-visible", "false");
+    sortingArea.setAttribute("data-sort-fields-visible", "true");
 })
 
 const closeButton = document.querySelector(".close-button");
 closeButton.addEventListener("click", () => {
-    const sorting = document.querySelector(".sorting");
-    sorting.classList.add("sort-hidden");
+    sortDataButtonArea.setAttribute("data-sort-button-area-visible", "true");
+    sortDataButton.setAttribute("data-sort-button-visible", "true");
+    sortingArea.setAttribute("data-sort-fields-visible", "false");
+    buttonResets();
 })

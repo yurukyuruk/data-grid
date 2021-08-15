@@ -10,6 +10,23 @@ table {
 .sort-line {
   display: flex;
 }
+.sort-data-button-area {
+  padding: 2.1rem;
+  background-color: rgb(252, 252, 184);
+  display: flex;
+  justify-content: center;
+}
+.sort-data-button {
+  border: 1px solid black;
+  background-color: rgb(235, 144, 101);
+  cursor: pointer;
+  outline: 2px solid white;
+  outline-offset: 1rem;
+}
+
+.sort-data-button:hover {
+  transform: scale(1.1);
+}
 .sort-adding-button {
   align-self: center;
   padding: 0 2px;
@@ -67,10 +84,7 @@ table {
 .addition-symbol {
   margin: 0;
 }
-.sort-hidden {
-  display: none;
-}
-.sort-adding-button, .close-button, .sort-fields, .sort-directions, .reset-button, .submit-button, .sort-options-clone, .addition-symbol {
+.sort-data-button, .sort-adding-button, .close-button, .sort-fields, .sort-directions, .reset-button, .submit-button, .sort-options-clone, .addition-symbol {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.9rem;
   text-align: center;
@@ -119,4 +133,14 @@ th[data-address-section-expanded='true'] {
 }
 tr[data-address-section-expanded='true'] > * {
   padding: 1px;
+}
+
+input[data-sort-button-visible="false"] {
+  display: none;
+}
+section[data-sort-fields-visible="false"] {
+  display: none;
+}
+div[data-sort-button-area-visible="false"] {
+  display: none;
 }
