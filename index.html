@@ -9,46 +9,46 @@
     <div class="sort-data-button-area" data-sort-button-area-visible="true">
         <input class="sort-data-button" data-sort-button-visible="true" type="button" value="SORT DATA">
     </div>
-    <section class="sorting" data-sort-fields-visible="false">
-        <input class="close-button" type="button" value="x">
-        <input class="sort-adding-button" type="button" value="+">
-        <div class="sort-line"> 
-            <div class="sort-options">
-                <select class="sort-fields" name="fields">
+    <section class="sorting not-blured" data-sort-fields-visible="false">
+        <input class="close-button not-blured" type="button" value="x">
+        <div class="sort-line not-blured"> 
+            <div class="sort-options-1 not-blured">
+                <select class="sort-fields not-blured" name="fields">
                     <option>sort by</option>
-                    <option value="id">id</option>
-                    <option value="gender">gender</option>
-                    <option value="first name">first name</option>
-                    <option value="last name">last name</option>
-                    <option value="birth date">birth date</option>
-                    <option value="age">age</option>
-                    <option value="e-mail">e-mail</option>
-                    <option value="address">address</option>
+                    <option class="id" value="id">id</option>
+                    <option class="gender" value="gender">gender</option>
+                    <option class="first name" value="first name">first name</option>
+                    <option class="last name" value="last name">last name</option>
+                    <option class="birth date" value="birth date">birth date</option>
+                    <option class="age" value="age">age</option>
+                    <option class="e-mail" value="e-mail">e-mail</option>
+                    <option class="address" value="address">address</option>
                 </select>
-                <select class="sort-directions" name="direction">
+                <select class="sort-directions not-blured" name="direction">
                     <option>sort direction</option>
                     <option value="ascending">ascending</option>
                     <option value="descending ">descending</option>
                 </select>
             </div>
         </div>
-        <div class="submit-buttons">
-            <input class="reset-button" type="reset" value="clear">
-            <input class="submit-button" type="submit" value="apply">
+        <input class="sort-adding-button not-blured" type="button" value="+">
+        <div class="submit-buttons not-blured">
+            <input class="reset-button not-blured" type="reset" value="clear">
+            <input class="submit-button not-blured" type="submit" value="apply">
         </div>
     </section>
     <div class="scroll-bar">
         <table>
             <thead>
-                <tr>
-                    <th data-address-section-expanded="false" rowspan="2">ID</th>
-                    <th data-address-section-expanded="false" rowspan="2">GENDER</th>
-                    <th data-address-section-expanded="false" rowspan="2">FIRST NAME</th>
-                    <th data-address-section-expanded="false" rowspan="2">LAST NAME</th>
-                    <th data-address-section-expanded="false" rowspan="2">BIRTH DATE</th>
-                    <th data-address-section-expanded="false" rowspan="2">AGE</th>
-                    <th data-address-section-expanded="false" rowspan="2">E-MAIL</th>
-                    <th class="header" id="address-section" data-address-section-expanded="false" colspan="5">ADRESS</th>
+                <tr class="columns">
+                    <th class="id-data" data-address-section-expanded="false" rowspan="2">ID</th>
+                    <th class="gender-data" data-address-section-expanded="false" rowspan="2">GENDER</th>
+                    <th class="first-name-data" data-address-section-expanded="false" rowspan="2">FIRST NAME</th>
+                    <th class="last-name-data" data-address-section-expanded="false" rowspan="2">LAST NAME</th>
+                    <th class="birth-date-data" data-address-section-expanded="false" rowspan="2">BIRTH DATE</th>
+                    <th class="age-data" data-address-section-expanded="false" rowspan="2">AGE</th>
+                    <th class="email-data" data-address-section-expanded="false" rowspan="2">E-MAIL</th>
+                    <th class="address-data" class="header" id="address-section" data-address-section-expanded="false" colspan="5">ADRESS</th>
                 </tr>
                 <tr data-address-section-expanded="false">
                     <th data-address-section-expanded="false">country</th>
