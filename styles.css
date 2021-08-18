@@ -59,6 +59,9 @@ table {
   margin: 5px;
   
 }
+.option-default {
+  display: none;
+}
 .reset-button {
   border: black 1px solid;
   width: 8vw;

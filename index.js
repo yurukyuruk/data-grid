@@ -98,31 +98,28 @@ addressSection.addEventListener("click", () => {
 
 })
 
+let submitButton = document.querySelector(".submit-button");
+submitButton.disabled = true;
 const sortAddingButton = document.querySelector(".sort-adding-button");
+sortAddingButton.disabled = true;
 const columnCount = document.querySelector(".columns").childElementCount;
 const sortOptions1 = document.querySelector(".sort-options-1");
 let clickCount = 0;
 let sortOptionsList = [sortOptions1];
-sortAddingButton.addEventListener("click", () => {
-    clickCount += 1;
-    const sorting = document.querySelector(".sorting");
-    let sortOptionsCloned = sortOptions1.cloneNode(true);
-    sortOptionsCloned.classList = `sort-options-${clickCount + 1}`;
-    sorting.insertBefore(sortOptionsCloned, sortAddingButton);
-    sortOptionsList.push(sortOptionsCloned);
-    if(clickCount > columnCount - 2) {
-        sortAddingButton.disabled = true;
-    }
-})
+let selectedSortField = document.querySelector(".sort-options-1 .sort-fields");
+let selectedSortDirection = document.querySelector(".sort-options-1 .sort-directions");
+selectedSortDirection.disabled = true;
+let selectedSortFieldOption;
+let selectedSortDirectionOption
 
-
-const selectFields = document.querySelector(".sort-options-1 .sort-fields");
+/*
+const selectedSortField = document.querySelector(".sort-options-1 .sort-fields");
 let currentSelectedOptions = [];
-selectFields.addEventListener("change", function() {
-    let selectedOption = selectFields.options[selectFields.selectedIndex].value;
+selectedSortField.addEventListener("change", function() {
+    let selectedOption = selectedSortField.options[selectedSortField.selectedIndex].value;
     currentSelectedOptions.push(selectedOption);
     if(currentSelectedOptions.includes(selectedOption) === false && kaldırılmış) {
-        //yeniden ekle /seçilip kaldırılmış mı kalkmışsa yeniden eklenecek.
+        //yeniden ekle /seçilip kaldırılmış mı kalkmışsa yeniden eklenecek. birden fazla aynı seçenek çubuğuna farklı değer girilirse birsen fazla silinir.
     }
     
     if(selectedOption === "id") {
@@ -143,12 +140,14 @@ selectFields.addEventListener("change", function() {
         const allAddressOptions = document.querySelectorAll(".address");
     } 
 })
-    
+*/  
 
 const resetButton = document.querySelector(".reset-button");
 resetButton.addEventListener("click", () => {
     buttonResets();
-    sortAddingButton.disabled = false;
+    sortAddingButton.disabled = true;
+    submitButton.disabled = true;
+    selectedSortDirection.disabled = true;
 })
 
 function buttonResets() {
@@ -188,45 +187,71 @@ closeButton.addEventListener("click", () => {
 })
 
 
-const submitButton = document.querySelector(".submit-button");
-submitButton.addEventListener("click", () => {
-    const selectFields = document.querySelector(".sort-fields");
-    let selectedOption = selectFields.options[selectFields.selectedIndex].value;
-    if(selectedOption === "id") {
-        let idList = [];
-        data.forEach(element => idList.push(element.id));;
-        idList.sort();
-        for(let i = 0; i < idList.length; i++) {
-            for(let j = 0; j < data.length; j++) {
-                if(idList[i] === data[j].id) {
-                    idList[i] = data[j]
-    
-                }
-            } 
-        }
-        for(let i = 0; i < idList.length; i++) {
-            data[i] = idList[i];
-        }
-        console.log(data);
-        addAllDataAtOnce(data, createReferenceElement());
-    } else if(selectedOption === "gender") {
-        
-    } else if(selectedOption === "first name") {
-    
-    } else if(selectedOption === "last name") {
-    
-    } else if(selectedOption === "birth date") {
-    
-    } else if(selectedOption === "age") {
-    
-    } else if(selectedOption === "e-mail") {
-    
-    } else if(selectedOption === "address") {
-    
+
+let currentSelectedOptions = [];
+selectedSortField.addEventListener("change", () => {
+    selectedSortFieldOption = selectedSortField.options[selectedSortField.selectedIndex].value;
+    if(selectedSortFieldOption !== "sort by") {
+        selectedSortDirection.disabled = false;
     }
-    //console.log(selectedOption);
+    currentSelectedOptions.push(selectedSortFieldOption);
 })
 
+
+
+selectedSortDirection.addEventListener("change", () => {
+    selectedSortDirectionOption = selectedSortDirection.options[selectedSortDirection.selectedIndex].value;
+    if(selectedSortDirectionOption !== "sort direction ") {
+        sortAddingButton.disabled = false;
+    }
+})
+
+let selectInputs = document.querySelector(".sort-options-1");
+selectInputs.addEventListener("change", () => {
+    selectedSortFieldOption = selectedSortField.options[selectedSortField.selectedIndex].value;
+    selectedSortDirectionOption = selectedSortDirection.options[selectedSortDirection.selectedIndex].value;
+    if(selectedSortFieldOption !== "sort by" && selectedSortDirectionOption !== "sort direction") {
+        submitButton.disabled = false;
+    } else{submitButton.disabled = true;
+        sortAddingButton.disabled = true;
+    };
+    
+})
+
+sortAddingButton.addEventListener("click", () => {
+    clickCount += 1;
+    const sorting = document.querySelector(".sorting");
+    let sortOptionsCloned = sortOptions1.cloneNode(true);
+    sortOptionsCloned.classList = "sort-options-cloned";
+    sorting.insertBefore(sortOptionsCloned, sortAddingButton);
+    sortOptionsList.push(sortOptionsCloned);
+    if(clickCount > columnCount - 2) {
+        sortAddingButton.disabled = true;
+    }
+    if(selectedSortFieldOption === "id") {
+        const allIdOptions = document.querySelector(".id.sort-options-cloned");
+        allIdOptions.remove();
+    }/* else if(selectedSortFieldOption === "gender") {
+        const allGenderOptions = document.querySelector(".gender");
+    } else if(selectedSortFieldOption === "first name") {
+        const allFirstNameOptions = document.querySelector(".first-name");
+    } else if(selectedSortFieldOption === "last name") {
+        const allLastNameOptions = document.querySelector(".last-name");
+    } else if(selectedSortFieldOption === "birth date") {
+        const allBirthDateOptions = document.querySelector(".birth-date");
+    } else if(selectedSortFieldOption === "age") {
+        const allAgeOptions = document.querySelector(".age");
+    } else if(selectedSortFieldOption === "e-mail") {
+        const allEmailOptions = document.querySelector(".e-mail");
+    } else if(selectedSortFieldOption === "address") {
+        const allAddressOptions = document.querySelector(".address");
+    } 
+    //let selectedSortFieldToBeDelated = document.querySelector(`option[value=${selectedSortFieldOption}]`);
+    let selectedSortFieldToBeDelated = 
+    if(currentSelectedOptions.includes(selectedOption) === false && kaldırılmış) {
+        selectedSortFieldToBeDelated
+    }*/
+})
 
 
 
