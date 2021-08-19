@@ -106,41 +106,12 @@ const columnCount = document.querySelector(".columns").childElementCount;
 const sortOptions1 = document.querySelector(".sort-options-1");
 let clickCount = 0;
 let sortOptionsList = [sortOptions1];
-let selectedSortField = document.querySelector(".sort-options-1 .sort-fields");
 let selectedSortDirection = document.querySelector(".sort-options-1 .sort-directions");
+let selectedSortField = document.querySelector(".sort-options-1 .sort-fields");
 selectedSortDirection.disabled = true;
 let selectedSortFieldOption;
-let selectedSortDirectionOption
+let selectedSortDirectionOption; 
 
-/*
-const selectedSortField = document.querySelector(".sort-options-1 .sort-fields");
-let currentSelectedOptions = [];
-selectedSortField.addEventListener("change", function() {
-    let selectedOption = selectedSortField.options[selectedSortField.selectedIndex].value;
-    currentSelectedOptions.push(selectedOption);
-    if(currentSelectedOptions.includes(selectedOption) === false && kaldırılmış) {
-        //yeniden ekle /seçilip kaldırılmış mı kalkmışsa yeniden eklenecek. birden fazla aynı seçenek çubuğuna farklı değer girilirse birsen fazla silinir.
-    }
-    
-    if(selectedOption === "id") {
-        const allIdOptions = document.querySelectorAll(".id");
-    } else if(selectedOption === "gender") {
-        const allGenderOptions = document.querySelectorAll(".gender");
-    } else if(selectedOption === "first name") {
-        const allFirstNameOptions = document.querySelectorAll(".first-name");
-    } else if(selectedOption === "last name") {
-        const allLastNameOptions = document.querySelectorAll(".last-name");
-    } else if(selectedOption === "birth date") {
-        const allBirthDateOptions = document.querySelectorAll(".birth-date");
-    } else if(selectedOption === "age") {
-        const allAgeOptions = document.querySelectorAll(".age");
-    } else if(selectedOption === "e-mail") {
-        const allEmailOptions = document.querySelectorAll(".e-mail");
-    } else if(selectedOption === "address") {
-        const allAddressOptions = document.querySelectorAll(".address");
-    } 
-})
-*/  
 
 const resetButton = document.querySelector(".reset-button");
 resetButton.addEventListener("click", () => {
@@ -153,8 +124,6 @@ resetButton.addEventListener("click", () => {
 function buttonResets() {
     let allSortOptionsCloned = document.querySelectorAll(".sort-options-cloned");
     allSortOptionsCloned.forEach(element => element.remove());
-    let allAdditionSymbols = document.querySelectorAll(".addition-symbol");
-    allAdditionSymbols.forEach(element => element.remove());
     let sortFields = document.querySelector(".sort-fields");
     sortFields.selectedIndex = 0;
     let sortDirections = document.querySelector(".sort-directions");
@@ -197,8 +166,6 @@ selectedSortField.addEventListener("change", () => {
     currentSelectedOptions.push(selectedSortFieldOption);
 })
 
-
-
 selectedSortDirection.addEventListener("change", () => {
     selectedSortDirectionOption = selectedSortDirection.options[selectedSortDirection.selectedIndex].value;
     if(selectedSortDirectionOption !== "sort direction ") {
@@ -214,45 +181,81 @@ selectInputs.addEventListener("change", () => {
         submitButton.disabled = false;
     } else{submitButton.disabled = true;
         sortAddingButton.disabled = true;
-    };
-    
+    };  
 })
 
 sortAddingButton.addEventListener("click", () => {
     clickCount += 1;
+    submitButton.disabled = true;
+    submitButton.disabled = true;
+    sortAddingButton.disabled = true;
     const sorting = document.querySelector(".sorting");
     let sortOptionsCloned = sortOptions1.cloneNode(true);
     sortOptionsCloned.classList = "sort-options-cloned";
     sorting.insertBefore(sortOptionsCloned, sortAddingButton);
     sortOptionsList.push(sortOptionsCloned);
-    if(clickCount > columnCount - 2) {
+    let currentSelectedOption = sortOptionsList[clickCount];
+    let selectedSortField = currentSelectedOption.firstElementChild;
+    let selectedSortDirection = selectedSortField.nextElementSibling;
+    selectedSortDirection.disabled = true;
+    if(clickCount > columnCount - 1) {
         sortAddingButton.disabled = true;
     }
+    currentSelectedOption.addEventListener("click", () => {
+        currentSelectedOption.addEventListener("change", () => {
+            let selectedSortFieldOption = selectedSortField.options[selectedSortField.selectedIndex].value;
+            if(selectedSortFieldOption !== "sort by") {
+                selectedSortDirection.disabled = false;
+            }
+        })
+        selectedSortDirection.addEventListener("change", () => {
+            let selectedSortDirectionOption = selectedSortDirection.options[selectedSortDirection.selectedIndex].value;
+            if(selectedSortDirectionOption !== "sort direction " && clickCount < columnCount - 1) {
+                sortAddingButton.disabled = false;
+            }
+            if(selectedSortFieldOption !== "sort by" && selectedSortDirectionOption !== "sort direction") {
+                submitButton.disabled = false;
+            } else{submitButton.disabled = true;
+                sortAddingButton.disabled = true;
+            }; 
+        })
+    })
+    
+
     if(selectedSortFieldOption === "id") {
-        const allIdOptions = document.querySelector(".id.sort-options-cloned");
+        const allIdOptions = document.querySelector(".sort-options-cloned .id");
         allIdOptions.remove();
-    }/* else if(selectedSortFieldOption === "gender") {
-        const allGenderOptions = document.querySelector(".gender");
+    } else if(selectedSortFieldOption === "gender") {
+        const allGenderOptions = document.querySelector(".sort-options-cloned .gender");
+        allGenderOptions.remove();
     } else if(selectedSortFieldOption === "first name") {
-        const allFirstNameOptions = document.querySelector(".first-name");
+        const allFirstNameOptions = document.querySelector(".sort-options-cloned .first-name");
+        allFirstNameOptions.remove();
     } else if(selectedSortFieldOption === "last name") {
-        const allLastNameOptions = document.querySelector(".last-name");
+        const allLastNameOptions = document.querySelector(".sort-options-cloned .last-name");
+        allLastNameOptions.remove();
     } else if(selectedSortFieldOption === "birth date") {
-        const allBirthDateOptions = document.querySelector(".birth-date");
+        const allBirthDateOptions = document.querySelector(".sort-options-cloned .birth-date");
+        allBirthDateOptions.remove();
     } else if(selectedSortFieldOption === "age") {
-        const allAgeOptions = document.querySelector(".age");
+        const allAgeOptions = document.querySelector(".sort-options-cloned .age");
+        allAgeOptions.remove();
     } else if(selectedSortFieldOption === "e-mail") {
-        const allEmailOptions = document.querySelector(".e-mail");
+        const allEmailOptions = document.querySelector(".sort-options-cloned .e-mail");
+        allEmailOptions.remove();
     } else if(selectedSortFieldOption === "address") {
-        const allAddressOptions = document.querySelector(".address");
+        const allAddressOptions = document.querySelector(".sort-options-cloned .address");
+        allAddressOptions.remove();
     } 
     //let selectedSortFieldToBeDelated = document.querySelector(`option[value=${selectedSortFieldOption}]`);
-    let selectedSortFieldToBeDelated = 
-    if(currentSelectedOptions.includes(selectedOption) === false && kaldırılmış) {
-        selectedSortFieldToBeDelated
-    }*/
+    //let selectedSortFieldToBeDelated = 
+    //if(currentSelectedOptions.includes(selectedOption) === false && kaldırılmış) {
+    
 })
 
+
+    
+    
 
 
 let idHeader = document.querySelector(".id-header");
