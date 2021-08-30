@@ -1,3 +1,4 @@
+import {MySortingSection} from "./sort.js";
 const addressSection = document.querySelector("#address-section");
 let allAddressSectionElements;
 let addressSummaryElements;
@@ -98,7 +99,7 @@ addressSection.addEventListener("click", () => {
 
 })
 
-let submitButton = document.querySelector(".submit-button");
+/*let submitButton = document.querySelector(".submit-button");
 submitButton.disabled = true;
 const sortAddingButton = document.querySelector(".sort-adding-button");
 sortAddingButton.disabled = true;
@@ -110,26 +111,24 @@ let selectedSortDirection = document.querySelector(".sort-options-1 .sort-direct
 let selectedSortField = document.querySelector(".sort-options-1 .sort-fields");
 selectedSortDirection.disabled = true;
 let selectedSortFieldOption;
-let selectedSortDirectionOption; 
+let selectedSortDirectionOption; */
 
 
-const resetButton = document.querySelector(".reset-button");
+/*
 resetButton.addEventListener("click", () => {
-    buttonResets();
-    sortAddingButton.disabled = true;
-    submitButton.disabled = true;
-    selectedSortDirection.disabled = true;
-})
-
-function buttonResets() {
     let allSortOptionsCloned = document.querySelectorAll(".sort-options-cloned");
     allSortOptionsCloned.forEach(element => element.remove());
     let sortFields = document.querySelector(".sort-fields");
     sortFields.selectedIndex = 0;
     let sortDirections = document.querySelector(".sort-directions");
     sortDirections.selectedIndex = 0;
-}
+    sortAddingButton.disabled = true;
+    submitButton.disabled = true;
+    selectedSortDirection.disabled = true;
+})*/
 
+
+/*
 let sortDataButton = document.querySelector(".sort-data-button");
 let sortingArea = document.querySelector(".sorting");
 let sortDataButtonArea = document.querySelector(".sort-data-button-area");
@@ -153,10 +152,10 @@ closeButton.addEventListener("click", () => {
     buttonResets();
     let allBodyElements = document.body.querySelectorAll('*');
     allBodyElements.forEach(element => element.classList.remove("blured"));
-})
+})*/
 
 
-
+/*
 let currentSelectedOptions = [];
 selectedSortField.addEventListener("change", () => {
     selectedSortFieldOption = selectedSortField.options[selectedSortField.selectedIndex].value;
@@ -219,51 +218,38 @@ sortAddingButton.addEventListener("click", () => {
                 sortAddingButton.disabled = true;
             }; 
         })
+        if(selectedSortFieldOption === "id") {
+            const allIdOptions = document.querySelector(".sort-options-cloned .id");
+            allIdOptions.classList.add("chosen-option");
+        } else if(selectedSortFieldOption === "gender") {
+            const allGenderOptions = document.querySelector(".sort-options-cloned .gender");
+            allGenderOptions.classList.add("chosen-option");
+        } else if(selectedSortFieldOption === "first name") {
+            const allFirstNameOptions = document.querySelector(".sort-options-cloned .first-name");
+            allFirstNameOptions.classList.add("chosen-option");
+        } else if(selectedSortFieldOption === "last name") {
+            const allLastNameOptions = document.querySelector(".sort-options-cloned .last-name");
+            allLastNameOptions.classList.add("chosen-option");
+        } else if(selectedSortFieldOption === "birth date") {
+            const allBirthDateOptions = document.querySelector(".sort-options-cloned .birth-date");
+            allBirthDateOptions.classList.add("chosen-option");
+        } else if(selectedSortFieldOption === "age") {
+            const allAgeOptions = document.querySelector(".sort-options-cloned .age");
+            allAgeOptions.classList.add("chosen-option");
+        } else if(selectedSortFieldOption === "e-mail") {
+            const allEmailOptions = document.querySelector(".sort-options-cloned .e-mail");
+            allEmailOptions.classList.add("chosen-option");
+        } else if(selectedSortFieldOption === "address") {
+            const allAddressOptions = document.querySelector(".sort-options-cloned .address");
+            allAddressOptions.classList.add("chosen-option");
+        } 
+        
     })
     
 
-    if(selectedSortFieldOption === "id") {
-        const allIdOptions = document.querySelector(".sort-options-cloned .id");
-        allIdOptions.remove();
-    } else if(selectedSortFieldOption === "gender") {
-        const allGenderOptions = document.querySelector(".sort-options-cloned .gender");
-        allGenderOptions.remove();
-    } else if(selectedSortFieldOption === "first name") {
-        const allFirstNameOptions = document.querySelector(".sort-options-cloned .first-name");
-        allFirstNameOptions.remove();
-    } else if(selectedSortFieldOption === "last name") {
-        const allLastNameOptions = document.querySelector(".sort-options-cloned .last-name");
-        allLastNameOptions.remove();
-    } else if(selectedSortFieldOption === "birth date") {
-        const allBirthDateOptions = document.querySelector(".sort-options-cloned .birth-date");
-        allBirthDateOptions.remove();
-    } else if(selectedSortFieldOption === "age") {
-        const allAgeOptions = document.querySelector(".sort-options-cloned .age");
-        allAgeOptions.remove();
-    } else if(selectedSortFieldOption === "e-mail") {
-        const allEmailOptions = document.querySelector(".sort-options-cloned .e-mail");
-        allEmailOptions.remove();
-    } else if(selectedSortFieldOption === "address") {
-        const allAddressOptions = document.querySelector(".sort-options-cloned .address");
-        allAddressOptions.remove();
-    } 
+    
     //let selectedSortFieldToBeDelated = document.querySelector(`option[value=${selectedSortFieldOption}]`);
     //let selectedSortFieldToBeDelated = 
     //if(currentSelectedOptions.includes(selectedOption) === false && kaldırılmış) {
     
-})
-
-
-    
-    
-
-
-let idHeader = document.querySelector(".id-header");
-let genderHeader = document.querySelector(".gender-header");
-let firstNameHeader = document.querySelector(".first-name-header");
-let lastNameHeader = document.querySelector(".last-name-header");
-let birthDateHeader = document.querySelector(".birth-date-header");
-let ageHeader = document.querySelector(".age-header");
-let emailHeader = document.querySelector(".email-header");
-let addressHeader = document.querySelector(".address-header");
-
+})*/

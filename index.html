@@ -6,39 +6,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="sort-data-button-area" data-sort-button-area-visible="true">
-        <input class="sort-data-button" data-sort-button-visible="true" type="button" value="SORT DATA">
-    </div>
-    <section class="sorting not-blured" data-sort-fields-visible="false">
-        <input class="close-button not-blured" type="button" value="x">
-        <div class="sort-line not-blured"> 
-            <div class="sort-options-1 not-blured">
-                <select class="sort-fields not-blured" name="fields">
-                    <option class="option-default" value="sort by" selected>sort by</option>
-                    <option class="id" value="id">id</option>
-                    <option class="gender" value="gender">gender</option>
-                    <option class="first-name" value="first name">first name</option>
-                    <option class="last-name" value="last name">last name</option>
-                    <option class="birth-date" value="birth date">birth date</option>
-                    <option class="age" value="age">age</option>
-                    <option class="e-mail" value="e-mail">e-mail</option>
-                    <option class="address" value="address">address</option>
-                </select>
-                <select class="sort-directions not-blured" name="direction">
-                    <option class="option-default" value="sort direction" selected>sort direction</option>
-                    <option value="ascending">ascending</option>
-                    <option value="descending">descending</option>
-                </select>
-            </div>
-        </div>
-        <input class="sort-adding-button not-blured" type="button" value="+">
-        <div class="submit-buttons not-blured">
-            <input class="reset-button not-blured" type="reset" value="clear">
-            <input class="submit-button not-blured" type="submit" value="apply">
-        </div>
-    </section>
+    <my-sorting-section></my-sorting-section>
     <div class="scroll-bar">
-        <table>
+        <table id="data-table">
             <thead>
                 <tr class="columns">
                     <th class="id-data" data-address-section-expanded="false" rowspan="2">ID</th>
@@ -63,5 +33,7 @@
         </table>
     </div>
     <script type="module" src="./index.js"></script>
+    
+    
 </body>
 </html>
