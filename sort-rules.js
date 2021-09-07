@@ -20,7 +20,7 @@ const {template} = {
       .option-default {
         display: none;
       }
-      .sort-field, .sort-direction, .sort-options-clone {
+      .sort-field, .sort-direction {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
@@ -31,12 +31,12 @@ const {template} = {
       .chosen-option {
         display: none;
       }
-      .sort-line, .sort-line-cloned {
+      .sort-line {
         display:flex;
       }
   </style>
         <div class="sort-line">
-            <select class="sort-field" name="fields">
+            <select class="sort-field">
                 <option class="option-default" value="sort by" selected>sort by</option>
                 <option value="id">id</option>
                 <option value="gender">gender</option>
@@ -63,8 +63,7 @@ const {template} = {
       this.attachShadow({ mode: "open" });
       this.shadowRoot.innerHTML = template;
       this.getElementReferences();
-    }
-    
+      }
       set fieldOption(value) {
         this.sortField.value = value;
       }
@@ -77,6 +76,9 @@ const {template} = {
       get directionOption() {
         return this.sortDirection.value;
       }
+      initilizeListeners() {
+
+      }
       getElementReferences() { 
         this.sortLine = this.shadowRoot.querySelector(".sort-line");
         this.sortField = this.shadowRoot.querySelector(".sort-field");
@@ -85,63 +87,4 @@ const {template} = {
     }
   customElements.define(MySortingRules.TAG, MySortingRules);
 
-     /*this.sortAddingButton.addEventListener("click", () => {
-        this.sortLineCloned = this.sortLine.cloneNode(true);
-        this.sortLineCloned.classList = "sort-line-cloned";
-        this.sortLines.insertBefore(this.sortLineCloned, this.sortLine.nextSibling);
-        sortOptionsList.push(this.sortLineCloned);
-        this.currentSortLine = sortOptionsList[this.sortLines.childElementCount - 1];
-        this.currentSelectedSortField = this.currentSortLine.firstElementChild;
-        this.currentSelectedSortDirection = this.currentSortLine.lastElementChild;
-        if((this.sortLines.childElementCount - 1) > (this.columnCount - 1)) {
-            this.sortAddingButton.disabled = true;
-        }
-        this.previousSelectedSortLine = sortOptionsList[this.sortLines.childElementCount - 2];
-        this.previousSelectedSortLine.disabled = true;
-    })
-
-    this.currentSelectedSortField.addEventListener("change", () => {
-        let selectedSortFieldOption = this.currentSelectedSortField.value;
-        if(selectedSortFieldOption !== "sort by") {
-          this.currentSelectedSortDirection.disabled = false;
-        }
-        this.sortFieldOptions.forEach(element =>  {
-            if(element.value === selectedSortFieldOption) {
-                this.sortFieldOptions.remove(element);
-            }
-        })
-      })
-    
-      this.currentSelectedSortDirection.addEventListener("change", () => {
-        let selectedSortDirectionOption = this.currentSelectedSortDirection.value;
-        if(selectedSortDirectionOption !== "sort direction ") {
-          this.sortAddingButton.disabled = false;
-          this.submitButton.disabled = false;
-        }
-      })
-    
-      currentSortLine.addEventListener("change", () => {
-        let selectedSortFieldOption = this.currentSelectedSortField.value;
-        let selectedSortDirectionOption = this.currentSelectedSortDirection.value;
-        if(selectedSortFieldOption !== "sort by" && selectedSortDirectionOption !== "sort direction") {
-          this.submitButton.disabled = false;
-        } else{this.submitButton.disabled = true;
-          this.sortAddingButton.disabled = true;
-        };  
-      })
-      
-       getElementReferences() {
-        this.sortLines = this.shadowRoot.querySelector(".sort-lines");
-        this.sortLine = this.shadowRoot.querySelector(".sort-line");
-        this.defaultSortField = this.shadowRoot.querySelector(".sort-field");
-        this.defaultSortDirection = this.shadowRoot.querySelector(".sort-direction");
-        this.columnCount = document.querySelector(".columns").childElementCount;
-        this.sortLineCloned = this.sortLine.cloneNode(true);
-        let sortOptionsList = [this.sortLine];
-        this.currentSortLine = sortOptionsList[this.sortLines.childElementCount - 1];
-        this.currentSelectedSortField = this.currentSortLine.firstElementChild;
-        this.currentSelectedSortDirection = this.currentSortLine.lastElementChild;
-        this.sortFieldOptions = this.shadowRoot.querySelectorAll(".sort-field option");
-        this.sortDirectionOptions = this.shadowRoot.querySelectorAll(".sort-direction option");
-    }
-    */
+ 
