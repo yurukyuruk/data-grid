@@ -43,7 +43,7 @@ const {template} = {
     width: 20vw;
     border: black 1px solid;
     text-align-last: center;
-    margin: 5px;
+    margin: 5px 5px 5px 1px;
   }
   .sort-field, .sort-direction {
     font-family: Arial, Helvetica, sans-serif;
@@ -103,6 +103,9 @@ const {template} = {
     display: none;
   }
   div[data-sort-button-area-visible="false"] {
+    display: none;
+  }
+  section[data-sort-fields-visible="false"] {
     display: none;
   }
 </style>
@@ -180,8 +183,8 @@ export class MySortingSection extends HTMLElement {
       this.sortLines.innerHTML = "";
       this.sortLines.append(firstSortLine);
       firstSortLine.firstElementChild.disabled = false;
-      firstSortLine.lastElementChild.disabled = true;
-      
+      firstSortLine.firstElementChild.firstElementChild.selected = "selected";
+      firstSortLine.lastElementChild.firstElementChild.selected = "selected";
     })
 
     this.submitButton.addEventListener("click", () => {
@@ -219,15 +222,9 @@ export class MySortingSection extends HTMLElement {
         this.sortLines.childNodes[this.sortLines.childNodes.length - 2].shadowRoot.lastElementChild.firstElementChild.disabled = true;
         this.sortLines.childNodes[this.sortLines.childNodes.length - 2].shadowRoot.lastElementChild.lastElementChild.disabled = true;
       } 
+    })
+    this.sortAddingButton.addEventListener("mousedown", () => {
 
-      if(this.sortOptions.length > 0) {
-        let currentSortFieldArea = this.sortLines.childNodes[this.sortLines.childNodes.length - 1].shadowRoot.lastElementChild.firstElementChild;
-        let currentSortDirectionArea = this.sortLines.childNodes[this.sortLines.childNodes.length - 1].shadowRoot.lastElementChild.lastElementChild;
-        currentSortDirectionArea.disabled = true;
-        currentSortFieldArea.addEventListener("change", () => {
-
-        })  
-      }
     })
   }
   getElementReferences() {
