@@ -29,6 +29,30 @@ const {template} = {
     z-index: 1;
     max-height: 50vh;
   }
+  .sort-lines {
+    display: flex;
+    flex-direction: column;
+  }
+  .sort-field {
+    width: 20vw;
+    border: black 1px solid;
+    text-align-last: center;
+    margin: 5px;
+  }
+  .sort-direction {
+    width: 20vw;
+    border: black 1px solid;
+    text-align-last: center;
+    margin: 5px;
+  }
+  .sort-field, .sort-direction {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  .option-default {
+    display: none;
+  }
   .close-button {
     align-self: flex-end;
     border: black 1px solid;
@@ -131,6 +155,7 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.disabled = true;
     this.sortAddingButton.disabled = true;
     this.sortDirection.disabled = true;
+    
   }
   initializeListeners() {
     this.sortDataButton.addEventListener("click", () => {
@@ -140,11 +165,6 @@ export class MySortingSection extends HTMLElement {
       this.table.classList.toggle("blured");
       
     });
-    this.sortField.addEventListener("change", () => {
-      if(this.sortField.value !== "sort by") {
-        this.sortDirection.disabled = false;
-      }
-    })
 
     this.closeButton.addEventListener("click", () => {
       this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "true");
@@ -160,11 +180,19 @@ export class MySortingSection extends HTMLElement {
       this.sortLines.innerHTML = "";
       this.sortLines.append(firstSortLine);
       firstSortLine.firstElementChild.disabled = false;
-      firstSortLine.lastElementChild.disabled = false;
+      firstSortLine.lastElementChild.disabled = true;
+      
     })
 
     this.submitButton.addEventListener("click", () => {
+      this.sortAddingButton.disabled = true;
+      this.submitButton.disabled = true;
+    })
 
+    this.sortField.addEventListener("change", () => {
+      if(this.sortField.value !== "sort by") {
+        this.sortDirection.disabled = false;
+      }
     })
     this.sortLine.addEventListener("change", () => {
       if(this.sortField.value !== "sort by" && this.sortDirection.value !== "sort direction") {
@@ -176,45 +204,21 @@ export class MySortingSection extends HTMLElement {
     let fieldOptionElement;
     this.sortAddingButton.addEventListener("click", () => {
       this.submitButton.disabled = true;
-      this.sortAddingButton.disabled = false;
-    
-      /*let newSortField = document.createElement('select');
-      newSortField.classList = "sort-field";
-
-      const fieldValueNames = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
-      fieldValueNames.forEach(item => {
-        fieldOptionElement = document.createElement("option");
-        if(item === fieldValueNames[0]) {
-          fieldOptionElement.classList = "option-default";
-        } 
-        fieldOptionElement.textContent = item;
-        fieldOptionElement.value = item;
-        newSortField.append(fieldOptionElement); 
-      })
-
-      let newSortDirection = document.createElement('select');
-      newSortDirection.classList = "sort-direction";
-      const directionValueNames = ["sort direction", "ascending", "descending"];
-      directionValueNames.forEach(item => {
-        const directionOptionElement = document.createElement("option");
-        if(item === directionValueNames[0]) {
-          directionOptionElement.classList = "option-default";
-        } 
-        directionOptionElement.textContent = item;
-        directionOptionElement.value = item;
-        newSortDirection.append(directionOptionElement); 
-      })*/
+      this.sortAddingButton.disabled = true;
+      this.sortField.disabled = true;
+      this.sortDirection.disabled = true;
 
       this.sortOptions.push(new MySortingRules());
+      this.sortOptions[this.sortOptions.length - 1].addEventListener("is-direction-set", (e) => {
+        this.submitButton.disabled = false;
+        this.sortAddingButton.disabled = false;
+      })
       this.sortLines.append(this.sortOptions[this.sortOptions.length - 1]);
       
-      /*if(this.sortOptions.length > 1) {
+      if(this.sortOptions.length > 1) {
         this.sortLines.childNodes[this.sortLines.childNodes.length - 2].shadowRoot.lastElementChild.firstElementChild.disabled = true;
         this.sortLines.childNodes[this.sortLines.childNodes.length - 2].shadowRoot.lastElementChild.lastElementChild.disabled = true;
-      } else { 
-        this.sortLines.childNodes[1].firstElementChild.disabled = true;
-        this.sortLines.childNodes[1].lastElementChild.disabled = true;
-      }
+      } 
 
       if(this.sortOptions.length > 0) {
         let currentSortFieldArea = this.sortLines.childNodes[this.sortLines.childNodes.length - 1].shadowRoot.lastElementChild.firstElementChild;
@@ -223,10 +227,8 @@ export class MySortingSection extends HTMLElement {
         currentSortFieldArea.addEventListener("change", () => {
 
         })  
-      }*/
-     
+      }
     })
-    
   }
   getElementReferences() {
     this.sortingArea = this.shadowRoot.querySelector(".sorting");

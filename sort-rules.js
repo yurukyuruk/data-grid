@@ -1,10 +1,6 @@
 const {template} = {
     template: `
     <style>  
-    .sort-lines {
-      display: flex;
-      flex-direction: column;
-    }
     .sort-field {
         width: 20vw;
         border: black 1px solid;
@@ -25,12 +21,7 @@ const {template} = {
         font-size: 0.9rem;
         text-align: center;
       }
-      section[data-sort-fields-visible="false"] {
-        display: none;
-      }
-      .chosen-option {
-        display: none;
-      }
+      
       .sort-line {
         display:flex;
       }
@@ -63,6 +54,8 @@ const {template} = {
       this.attachShadow({ mode: "open" });
       this.shadowRoot.innerHTML = template;
       this.getElementReferences();
+      this.initilizeListeners();
+      this.setButtons();
       }
       set fieldOption(value) {
         this.sortField.value = value;
@@ -72,13 +65,31 @@ const {template} = {
       }
       set directionOption(value) {
         this.sortDirection.value = value;
+          
       }
       get directionOption() {
         return this.sortDirection.value;
       }
-      initilizeListeners() {
-
+      setButtons() {
+        this.sortDirection.disabled = true;
       }
+      initilizeListeners() {
+        this.sortField.addEventListener("change", () => {
+          if(this.fieldOption !== "sort by") {
+            this.sortDirection.disabled = false;
+          }
+                  
+        })
+        this.sortDirection.addEventListener("change", () => {
+          const isDirectionSet = new CustomEvent("is-direction-set", {
+            bubbles: true,
+            composed: true
+          });
+          this.shadowRoot.dispatchEvent(isDirectionSet);
+        }) 
+      }
+     
+       
       getElementReferences() { 
         this.sortLine = this.shadowRoot.querySelector(".sort-line");
         this.sortField = this.shadowRoot.querySelector(".sort-field");
