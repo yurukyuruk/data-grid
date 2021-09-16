@@ -205,7 +205,7 @@ export class MySortingSection extends HTMLElement {
     return this.allFields.filter((field) => !previousChosenField.includes(field));
   }
   canAddNewSortingRule() {
-    return this.getRemainingFields().length > 0;
+    return this.getRemainingFields().length > 1;
   }
   createNewSortLine() {
     let newSortLine = new SortingRule(this.getRemainingFields());
