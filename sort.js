@@ -134,9 +134,9 @@ export class MySortingSection extends HTMLElement {
     this.shadowRoot.innerHTML = template;
     this.getElementReferences();
     this.setButtons();  
+    this.allFields = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
-    this.sortOptions[0].setSortByOptions(["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"]);
-    this.chosenSortFieldOptions = [];
+    this.sortOptions[0].setSortByOptions(this.allFields);
     this.initializeListeners();
   }  
   setButtons() {
@@ -160,18 +160,18 @@ export class MySortingSection extends HTMLElement {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       this.sortLines.innerHTML = "";
-      this.sortOptions[0].sortDirection.disabled = true;
-      this.chosenSortFieldOptions = [];
+      this.sortOptions = [];
       this.createNewSortLine();
+      this.sortOptions[0].sortDirection.disabled = true;
     })
 
     this.resetButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       this.sortLines.innerHTML = "";
-      this.sortOptions[0].sortDirection.disabled = true;
-      this.chosenSortFieldOptions = [];
+      this.sortOptions = [];
       this.createNewSortLine();
+      this.sortOptions[0].sortDirection.disabled = true;
     })
 
     this.submitButton.addEventListener("click", () => {
@@ -179,10 +179,10 @@ export class MySortingSection extends HTMLElement {
       this.submitButton.disabled = true;
     })
     
-    this.sortOptions[0].sortLine.addEventListener("change", () => {
+    this.sortOptions[0].sortLine.addEventListener("change", (e) => {
       if(this.sortOptions[0].fieldOption !== "sort by" && this.sortOptions[0].directionOption !== "sort direction") {
         this.sortAddingButton.disabled = false;
-      }
+      } 
     })
     this.sortAddingButton.addEventListener("click", () => {
       this.submitButton.disabled = true;
@@ -190,24 +190,32 @@ export class MySortingSection extends HTMLElement {
       this.disableLastSortLine();
       this.getPreviousChosenField();
       this.createNewSortLine();
+      
     })
   }
   disableLastSortLine() {
     this.sortOptions[this.sortOptions.length - 1].disableSelects();
   }
   getPreviousChosenField() {
-    return this.chosenSortFieldOptions.push(this.sortOptions[this.sortOptions.length - 1].fieldOption);
+    return this.sortOptions.map(option => option.fieldOption);
   }
-  setSortField(fields) {
-    fields = fields.filter((item) => !this.chosenSortFieldOptions.includes(item));
-    return fields;
+  
+  getRemainingFields() {
+    const previousChosenField = this.getPreviousChosenField();
+    return this.allFields.filter((field) => !previousChosenField.includes(field));
+  }
+  canAddNewSortingRule() {
+    return this.getRemainingFields().length > 0;
   }
   createNewSortLine() {
-    let newSortLine = new SortingRule(this.setSortField(["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"]));
+    let newSortLine = new SortingRule(this.getRemainingFields());
     this.sortOptions.push(newSortLine);
     newSortLine.addEventListener("is-direction-set", (e) => {
       this.submitButton.disabled = false;
-      this.sortAddingButton.disabled = false;
+      if(this.canAddNewSortingRule()) {
+        this.sortAddingButton.disabled = false;
+      }
+
     })
     this.sortLines.append(newSortLine);
   }
@@ -223,7 +231,6 @@ export class MySortingSection extends HTMLElement {
     this.table = document.querySelector('#data-table');
     this.sortLines = this.shadowRoot.querySelector(".sort-lines");
     this.sortLine = this.shadowRoot.querySelector(".sort-line");
-    
   }
 }
 

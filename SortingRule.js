@@ -47,7 +47,7 @@ const {template} = {
       this.getElementReferences();
       this.initilizeListeners();
       this.setSortByOptions(sortFields);
-      
+     
       this.setButtons();
       }
       set fieldOption(value) {
