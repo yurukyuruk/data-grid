@@ -151,7 +151,7 @@ export class MySortingSection extends HTMLElement {
       this.table.classList.toggle("blured");
       
     });
-
+    
     this.closeButton.addEventListener("click", () => {
       this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "true");
       this.sortDataButton.setAttribute("data-sort-button-visible", "true");
@@ -177,6 +177,7 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
+      this.getSortingRuleData();
     })
     
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
@@ -188,20 +189,19 @@ export class MySortingSection extends HTMLElement {
       this.submitButton.disabled = true;
       this.sortAddingButton.disabled = true;
       this.disableLastSortLine();
-      this.getPreviousChosenField();
+      this.getPreviousChosenFields();
       this.createNewSortLine();
-      
     })
   }
   disableLastSortLine() {
     this.sortOptions[this.sortOptions.length - 1].disableSelects();
   }
-  getPreviousChosenField() {
+  getPreviousChosenFields() {
     return this.sortOptions.map(option => option.fieldOption);
   }
   
   getRemainingFields() {
-    const previousChosenField = this.getPreviousChosenField();
+    const previousChosenField = this.getPreviousChosenFields();
     return this.allFields.filter((field) => !previousChosenField.includes(field));
   }
   canAddNewSortingRule() {
@@ -218,6 +218,23 @@ export class MySortingSection extends HTMLElement {
 
     })
     this.sortLines.append(newSortLine);
+  }
+  getSortingRuleData() {
+    let chosenSortFieldsArray = this.getPreviousChosenFields();
+    let chosenSortDirectionsArray = this.getPreviousChosenDirections();
+    let sortConfig = [];
+    for(let i = 0; i < chosenSortFieldsArray.length; i++) {
+      const sortRule = {
+        field: chosenSortFieldsArray[i],
+        type: 'STRING',
+        direction: chosenSortDirectionsArray[i]
+      };
+      sortConfig.push(sortRule);
+    }
+    console.log(sortConfig);
+  }
+  getPreviousChosenDirections() {
+    return this.sortOptions.map(option => option.directionOption);
   }
   getElementReferences() {
     this.sortingArea = this.shadowRoot.querySelector(".sorting");

@@ -1,4 +1,6 @@
-import {MySortingSection} from "./sort.js";
+import {MySortingSection} from "./sortModel.js";
+import {ColumnHider} from "./columnHider.js";
+import {SortingService} from "./sortingService.js";
 const addressSection = document.querySelector("#address-section");
 let allAddressSectionElements;
 let addressSummaryElements;
@@ -9,20 +11,28 @@ function createReferenceElement() {
     dataRow.classList.add("data-row");
     const idData = document.createElement("td");
     idData.classList.add("id-data");
+    idData.setAttribute("data-column-checkbox-checked", "true");
     const genderData = document.createElement("td");
     genderData.classList.add("gender-data");
+    genderData.setAttribute("data-column-checkbox-checked", "true");
     const firstNameData = document.createElement("td");
     firstNameData.classList.add("first-name-data");
+    firstNameData.setAttribute("data-column-checkbox-checked", "true");
     const lastNameData = document.createElement("td");
     lastNameData.classList.add("last-name-data");
+    lastNameData.setAttribute("data-column-checkbox-checked", "true");
     const birthDateData = document.createElement("td");
     birthDateData.classList.add("birth-date-data");
+    birthDateData.setAttribute("data-column-checkbox-checked", "true");
     const ageData = document.createElement("td");
     ageData.classList.add("age-data");
+    ageData.setAttribute("data-column-checkbox-checked", "true");
     const emailData = document.createElement("td");
-    emailData.classList.add("id-data");
+    emailData.classList.add("email-data");
+    emailData.setAttribute("data-column-checkbox-checked", "true");
     const addressSummaryData = document.createElement("td");
     addressSummaryData.setAttribute("data-address-section-closed", "true");
+    emailData.setAttribute("data-column-checkbox-checked", "true");
     addressSummaryData.classList.add("address-summary-data");
     const countryData = document.createElement("td");
     countryData.setAttribute("data-address-section-expanded", "false");
@@ -99,157 +109,5 @@ addressSection.addEventListener("click", () => {
 
 })
 
-/*let submitButton = document.querySelector(".submit-button");
-submitButton.disabled = true;
-const sortAddingButton = document.querySelector(".sort-adding-button");
-sortAddingButton.disabled = true;
-const columnCount = document.querySelector(".columns").childElementCount;
-const sortOptions1 = document.querySelector(".sort-options-1");
-let clickCount = 0;
-let sortOptionsList = [sortOptions1];
-let selectedSortDirection = document.querySelector(".sort-options-1 .sort-directions");
-let selectedSortField = document.querySelector(".sort-options-1 .sort-fields");
-selectedSortDirection.disabled = true;
-let selectedSortFieldOption;
-let selectedSortDirectionOption; */
 
 
-/*
-resetButton.addEventListener("click", () => {
-    let allSortOptionsCloned = document.querySelectorAll(".sort-options-cloned");
-    allSortOptionsCloned.forEach(element => element.remove());
-    let sortFields = document.querySelector(".sort-fields");
-    sortFields.selectedIndex = 0;
-    let sortDirections = document.querySelector(".sort-directions");
-    sortDirections.selectedIndex = 0;
-    sortAddingButton.disabled = true;
-    submitButton.disabled = true;
-    selectedSortDirection.disabled = true;
-})*/
-
-
-/*
-let sortDataButton = document.querySelector(".sort-data-button");
-let sortingArea = document.querySelector(".sorting");
-let sortDataButtonArea = document.querySelector(".sort-data-button-area");
-sortDataButton.addEventListener("click", () => {
-    sortDataButtonArea.setAttribute("data-sort-button-area-visible", "false");
-    sortDataButton.setAttribute("data-sort-button-visible", "false");
-    sortingArea.setAttribute("data-sort-fields-visible", "true");
-    let allBodyElements = document.body.querySelectorAll('*');
-    allBodyElements.forEach(function(element) {
-        if(element.classList.contains("not-blured") === false) {
-            element.classList.add("blured");
-        }
-    });
-  
-})
-const closeButton = document.querySelector(".close-button");
-closeButton.addEventListener("click", () => {
-    sortDataButtonArea.setAttribute("data-sort-button-area-visible", "true");
-    sortDataButton.setAttribute("data-sort-button-visible", "true");
-    sortingArea.setAttribute("data-sort-fields-visible", "false");
-    buttonResets();
-    let allBodyElements = document.body.querySelectorAll('*');
-    allBodyElements.forEach(element => element.classList.remove("blured"));
-})*/
-
-
-/*
-let currentSelectedOptions = [];
-selectedSortField.addEventListener("change", () => {
-    selectedSortFieldOption = selectedSortField.options[selectedSortField.selectedIndex].value;
-    if(selectedSortFieldOption !== "sort by") {
-        selectedSortDirection.disabled = false;
-    }
-    currentSelectedOptions.push(selectedSortFieldOption);
-})
-
-selectedSortDirection.addEventListener("change", () => {
-    selectedSortDirectionOption = selectedSortDirection.options[selectedSortDirection.selectedIndex].value;
-    if(selectedSortDirectionOption !== "sort direction ") {
-        sortAddingButton.disabled = false;
-    }
-})
-
-let selectInputs = document.querySelector(".sort-options-1");
-selectInputs.addEventListener("change", () => {
-    selectedSortFieldOption = selectedSortField.options[selectedSortField.selectedIndex].value;
-    selectedSortDirectionOption = selectedSortDirection.options[selectedSortDirection.selectedIndex].value;
-    if(selectedSortFieldOption !== "sort by" && selectedSortDirectionOption !== "sort direction") {
-        submitButton.disabled = false;
-    } else{submitButton.disabled = true;
-        sortAddingButton.disabled = true;
-    };  
-})
-
-sortAddingButton.addEventListener("click", () => {
-    clickCount += 1;
-    submitButton.disabled = true;
-    submitButton.disabled = true;
-    sortAddingButton.disabled = true;
-    const sorting = document.querySelector(".sorting");
-    let sortOptionsCloned = sortOptions1.cloneNode(true);
-    sortOptionsCloned.classList = "sort-options-cloned";
-    sorting.insertBefore(sortOptionsCloned, sortAddingButton);
-    sortOptionsList.push(sortOptionsCloned);
-    let currentSelectedOption = sortOptionsList[clickCount];
-    let selectedSortField = currentSelectedOption.firstElementChild;
-    let selectedSortDirection = selectedSortField.nextElementSibling;
-    selectedSortDirection.disabled = true;
-    if(clickCount > columnCount - 1) {
-        sortAddingButton.disabled = true;
-    }
-    currentSelectedOption.addEventListener("click", () => {
-        currentSelectedOption.addEventListener("change", () => {
-            let selectedSortFieldOption = selectedSortField.options[selectedSortField.selectedIndex].value;
-            if(selectedSortFieldOption !== "sort by") {
-                selectedSortDirection.disabled = false;
-            }
-        })
-        selectedSortDirection.addEventListener("change", () => {
-            let selectedSortDirectionOption = selectedSortDirection.options[selectedSortDirection.selectedIndex].value;
-            if(selectedSortDirectionOption !== "sort direction " && clickCount < columnCount - 1) {
-                sortAddingButton.disabled = false;
-            }
-            if(selectedSortFieldOption !== "sort by" && selectedSortDirectionOption !== "sort direction") {
-                submitButton.disabled = false;
-            } else{submitButton.disabled = true;
-                sortAddingButton.disabled = true;
-            }; 
-        })
-        if(selectedSortFieldOption === "id") {
-            const allIdOptions = document.querySelector(".sort-options-cloned .id");
-            allIdOptions.classList.add("chosen-option");
-        } else if(selectedSortFieldOption === "gender") {
-            const allGenderOptions = document.querySelector(".sort-options-cloned .gender");
-            allGenderOptions.classList.add("chosen-option");
-        } else if(selectedSortFieldOption === "first name") {
-            const allFirstNameOptions = document.querySelector(".sort-options-cloned .first-name");
-            allFirstNameOptions.classList.add("chosen-option");
-        } else if(selectedSortFieldOption === "last name") {
-            const allLastNameOptions = document.querySelector(".sort-options-cloned .last-name");
-            allLastNameOptions.classList.add("chosen-option");
-        } else if(selectedSortFieldOption === "birth date") {
-            const allBirthDateOptions = document.querySelector(".sort-options-cloned .birth-date");
-            allBirthDateOptions.classList.add("chosen-option");
-        } else if(selectedSortFieldOption === "age") {
-            const allAgeOptions = document.querySelector(".sort-options-cloned .age");
-            allAgeOptions.classList.add("chosen-option");
-        } else if(selectedSortFieldOption === "e-mail") {
-            const allEmailOptions = document.querySelector(".sort-options-cloned .e-mail");
-            allEmailOptions.classList.add("chosen-option");
-        } else if(selectedSortFieldOption === "address") {
-            const allAddressOptions = document.querySelector(".sort-options-cloned .address");
-            allAddressOptions.classList.add("chosen-option");
-        } 
-        
-    })
-    
-
-    
-    //let selectedSortFieldToBeDelated = document.querySelector(`option[value=${selectedSortFieldOption}]`);
-    //let selectedSortFieldToBeDelated = 
-    //if(currentSelectedOptions.includes(selectedOption) === false && kaldırılmış) {
-    
-})*/

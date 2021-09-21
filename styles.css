@@ -1,3 +1,13 @@
+.whole-sort-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(252, 252, 184);
+}
+th[data-column-checkbox-checked="false"],
+td[data-column-checkbox-checked="false"] {
+  display: none;
+}
 table {
   width: 100%;
 }
@@ -21,7 +31,7 @@ tr, td, th {
 th {
   padding: 12px;
 }
-.header:hover {
+.address-data:hover {
   color: white;
   cursor: pointer;
 }

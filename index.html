@@ -6,19 +6,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <my-sorting-section></my-sorting-section>
+    <div class="whole-sort-area">
+        <my-sorting-section></my-sorting-section>
+        <column-hider></column-hider>
+    </div>
     <div class="scroll-bar">
         <table id="data-table">
             <thead>
                 <tr class="columns">
-                    <th class="id-data" data-address-section-expanded="false" rowspan="2">ID</th>
+                    <th class="id-data" data-address-section-expanded="false" data-column-checkbox-checked="true" rowspan="2">ID</th>
                     <th class="gender-data" data-address-section-expanded="false" rowspan="2">GENDER</th>
                     <th class="first-name-data" data-address-section-expanded="false" rowspan="2">FIRST NAME</th>
                     <th class="last-name-data" data-address-section-expanded="false" rowspan="2">LAST NAME</th>
                     <th class="birth-date-data" data-address-section-expanded="false" rowspan="2">BIRTH DATE</th>
                     <th class="age-data" data-address-section-expanded="false" rowspan="2">AGE</th>
                     <th class="email-data" data-address-section-expanded="false" rowspan="2">E-MAIL</th>
-                    <th class="address-data" class="header" id="address-section" data-address-section-expanded="false" colspan="5">ADRESS</th>
+                    <th class="address-data" class="header" id="address-section" data-address-section-expanded="false" data-column-checkbox-checked="true" colspan="5">ADRESS</th>
                 </tr>
                 <tr data-address-section-expanded="false">
                     <th data-address-section-expanded="false">country</th>
