@@ -137,10 +137,12 @@ export class MySortingSection extends HTMLElement {
     this.allFields = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
     this.sortOptions[0].setSortByOptions(this.allFields);
+    this.sortConfig = [];
     this.initializeListeners();
+
   }  
   setButtons() {
-    this.submitButton.disabled = true;
+    this.submitButton.disabled = false;
     this.sortAddingButton.disabled = true; 
   }
   initializeListeners() {
@@ -178,6 +180,9 @@ export class MySortingSection extends HTMLElement {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       this.getSortingRuleData();
+      let dataRows = document.querySelectorAll(".data-row");
+      console.log(this.sortConfig);
+      //let sortingServiceClass = new sortingService(this.sortOptions[this.sortOptions.length - 1].fieldOption, this.sortOptions[this.sortOptions.length - 1].directionOption, this.getFieldType(this.sortOptions[this.sortOptions.length - 1].fieldOption));
     })
     
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
@@ -190,7 +195,7 @@ export class MySortingSection extends HTMLElement {
       this.sortAddingButton.disabled = true;
       this.disableLastSortLine();
       this.getPreviousChosenFields();
-      this.createNewSortLine();
+      this.createNewSortLine(); 
     })
   }
   disableLastSortLine() {
@@ -219,19 +224,28 @@ export class MySortingSection extends HTMLElement {
     })
     this.sortLines.append(newSortLine);
   }
+  getFieldType(field) {
+    if(field !== "birth date" && field !== "age") {
+      return "string";
+    } else if(field === "birth date") {
+      return "date";
+    } else { 
+      return "number";
+    }
+  }
   getSortingRuleData() {
     let chosenSortFieldsArray = this.getPreviousChosenFields();
     let chosenSortDirectionsArray = this.getPreviousChosenDirections();
-    let sortConfig = [];
+    
     for(let i = 0; i < chosenSortFieldsArray.length; i++) {
       const sortRule = {
         field: chosenSortFieldsArray[i],
-        type: 'STRING',
+        type: this.getFieldType(this.sortOptions[i].fieldOption),
         direction: chosenSortDirectionsArray[i]
       };
-      sortConfig.push(sortRule);
+      this.sortConfig.push(sortRule);
     }
-    console.log(sortConfig);
+    console.log(this.sortConfig);
   }
   getPreviousChosenDirections() {
     return this.sortOptions.map(option => option.directionOption);
@@ -248,6 +262,7 @@ export class MySortingSection extends HTMLElement {
     this.table = document.querySelector('#data-table');
     this.sortLines = this.shadowRoot.querySelector(".sort-lines");
     this.sortLine = this.shadowRoot.querySelector(".sort-line");
+    
   }
 }
 
