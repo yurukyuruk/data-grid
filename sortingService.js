@@ -1,34 +1,19 @@
-
-import {SortingRule} from "./SortingRule.js";
-const {template} = {
-    template: `
-    <style>  
-
-        
-  </style>
-       
-    `
-  };
-
-  export class SortingService extends HTMLElement {
-    static TAG = "sorting-service";
-    constructor(fieldName, sortDirection, sortType) {
-      super();
-      this.attachShadow({ mode: "open" });
-      this.shadowRoot.innerHTML = template;
-      this.getElementReferences();
-      this.initilizeListeners();
-      this.fieldName = fieldName;
-      this.sortDirection = sortDirection;
-      this.sortType = sortType;
-      }
-      
-      initilizeListeners() {       
-
-     }
-      
-      getElementReferences() { 
-        this.fieldOption = trial.fieldOption;
-      }
+import {MySortingSection} from "./sortModel.js";
+  export class SortingService {
+    constructor() {
     }
-  customElements.define(SortingService.TAG, SortingService);
+    getSortOptions(fieldName, sortDirection, sortType) {
+        let chosenSortFieldsArray = fieldName;
+        let chosenSortDirectionsArray = sortDirection;
+        let sortConfig = [];
+        for(let i = 0; i < chosenSortFieldsArray.length; i++) {
+          const sortRule = {
+            field: chosenSortFieldsArray[i],
+            type: sortType[i],
+            direction: chosenSortDirectionsArray[i]
+          };
+          sortConfig.push(sortRule);
+        }
+        console.log(sortConfig);
+    }   
+  }

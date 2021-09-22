@@ -106,7 +106,7 @@ addressSection.addEventListener("click", () => {
     const addressSummaryElementState = !addressSectionElementsStateChange;
     allAddressSectionElements.forEach(addressElement => addressElement.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
     addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
-
+    
 })
 
 
