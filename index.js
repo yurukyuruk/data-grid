@@ -96,8 +96,14 @@ function addAllDataAtOnce(fetchedData, dataReferenceElement) {
 }
 
 let data;
+export let sortingService;
 fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/persons-data-0.json").then(async (response) => {
     data = await response.json();
+    console.log(data);
+    sortingService = new SortingService(data);
+    data.sort(function(a, b) {
+        return a.firstName - b.firstName;
+    });
     addAllDataAtOnce(data, createReferenceElement());
 });
 

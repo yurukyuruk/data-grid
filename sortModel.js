@@ -1,5 +1,6 @@
 import {SortingRule} from "./SortingRule.js";
 import {SortingService} from "./sortingService.js";
+import {sortingService} from "./index.js";
 const {template} = {
   template: `
   <style>  
@@ -179,10 +180,9 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
-      let dataRows = document.querySelectorAll(".data-row");
-      let a = new SortingService();
-      console.log(a.getSortOptions(this.getPreviousChosenFields(), this.getPreviousChosenDirections(), this.getFieldType(this.getPreviousChosenFields())));
-      //let sortingServiceClass = new sortingService(this.sortOptions[this.sortOptions.length - 1].fieldOption, this.sortOptions[this.sortOptions.length - 1].directionOption, this.getFieldType(this.sortOptions[this.sortOptions.length - 1].fieldOption));
+      console.log(sortingService);
+  
+     
     })
     
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {

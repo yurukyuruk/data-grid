@@ -1,6 +1,8 @@
 import {MySortingSection} from "./sortModel.js";
   export class SortingService {
-    constructor() {
+    constructor(data) {
+      this.data = data;
+      console.log(this.data);
     }
     getSortOptions(fieldName, sortDirection, sortType) {
         let chosenSortFieldsArray = fieldName;
