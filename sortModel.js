@@ -180,8 +180,9 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
-      console.log(sortingService);
-  
+      console.log(sortingService.getSortOptions(this.getPreviousChosenFields(), this.getPreviousChosenDirections(), this.getFieldType(this.getPreviousChosenFields())));
+      console.log(sortingService.sortData(sortingService.data));//sortConfig
+      
      
     })
     
