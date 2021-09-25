@@ -139,6 +139,7 @@ export class MySortingSection extends HTMLElement {
     this.allFields = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
     this.sortOptions[0].setSortByOptions(this.allFields);
+    this.sortConfig = [];
     this.initializeListeners();
 
   }  
@@ -180,8 +181,8 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
-      console.log(sortingService.getSortOptions(this.getPreviousChosenFields(), this.getPreviousChosenDirections(), this.getFieldType(this.getPreviousChosenFields())));
-      console.log(sortingService.sortData(sortingService.data));//sortConfig
+      console.log(this.getSortOptions(this.getPreviousChosenFields(), this.getPreviousChosenDirections(), this.getFieldType(this.getPreviousChosenFields())));
+      console.log(sortingService.sortData(this.sortConfig));
       
      
     })
@@ -241,6 +242,18 @@ export class MySortingSection extends HTMLElement {
   getPreviousChosenDirections() {
     return this.sortOptions.map(option => option.directionOption);
   }
+  getSortOptions(fieldName, sortDirection, sortType) {
+        
+    for(let i = 0; i < fieldName.length; i++) {
+      const sortRule = {
+        field: fieldName[i],
+        type: sortType[i],
+        direction: sortDirection[i]
+      };
+      this.sortConfig.push(sortRule);
+    }
+    return this.sortConfig;
+}
   getElementReferences() {
     this.sortingArea = this.shadowRoot.querySelector(".sorting");
     this.sortDataButtonArea = this.shadowRoot.querySelector(".sort-data-button-area");
