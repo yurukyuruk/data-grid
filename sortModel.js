@@ -140,9 +140,21 @@ export class MySortingSection extends HTMLElement {
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
     this.sortOptions[0].setSortByOptions(this.allFields);
     this.sortConfig = [];
+    this.fieldMappings = new Map();
+    this.initializeFieldMappings();
     this.initializeListeners();
 
   }  
+  initializeFieldMappings() {
+    this.fieldMappings.set("id", "id");
+    this.fieldMappings.set("gender", "gender");
+    this.fieldMappings.set("first name", "firstName");
+    this.fieldMappings.set("last name", "lastName");
+    this.fieldMappings.set("birth date", "birthDate");
+    this.fieldMappings.set("age", "age");
+    this.fieldMappings.set("e-mail", "email");
+    this.fieldMappings.set("address", "address");
+  }
   setButtons() {
     this.submitButton.disabled = false;
     this.sortAddingButton.disabled = true; 
@@ -181,10 +193,8 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
-      console.log(this.getSortOptions(this.getPreviousChosenFields(), this.getPreviousChosenDirections(), this.getFieldType(this.getPreviousChosenFields())));
+      this.getSortOptions(this.getPreviousChosenFields(), this.getPreviousChosenDirections(), this.getFieldType(this.getPreviousChosenFields()));
       console.log(sortingService.sortData(this.sortConfig));
-      
-     
     })
     
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
@@ -206,7 +216,6 @@ export class MySortingSection extends HTMLElement {
   getPreviousChosenFields() {
     return this.sortOptions.map(option => option.fieldOption);
   }
-  
   getRemainingFields() {
     const previousChosenField = this.getPreviousChosenFields();
     return this.allFields.filter((field) => !previousChosenField.includes(field));
@@ -242,11 +251,10 @@ export class MySortingSection extends HTMLElement {
   getPreviousChosenDirections() {
     return this.sortOptions.map(option => option.directionOption);
   }
-  getSortOptions(fieldName, sortDirection, sortType) {
-        
+  getSortOptions(fieldName, sortDirection, sortType) {    
     for(let i = 0; i < fieldName.length; i++) {
       const sortRule = {
-        field: fieldName[i],
+        field: this.fieldMappings.get(fieldName[i]),
         type: sortType[i],
         direction: sortDirection[i]
       };
