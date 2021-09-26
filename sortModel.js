@@ -1,7 +1,7 @@
-import {SortingRule} from "./SortingRule.js";
-import {SortingService} from "./sortingService.js";
-import {sortingService} from "./index.js";
-const {template} = {
+import { SortingRule } from "./SortingRule.js";
+import { SortingService } from "./sortingService.js";
+import { sortingService } from "./index.js";
+const { template } = {
   template: `
   <style>  
   .sort-data-button-area {
@@ -135,29 +135,28 @@ export class MySortingSection extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = template;
     this.getElementReferences();
-    this.setButtons();  
+    this.setButtons();
     this.allFields = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
     this.sortOptions[0].setSortByOptions(this.allFields);
-    this.sortConfig = [];
     this.fieldMappings = new Map();
     this.initializeFieldMappings();
     this.initializeListeners();
 
-  }  
+  }
   initializeFieldMappings() {
-    this.fieldMappings.set("id", "id");
-    this.fieldMappings.set("gender", "gender");
-    this.fieldMappings.set("first name", "firstName");
-    this.fieldMappings.set("last name", "lastName");
-    this.fieldMappings.set("birth date", "birthDate");
-    this.fieldMappings.set("age", "age");
-    this.fieldMappings.set("e-mail", "email");
-    this.fieldMappings.set("address", "address");
+    this.fieldMappings.set("id", { name: "id", type: "string" });
+    this.fieldMappings.set("gender", { name: "gender", type: "string" });
+    this.fieldMappings.set("first name", { name: "firstName", type: "string" });
+    this.fieldMappings.set("last name", { name: "lastName", type: "string" });
+    this.fieldMappings.set("birth date", { name: "birthDate", type: "date" });
+    this.fieldMappings.set("age", { name: "age", type: "number" });
+    this.fieldMappings.set("e-mail", { name: "email", type: "string" });
+    this.fieldMappings.set("address", { name: "address", type: "string" });
   }
   setButtons() {
     this.submitButton.disabled = false;
-    this.sortAddingButton.disabled = true; 
+    this.sortAddingButton.disabled = true;
   }
   initializeListeners() {
     this.sortDataButton.addEventListener("click", () => {
@@ -165,9 +164,9 @@ export class MySortingSection extends HTMLElement {
       this.sortDataButton.setAttribute("data-sort-button-visible", "false");
       this.sortingArea.setAttribute("data-sort-fields-visible", "true");
       this.table.classList.toggle("blured");
-      
+
     });
-    
+
     this.closeButton.addEventListener("click", () => {
       this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "true");
       this.sortDataButton.setAttribute("data-sort-button-visible", "true");
@@ -193,21 +192,26 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
-      this.getSortOptions(this.getPreviousChosenFields(), this.getPreviousChosenDirections(), this.getFieldType(this.getPreviousChosenFields()));
-      console.log(sortingService.sortData(this.sortConfig));
+      this.getSortOptions();
+      console.log(sortingService.sortData(this.getSortOptions()));
+      const toSort = new CustomEvent("to-sort", {
+        bubbles: true,
+        composed: true
+      });
+      this.shadowRoot.dispatchEvent(toSort);
     })
-    
+
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
-      if(this.sortOptions[0].fieldOption !== "sort by" && this.sortOptions[0].directionOption !== "sort direction") {
+      if (this.sortOptions[0].fieldOption !== "sort by" && this.sortOptions[0].directionOption !== "sort direction") {
         this.sortAddingButton.disabled = false;
-      } 
+      }
     })
     this.sortAddingButton.addEventListener("click", () => {
       this.submitButton.disabled = true;
       this.sortAddingButton.disabled = true;
       this.disableLastSortLine();
       this.getPreviousChosenFields();
-      this.createNewSortLine(); 
+      this.createNewSortLine();
     })
   }
   disableLastSortLine() {
@@ -228,40 +232,23 @@ export class MySortingSection extends HTMLElement {
     this.sortOptions.push(newSortLine);
     newSortLine.addEventListener("is-direction-set", (e) => {
       this.submitButton.disabled = false;
-      if(this.canAddNewSortingRule()) {
+      if (this.canAddNewSortingRule()) {
         this.sortAddingButton.disabled = false;
       }
 
     })
     this.sortLines.append(newSortLine);
   }
-  getFieldType(fields) {
-    let fieldTypes = [];
-    fields.forEach(function(field) {
-      if(field !== "birth date" && field !== "age") {
-        fieldTypes.push("string");
-      } else if(field === "birth date") {
-        fieldTypes.push("date");
-      } else { 
-        fieldTypes.push("number");
+  getSortOptions() {
+    return this.sortOptions.map(option => {
+      const fieldData = this.fieldMappings.get(option.fieldOption);
+      return {
+        field: fieldData.name,
+        type: fieldData.type,
+        direction: option.directionOption
       }
     })
-    return fieldTypes;
   }
-  getPreviousChosenDirections() {
-    return this.sortOptions.map(option => option.directionOption);
-  }
-  getSortOptions(fieldName, sortDirection, sortType) {    
-    for(let i = 0; i < fieldName.length; i++) {
-      const sortRule = {
-        field: this.fieldMappings.get(fieldName[i]),
-        type: sortType[i],
-        direction: sortDirection[i]
-      };
-      this.sortConfig.push(sortRule);
-    }
-    return this.sortConfig;
-}
   getElementReferences() {
     this.sortingArea = this.shadowRoot.querySelector(".sorting");
     this.sortDataButtonArea = this.shadowRoot.querySelector(".sort-data-button-area");
@@ -274,7 +261,7 @@ export class MySortingSection extends HTMLElement {
     this.table = document.querySelector('#data-table');
     this.sortLines = this.shadowRoot.querySelector(".sort-lines");
     this.sortLine = this.shadowRoot.querySelector(".sort-line");
-    
+
   }
 }
 

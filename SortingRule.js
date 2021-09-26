@@ -1,5 +1,5 @@
-const {template} = {
-    template: `
+const { template } = {
+  template: `
     <style>  
     .sort-field {
         width: 20vw;
@@ -36,78 +36,77 @@ const {template} = {
       </select>   
     </div>       
     `
-  };
+};
 
-  export class SortingRule extends HTMLElement {
-    static TAG = "sorting-rule";
-    constructor(sortFields) {
-      super();
-      this.attachShadow({ mode: "open" });
-      this.shadowRoot.innerHTML = template;
-      this.getElementReferences();
-      this.initilizeListeners();
-      this.setSortByOptions(sortFields);
-     
-      this.setButtons();
-      }
-      set fieldOption(value) {
-        this.sortField.value = value;
-      }
-      get fieldOption() {
-       return this.sortField.value;
-      }
-      set directionOption(value) {
-        this.sortDirection.value = value;   
-      }
-      get directionOption() {
-        return this.sortDirection.value;
-      }
-      setButtons() {
-        this.sortDirection.disabled = true;
-      }
-      initilizeListeners() {       
-        this.sortField.addEventListener("change", () => {
-          if(this.fieldOption !== "sort by") {
-            this.sortDirection.disabled = false;
-          }
-        })
-        this.sortDirection.addEventListener("change", () => {
-          const isDirectionSet = new CustomEvent("is-direction-set", {
-            bubbles: true,
-            composed: true
-          });
-          this.shadowRoot.dispatchEvent(isDirectionSet);
-        }) 
-      }
-      disableSelects() {
-        this.sortField.disabled = true;
-        this.sortDirection.disabled = true;
-      }
-      setSortByOptions(sortFields) {
-        if(sortFields === undefined) {
-          return void 0;
-        }
-        
-        sortFields.forEach(item => {
-          const fieldOptionElement = document.createElement("option");
-          fieldOptionElement.textContent = item;
-          fieldOptionElement.value = item;
-          if(item === sortFields[0]) {
-            fieldOptionElement.classList = "option-default";
-          } 
-          this.sortField.append(fieldOptionElement); 
-        })
+export class SortingRule extends HTMLElement {
+  static TAG = "sorting-rule";
+  constructor(sortFields) {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.innerHTML = template;
+    this.getElementReferences();
+    this.initilizeListeners();
+    this.setSortByOptions(sortFields);
 
-      
-     }
-      
-      getElementReferences() { 
-        this.sortLine = this.shadowRoot.querySelector(".sort-line");
-        this.sortField = this.shadowRoot.querySelector(".sort-field");
-        this.sortDirection = this.shadowRoot.querySelector(".sort-direction");
-        let options = ["sort direction", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"]; 
+    this.setButtons();
+  }
+  set fieldOption(value) {
+    this.sortField.value = value;
+  }
+  get fieldOption() {
+    return this.sortField.value;
+  }
+  set directionOption(value) {
+    this.sortDirection.value = value;
+  }
+  get directionOption() {
+    return this.sortDirection.value;
+  }
+  setButtons() {
+    this.sortDirection.disabled = true;
+  }
+  initilizeListeners() {
+    this.sortField.addEventListener("change", () => {
+      if (this.fieldOption !== "sort by") {
+        this.sortDirection.disabled = false;
       }
+    })
+    this.sortDirection.addEventListener("change", () => {
+      const isDirectionSet = new CustomEvent("is-direction-set", {
+        bubbles: true,
+        composed: true
+      });
+      this.shadowRoot.dispatchEvent(isDirectionSet);
+    })
+  }
+  disableSelects() {
+    this.sortField.disabled = true;
+    this.sortDirection.disabled = true;
+  }
+  setSortByOptions(sortFields) {
+    if (sortFields === undefined) {
+      return void 0;
     }
-  customElements.define(SortingRule.TAG, SortingRule);
 
- 
+    sortFields.forEach(item => {
+      const fieldOptionElement = document.createElement("option");
+      fieldOptionElement.textContent = item;
+      fieldOptionElement.value = item;
+      if (item === sortFields[0]) {
+        fieldOptionElement.classList = "option-default";
+      }
+      this.sortField.append(fieldOptionElement);
+    })
+
+
+  }
+
+  getElementReferences() {
+    this.sortLine = this.shadowRoot.querySelector(".sort-line");
+    this.sortField = this.shadowRoot.querySelector(".sort-field");
+    this.sortDirection = this.shadowRoot.querySelector(".sort-direction");
+    let options = ["sort direction", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
+  }
+}
+customElements.define(SortingRule.TAG, SortingRule);
+

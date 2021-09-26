@@ -4,7 +4,8 @@ import {SortingService} from "./sortingService.js";
 const addressSection = document.querySelector("#address-section");
 let allAddressSectionElements;
 let addressSummaryElements;
-    
+const dataRows = document.querySelector(".data-rows");
+
 function createReferenceElement() {
     const dataRow = document.createElement("tr");
     dataRow.classList.add("row0");
@@ -97,15 +98,18 @@ function addAllDataAtOnce(fetchedData, dataReferenceElement) {
 
 let data;
 export let sortingService;
+const sortModel = document.querySelector(MySortingSection.TAG);
 fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/persons-data-0.json").then(async (response) => {
     data = await response.json();
     sortingService = new SortingService(data);
-    data.sort(function(a, b) {
-        return a.firstName - b.firstName;
-    });
     addAllDataAtOnce(data, createReferenceElement());
+    console.log(sortingService.data);
+    
 });
-
+sortModel.addEventListener("to-sort", (e) => {
+    dataRows.innerHTML = "";
+    addAllDataAtOnce(sortingService.data, createReferenceElement());
+})
 addressSection.addEventListener("click", () => {
     const addressSectionElementsStateChange = addressSection.getAttribute("data-address-section-expanded") === "false" ? true : false;
     const addressSummaryElementState = !addressSectionElementsStateChange;
