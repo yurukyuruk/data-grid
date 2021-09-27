@@ -1,15 +1,51 @@
-const {template} = {
+const { template } = {
     template: `
     <style>  
-      .column-checkboxes {
-        margin-left: -1.1rem;
-        padding-left: 1rem;
-        border-left: none;
-        align-items: center;
-        height: 3.25rem;
+    .column-hider-button-area {
+        background-color: rgb(252, 252, 184);
         display: flex;
+        justify-content: center;
+        padding: 2.1rem;
+      }
+      .column-hider-button {
+        border: 1px solid black;
+        background-color: rgb(235, 144, 101);
+        cursor: pointer;
+        outline: 2px solid white;
+        outline-offset: 1rem;   
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+        text-align: center;
+        width: 8rem;
+      }
+      .column-hider-button:hover {
+        transform: scale(1.1);
+      }
+      .column-checkboxes-area {
+          padding: 0 0 1rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        background-color: rgb(252, 252, 184);
+        position: absolute;
+        top: 45%;
+        left: 30%;
+        z-index: 1;
+        max-width: 35vw;
         flex-wrap: wrap;
-        max-width: 400px;
+      }
+      .column-hider-close-button {
+        align-self: flex-end;
+        border: black 1px solid;
+        background-color: rgb(235, 144, 101);
+        cursor: pointer;
+      }
+      .column-hider-close-button:hover {
+        background-color: white;
+      }
+      .column-checkboxes {
+          display: flex;
+          flex-wrap: wrap;
       }
       .column-checkbox {
         max-width: 200px;
@@ -40,56 +76,78 @@ const {template} = {
       .birth-date-checkbox:hover, .age-checkbox:hover, .email-checkbox:hover, .address-checkbox:hover {
           cursor: pointer;
       }
+      div[data-column-hider-button-area-visible="false"] {
+        display: none;
+      }
+      div[data-column-checkboxes-area-visible="false"] {
+          display: none;
+      }
         
   </style>
-  <div class="column-checkboxes">
-  <div class="column-checkbox">
-      <input type="checkbox" name="id" class="id-checkbox" checked>
-      <label for="id">id</label>
-  </div>
-  <div class="column-checkbox" data-column-checkbox-checked="true">
-      <input type="checkbox" name="gender" class="gender-checkbox" checked>
-      <label for="gender">gender</label>
-  </div>
-  <div class="column-checkbox" data-column-checkbox-checked="true">
-      <input type="checkbox" name="first name" class="first-name-checkbox" checked>
-      <label for="first name">first name</label>
-  </div>
-  <div class="column-checkbox" data-column-checkbox-checked="true">
-      <input type="checkbox" name="last name" class="last-name-checkbox" checked>
-      <label for="last name">last name</label>
-  </div>
-  <div class="column-checkbox" data-column-checkbox-checked="true">
-      <input type="checkbox" name="birth date" class="birth-date-checkbox" checked>
-      <label for="birth date">birth date</label>
-  </div>
-  <div class="column-checkbox" data-column-checkbox-checked="true">
-      <input type="checkbox" name="age" class="age-checkbox" checked>
-      <label for="age">age</label>
-  </div>
-  <div class="column-checkbox" data-column-checkbox-checked="true">
-      <input type="checkbox" name="e-mail" class="email-checkbox" checked>
-      <label for="e-mail">e-mail</label>
-  </div>
-  <div class="column-checkbox" data-column-checkbox-checked="true">
-      <input type="checkbox" name="address" class="address-checkbox" checked>
-      <label for="address">address</label>
-  </div>
+<div class="column-hider-button-area" data-column-hider-button-area-visible="true">
+  <input class="column-hider-button" type="button" value="HIDE COLUMN">
+</div>
+<div class="column-checkboxes-area" data-column-checkboxes-area-visible="false">
+    <div>
+        <input class="column-hider-close-button" type="button" value="x">
+    </div>
+    <div class="column-checkboxes">
+        <div class="column-checkbox">
+            <input type="checkbox" name="id" class="id-checkbox" checked>
+            <label for="id">id</label>
+        </div>
+        <div class="column-checkbox" data-column-checkbox-checked="true">
+            <input type="checkbox" name="gender" class="gender-checkbox" checked>
+            <label for="gender">gender</label>
+        </div>
+        <div class="column-checkbox" data-column-checkbox-checked="true">
+            <input type="checkbox" name="first name" class="first-name-checkbox" checked>
+            <label for="first name">first name</label>
+        </div>
+        <div class="column-checkbox" data-column-checkbox-checked="true">
+            <input type="checkbox" name="last name" class="last-name-checkbox" checked>
+            <label for="last name">last name</label>
+        </div>
+        <div class="column-checkbox" data-column-checkbox-checked="true">
+            <input type="checkbox" name="birth date" class="birth-date-checkbox" checked>
+            <label for="birth date">birth date</label>
+        </div>
+        <div class="column-checkbox" data-column-checkbox-checked="true">
+            <input type="checkbox" name="age" class="age-checkbox" checked>
+            <label for="age">age</label>
+        </div>
+        <div class="column-checkbox" data-column-checkbox-checked="true">
+            <input type="checkbox" name="e-mail" class="email-checkbox" checked>
+            <label for="e-mail">e-mail</label>
+        </div>
+        <div class="column-checkbox" data-column-checkbox-checked="true">
+            <input type="checkbox" name="address" class="address-checkbox" checked>
+            <label for="address">address</label>
+        </div>
+    </div>
 </div>      
     `
-  };
+};
 
-  export class ColumnHider extends HTMLElement {
+export class ColumnHider extends HTMLElement {
     static TAG = "column-hider";
     constructor() {
-      super();
-      this.attachShadow({ mode: "open" });
-      this.shadowRoot.innerHTML = template;
-      this.getElementReferences();
-      this.initilizeListeners();
-      }
-   
-      initilizeListeners() {       
+        super();
+        this.attachShadow({ mode: "open" });
+        this.shadowRoot.innerHTML = template;
+        this.getElementReferences();
+        this.initilizeListeners();
+    }
+
+    initilizeListeners() {
+        this.columnHiderButtonArea.addEventListener("click", () => {
+            this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
+            this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
+        })
+        this.columnHiderCloseButton.addEventListener("click", () => {
+            this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
+            this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
+        })
         this.idCheckbox.addEventListener("click", () => {
             let idDatas = document.querySelectorAll(".id-data");
             const idCheckboxElementsStateChange = idDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
@@ -132,9 +190,9 @@ const {template} = {
             addressDataHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
             addressDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
         })
-     }
-      
-      getElementReferences() { 
+    }
+
+    getElementReferences() {
         this.idCheckbox = this.shadowRoot.querySelector(".id-checkbox");
         this.genderCheckbox = this.shadowRoot.querySelector(".gender-checkbox");
         this.firstNameCheckbox = this.shadowRoot.querySelector(".first-name-checkbox");
@@ -143,8 +201,10 @@ const {template} = {
         this.ageCheckbox = this.shadowRoot.querySelector(".age-checkbox");
         this.emailCheckbox = this.shadowRoot.querySelector(".email-checkbox");
         this.addressCheckbox = this.shadowRoot.querySelector(".address-checkbox");
-      }
+        this.columnHiderButtonArea = this.shadowRoot.querySelector(".column-hider-button-area");
+        this.columnCheckboxesArea = this.shadowRoot.querySelector(".column-checkboxes-area");
+        this.columnHiderCloseButton = this.shadowRoot.querySelector(".column-hider-close-button");
     }
-  customElements.define(ColumnHider.TAG, ColumnHider);
+}
+customElements.define(ColumnHider.TAG, ColumnHider);
 
- 

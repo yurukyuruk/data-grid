@@ -40,6 +40,5 @@ export class SortingService {
   }
 }
 /*understand how sortdata method work
-make hidecolumns work
 how to imrove this sortdata method
 */
