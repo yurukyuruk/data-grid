@@ -1,6 +1,6 @@
 .whole-sort-area {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   background-color: rgb(252, 252, 184);
 }
@@ -48,10 +48,6 @@ td[data-address-section-closed='false'] {
 }
 tr[data-address-section-expanded='true'] {
   display: table-row;
-}
-td[data-address-section-expanded='true'],
-td[data-address-section-closed='true'] {
-  display: table-cell;
 }
 th[data-address-section-expanded='true'] {
   padding: 1px;

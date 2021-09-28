@@ -33,12 +33,14 @@ const { template } = {
         z-index: 1;
         max-width: 35vw;
         flex-wrap: wrap;
+        border: 2px solid rgb(235, 144, 101);
       }
       .column-hider-close-button {
         align-self: flex-end;
         border: black 1px solid;
         background-color: rgb(235, 144, 101);
         cursor: pointer;
+        margin: 1px 1px 0 0;
       }
       .column-hider-close-button:hover {
         background-color: white;
@@ -184,11 +186,34 @@ export class ColumnHider extends HTMLElement {
             emailDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", emailCheckboxElementsStateChange.toString()));
         })
         this.addressCheckbox.addEventListener("click", () => {
-            let addressDatas = document.querySelectorAll(".address-summary-data");
             let addressDataHeader = document.querySelector(".address-data");
+            let countryHeader = document.querySelector(".country-header");
+            let stateHeader = document.querySelector(".state-header");
+            let cityHeader = document.querySelector(".city-header");
+            let streetHeader = document.querySelector(".street-header");
+            let houseNumberHeader = document.querySelector(".house-number-header");
+
+            let addressDatas = document.querySelectorAll(".address-summary-data");
+            let countryDatas = document.querySelectorAll(".country-data");
+            let stateDatas = document.querySelectorAll(".state-data");
+            let cityDatas = document.querySelectorAll(".city-data");
+            let streetDatas = document.querySelectorAll(".street-data");
+            let houseNumberDatas = document.querySelectorAll(".house-number-data");
+            
             const addressCheckboxElementsStateChange = addressDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
             addressDataHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
+            countryHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
+            stateHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
+            cityHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
+            streetHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
+            houseNumberHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
+
             addressDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
+            countryDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
+            stateDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
+            cityDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
+            streetDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
+            houseNumberDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
         })
     }
 

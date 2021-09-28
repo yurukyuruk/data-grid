@@ -12,8 +12,8 @@ export class SortingService {
       } else {
         this.data.sort(this.sortDateComperator(sortRule.field, sortRule.direction));
       }
-      return this.data;
-    }//i doont need that for
+    }
+    return this.data;//i doont need that for
   }
   sortStringComparator(sortField, sortDirection) {
     return (a, b) => {

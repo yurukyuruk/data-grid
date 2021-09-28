@@ -32,6 +32,7 @@ const { template } = {
     left: 30%;
     z-index: 1;
     max-height: 50vh;
+    border: 2px solid rgb(235, 144, 101);
   }
   .sort-lines {
     display: flex;
@@ -62,6 +63,7 @@ const { template } = {
     border: black 1px solid;
     background-color: rgb(235, 144, 101);
     cursor: pointer;
+    margin: 1px 1px 0 0;
   }
   .close-button:hover {
     background-color: white;
@@ -195,7 +197,7 @@ export class MySortingSection extends HTMLElement {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       this.getSortOptions();
-      console.log(sortingService.sortData(this.getSortOptions()));
+      sortingService.sortData(this.getSortOptions());
       const toSort = new CustomEvent("to-sort", {
         bubbles: true,
         composed: true

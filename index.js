@@ -33,22 +33,27 @@ function createReferenceElement() {
     emailData.setAttribute("data-column-checkbox-checked", "true");
     const addressSummaryData = document.createElement("td");
     addressSummaryData.setAttribute("data-address-section-closed", "true");
-    emailData.setAttribute("data-column-checkbox-checked", "true");
+    addressSummaryData.setAttribute("data-column-checkbox-checked", "true");
     addressSummaryData.classList.add("address-summary-data");
     const countryData = document.createElement("td");
     countryData.setAttribute("data-address-section-expanded", "false");
+    addressSummaryData.setAttribute("data-column-checkbox-checked", "true");
     countryData.classList.add("country-data");
     const stateData = document.createElement("td");
     stateData.setAttribute("data-address-section-expanded", "false");
+    addressSummaryData.setAttribute("data-column-checkbox-checked", "true");
     stateData.classList.add("state-data");
     const cityData = document.createElement("td");
     cityData.setAttribute("data-address-section-expanded", "false");
+    addressSummaryData.setAttribute("data-column-checkbox-checked", "true");
     cityData.classList.add("city-data");
     const streetData = document.createElement("td");
     streetData.setAttribute("data-address-section-expanded", "false");
+    addressSummaryData.setAttribute("data-column-checkbox-checked", "true");
     streetData.classList.add("street-data");
     const houseNumberData = document.createElement("td");
     houseNumberData.setAttribute("data-address-section-expanded", "false");
+    addressSummaryData.setAttribute("data-column-checkbox-checked", "true");
     houseNumberData.classList.add("house-number-data");
     dataRow.append(idData, genderData, firstNameData, lastNameData, birthDateData, ageData, emailData, addressSummaryData, countryData, stateData, cityData, streetData, houseNumberData);
     return dataRow;
@@ -103,8 +108,6 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
     data = await response.json();
     sortingService = new SortingService(data);
     addAllDataAtOnce(data, createReferenceElement());
-    console.log(sortingService.data);
-    
 });
 sortModel.addEventListener("to-sort", (e) => {
     dataRows.innerHTML = "";
