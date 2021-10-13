@@ -125,7 +125,7 @@ const { template } = {
   </div>
   <input class="sort-adding-button" type="button" value="+">
   <div class="submit-buttons">
-    <input class="reset-button" type="reset" value="clear">
+    <input class="reset-button" type="reset" value="reset">
     <input class="submit-button" type="submit" value="apply">
   </div>
 </section>        

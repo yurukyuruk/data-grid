@@ -22,7 +22,7 @@ const { template } = {
         transform: scale(1.1);
       }
       .column-checkboxes-area {
-          padding: 0 0 1rem 1rem;
+        
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -48,6 +48,7 @@ const { template } = {
       .column-checkboxes {
           display: flex;
           flex-wrap: wrap;
+          justify-content: center;
       }
       .column-checkbox {
         max-width: 200px;
@@ -84,7 +85,27 @@ const { template } = {
       div[data-column-checkboxes-area-visible="false"] {
           display: none;
       }
-        
+      .reset-apply-buttons {
+          display: flex;
+          align-self: center;
+      }
+    .reset-button, .apply-button {
+        border: black 1px solid;
+        width: 8vw;
+        margin: 5px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        padding-top: 0;
+        padding-bottom: 0;
+        background-color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    .reset-button:hover, .apply-button:hover {
+        background-color: rgb(235, 144, 101);
+    }
+    
   </style>
 <div class="column-hider-button-area" data-column-hider-button-area-visible="true">
   <input class="column-hider-button" type="button" value="HIDE COLUMN">
@@ -94,40 +115,13 @@ const { template } = {
         <input class="column-hider-close-button" type="button" value="x">
     </div>
     <div class="column-checkboxes">
-        <div class="column-checkbox">
-            <input type="checkbox" name="id" class="id-checkbox" checked>
-            <label for="id">id</label>
-        </div>
-        <div class="column-checkbox" data-column-checkbox-checked="true">
-            <input type="checkbox" name="gender" class="gender-checkbox" checked>
-            <label for="gender">gender</label>
-        </div>
-        <div class="column-checkbox" data-column-checkbox-checked="true">
-            <input type="checkbox" name="first name" class="first-name-checkbox" checked>
-            <label for="first name">first name</label>
-        </div>
-        <div class="column-checkbox" data-column-checkbox-checked="true">
-            <input type="checkbox" name="last name" class="last-name-checkbox" checked>
-            <label for="last name">last name</label>
-        </div>
-        <div class="column-checkbox" data-column-checkbox-checked="true">
-            <input type="checkbox" name="birth date" class="birth-date-checkbox" checked>
-            <label for="birth date">birth date</label>
-        </div>
-        <div class="column-checkbox" data-column-checkbox-checked="true">
-            <input type="checkbox" name="age" class="age-checkbox" checked>
-            <label for="age">age</label>
-        </div>
-        <div class="column-checkbox" data-column-checkbox-checked="true">
-            <input type="checkbox" name="e-mail" class="email-checkbox" checked>
-            <label for="e-mail">e-mail</label>
-        </div>
-        <div class="column-checkbox" data-column-checkbox-checked="true">
-            <input type="checkbox" name="address" class="address-checkbox" checked>
-            <label for="address">address</label>
-        </div>
     </div>
-</div>      
+    <div class="reset-apply-buttons">
+        <input class="reset-button" type="button" value="reset">
+        <input class="apply-button" type="button" value="apply">
+    </div>
+</div>
+
     `
 };
 
@@ -137,83 +131,71 @@ export class ColumnHider extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
         this.shadowRoot.innerHTML = template;
-        this.getElementReferences();
+        this.columnHiderButtonArea = this.shadowRoot.querySelector(".column-hider-button-area");
+        this.columnHiderButton = this.shadowRoot.querySelector(".column-hider-button");
+        this.columnCheckboxesArea = this.shadowRoot.querySelector(".column-checkboxes-area");
+        this.columnHiderCloseButton = this.shadowRoot.querySelector(".column-hider-close-button");
+        this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes");
         this.initilizeListeners();
+    }
+    createAndSetCheckboxes() {
+        const columnNames = ["id", "gender", "first-name", "last-name", "birth-date", "age", "email", "address"];
+        const addressColumnHeaderNames = ["country", "state", "city", "street", "house-number"];
+        const addressColumnNames = ["address-summary", "country", "state", "city", "street", "house-number"];
+        function createDataColumnTagNames(x) {
+            return "." + columnNames[x] + "-data";
+        } 
+        function createAddressColumnHeaderTagNames(x) {
+            return "." + addressColumnHeaderNames[x] + "-header";
+        }
+        function createAddressColumnTagNames(x) {
+            return "." + addressColumnNames[x] + "-data";
+        }
+        for (let i = 0; i < columnNames.length; i++) {
+            const checkboxHolder = document.createElement("div");
+            checkboxHolder.classList.add("column-checkbox");
+            checkboxHolder.setAttribute("data-column-checkbox-checked", "true");
+            const checkbox = document.createElement("input");
+            checkbox.setAttribute("type", "checkbox");
+            checkbox.classList.add((columnNames[i] + "-checkbox")); 
+            checkbox.setAttribute("checked", "checked");
+            checkbox.addEventListener("click", () => {
+                let wholeColumnData = document.querySelectorAll(createDataColumnTagNames(i));
+                const checkboxElementsStateChange = wholeColumnData[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
+                wholeColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
+                if(checkbox.classList.value === "address-checkbox") {
+                    for(let i = 0; i < addressColumnHeaderNames.length; i++) {
+                        let addressHeader = document.querySelector(createAddressColumnHeaderTagNames(i));
+                        const addressCheckboxElementsStateChange = addressHeader.getAttribute("data-column-checkbox-checked") === "false" ? true : false;
+                        addressHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
+                    }
+                    for(let i = 0; i < addressColumnNames.length; i++) {
+                        let wholeAddressColumnData = document.querySelectorAll(createAddressColumnTagNames(i));
+                        const addressCheckboxElementsStateChange = wholeAddressColumnData[0].getAttribute("data-column-checkbox-checked") === "false" ? true : false;
+                        wholeAddressColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
+                    }
+                }
+            });
+ 
+            const checkboxLabel = document.createElement("label");
+            checkboxLabel.textContent = columnNames[i];
+            checkboxHolder.appendChild(checkbox);
+            checkboxHolder.appendChild(checkboxLabel);
+            this.columnCheckboxes.appendChild(checkboxHolder);
+        }
     }
 
     initilizeListeners() {
-        this.columnHiderButtonArea.addEventListener("click", () => {
+        this.columnHiderButton.addEventListener("click", () => {
+            this.createAndSetCheckboxes();
+            this.getElementReferences();
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
         })
         this.columnHiderCloseButton.addEventListener("click", () => {
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
-        })
-        this.idCheckbox.addEventListener("click", () => {
-            let idDatas = document.querySelectorAll(".id-data");
-            const idCheckboxElementsStateChange = idDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            idDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", idCheckboxElementsStateChange.toString()));
-        })
-        this.genderCheckbox.addEventListener("click", () => {
-            let genderDatas = document.querySelectorAll(".gender-data");
-            const genderCheckboxElementsStateChange = genderDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            genderDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", genderCheckboxElementsStateChange.toString()));
-        })
-        this.firstNameCheckbox.addEventListener("click", () => {
-            let firstNameDatas = document.querySelectorAll(".first-name-data");
-            const firstNameCheckboxElementsStateChange = firstNameDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            firstNameDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", firstNameCheckboxElementsStateChange.toString()));
-        })
-        this.lastNameCheckbox.addEventListener("click", () => {
-            let lastNameDatas = document.querySelectorAll(".last-name-data");
-            const lastNameCheckboxElementsStateChange = lastNameDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            lastNameDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", lastNameCheckboxElementsStateChange.toString()));
-        })
-        this.birthDateCheckbox.addEventListener("click", () => {
-            let birthDateDatas = document.querySelectorAll(".birth-date-data");
-            const birthDateCheckboxElementsStateChange = birthDateDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            birthDateDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", birthDateCheckboxElementsStateChange.toString()));
-        })
-        this.ageCheckbox.addEventListener("click", () => {
-            let ageDatas = document.querySelectorAll(".age-data");
-            const ageCheckboxElementsStateChange = ageDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            ageDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", ageCheckboxElementsStateChange.toString()));
-        })
-        this.emailCheckbox.addEventListener("click", () => {
-            let emailDatas = document.querySelectorAll(".email-data");
-            const emailCheckboxElementsStateChange = emailDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            emailDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", emailCheckboxElementsStateChange.toString()));
-        })
-        this.addressCheckbox.addEventListener("click", () => {
-            let addressDataHeader = document.querySelector(".address-data");
-            let countryHeader = document.querySelector(".country-header");
-            let stateHeader = document.querySelector(".state-header");
-            let cityHeader = document.querySelector(".city-header");
-            let streetHeader = document.querySelector(".street-header");
-            let houseNumberHeader = document.querySelector(".house-number-header");
-
-            let addressDatas = document.querySelectorAll(".address-summary-data");
-            let countryDatas = document.querySelectorAll(".country-data");
-            let stateDatas = document.querySelectorAll(".state-data");
-            let cityDatas = document.querySelectorAll(".city-data");
-            let streetDatas = document.querySelectorAll(".street-data");
-            let houseNumberDatas = document.querySelectorAll(".house-number-data");
-            
-            const addressCheckboxElementsStateChange = addressDatas[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-            addressDataHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
-            countryHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
-            stateHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
-            cityHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
-            streetHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
-            houseNumberHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
-
-            addressDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
-            countryDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
-            stateDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
-            cityDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
-            streetDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
-            houseNumberDatas.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
+            this.columnCheckboxes.innerHTML = "";
         })
     }
 
@@ -226,9 +208,6 @@ export class ColumnHider extends HTMLElement {
         this.ageCheckbox = this.shadowRoot.querySelector(".age-checkbox");
         this.emailCheckbox = this.shadowRoot.querySelector(".email-checkbox");
         this.addressCheckbox = this.shadowRoot.querySelector(".address-checkbox");
-        this.columnHiderButtonArea = this.shadowRoot.querySelector(".column-hider-button-area");
-        this.columnCheckboxesArea = this.shadowRoot.querySelector(".column-checkboxes-area");
-        this.columnHiderCloseButton = this.shadowRoot.querySelector(".column-hider-close-button");
     }
 }
 customElements.define(ColumnHider.TAG, ColumnHider);

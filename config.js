@@ -14,3 +14,12 @@
 }*/
 
 //save it in local storage.
+import { MySortingSection } from "./sortModel.js";
+ export let config = {};
+ //config.sortingRules = [{field: , direction:}];
+ //config.columns = {name: , displayName: , type: , visible: };
+// let a = new MySortingSection();
+
+ //config.push(a.getSortOptions());
+ //console.log(config);
+
