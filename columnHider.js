@@ -1,3 +1,4 @@
+import { config } from "./config.js";
 const { template } = {
     template: `
     <style>  
@@ -136,6 +137,9 @@ export class ColumnHider extends HTMLElement {
         this.columnCheckboxesArea = this.shadowRoot.querySelector(".column-checkboxes-area");
         this.columnHiderCloseButton = this.shadowRoot.querySelector(".column-hider-close-button");
         this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes");
+        this.resetButton = this.shadowRoot.querySelector(".reset-button");
+        this.applyButton = this.shadowRoot.querySelector(".apply-button");
+        this.allColumnsInformation = [];
         this.initilizeListeners();
     }
     createAndSetCheckboxes() {
@@ -163,6 +167,7 @@ export class ColumnHider extends HTMLElement {
                 let wholeColumnData = document.querySelectorAll(createDataColumnTagNames(i));
                 const checkboxElementsStateChange = wholeColumnData[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
                 wholeColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
+                checkboxHolder.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString());
                 if(checkbox.classList.value === "address-checkbox") {
                     for(let i = 0; i < addressColumnHeaderNames.length; i++) {
                         let addressHeader = document.querySelector(createAddressColumnHeaderTagNames(i));
@@ -197,9 +202,30 @@ export class ColumnHider extends HTMLElement {
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
             this.columnCheckboxes.innerHTML = "";
         })
+        this.applyButton.addEventListener("click", () => {
+            this.collectColumnInformation();
+            config.columns = this.allColumnsInformation;
+            console.log(config);
+            //{name: 'firstName', displayName: 'first name', type: 'string', visible: true}
+        })
+    }
+
+    collectColumnInformation() {
+        const columnNames = ["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"];
+        const columnDisplayNames = ["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
+        let columnsVisibilityStatus = [];
+        for(let i = 1; i < this.columnCheckboxes.childNodes.length; i++) {
+            columnsVisibilityStatus.push(this.columnCheckboxes.childNodes[i].getAttribute("data-column-checkbox-checked"));
+        }
+        for(let i = 0; i < columnNames.length; i++) {
+            const singleColumnInformation = {name: columnNames[i], displayName: columnDisplayNames[i], type: "string", visible: columnsVisibilityStatus[i]};
+            this.allColumnsInformation.push(singleColumnInformation);
+        }
+        
     }
 
     getElementReferences() {
+        this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes");
         this.idCheckbox = this.shadowRoot.querySelector(".id-checkbox");
         this.genderCheckbox = this.shadowRoot.querySelector(".gender-checkbox");
         this.firstNameCheckbox = this.shadowRoot.querySelector(".first-name-checkbox");
@@ -208,6 +234,7 @@ export class ColumnHider extends HTMLElement {
         this.ageCheckbox = this.shadowRoot.querySelector(".age-checkbox");
         this.emailCheckbox = this.shadowRoot.querySelector(".email-checkbox");
         this.addressCheckbox = this.shadowRoot.querySelector(".address-checkbox");
+        
     }
 }
 customElements.define(ColumnHider.TAG, ColumnHider);
