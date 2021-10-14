@@ -142,8 +142,7 @@ export class ColumnHider extends HTMLElement {
         this.allColumnsInformation = [];
         this.initilizeListeners();
     }
-    createAndSetCheckboxes() {
-        const columnNames = ["id", "gender", "first-name", "last-name", "birth-date", "age", "email", "address"];
+    createAndSetCheckboxes(columnNames) {
         const addressColumnHeaderNames = ["country", "state", "city", "street", "house-number"];
         const addressColumnNames = ["address-summary", "country", "state", "city", "street", "house-number"];
         function createDataColumnTagNames(x) {
@@ -192,7 +191,7 @@ export class ColumnHider extends HTMLElement {
 
     initilizeListeners() {
         this.columnHiderButton.addEventListener("click", () => {
-            this.createAndSetCheckboxes();
+            this.createAndSetCheckboxes(["id", "gender", "first-name", "last-name", "birth-date", "age", "email", "address"]);
             this.getElementReferences();
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
@@ -206,19 +205,19 @@ export class ColumnHider extends HTMLElement {
             this.collectColumnInformation();
             config.columns = this.allColumnsInformation;
             console.log(config);
-            //{name: 'firstName', displayName: 'first name', type: 'string', visible: true}
         })
     }
 
     collectColumnInformation() {
         const columnNames = ["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"];
         const columnDisplayNames = ["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
+        const columnTypes = ["string", "string", "string", "string", "date", "number", "string", "string"];
         let columnsVisibilityStatus = [];
         for(let i = 1; i < this.columnCheckboxes.childNodes.length; i++) {
             columnsVisibilityStatus.push(this.columnCheckboxes.childNodes[i].getAttribute("data-column-checkbox-checked"));
         }
         for(let i = 0; i < columnNames.length; i++) {
-            const singleColumnInformation = {name: columnNames[i], displayName: columnDisplayNames[i], type: "string", visible: columnsVisibilityStatus[i]};
+            const singleColumnInformation = {name: columnNames[i], displayName: columnDisplayNames[i], type: columnTypes[i], visible: columnsVisibilityStatus[i]};
             this.allColumnsInformation.push(singleColumnInformation);
         }
         

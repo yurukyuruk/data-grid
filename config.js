@@ -23,3 +23,9 @@ import { MySortingSection } from "./sortModel.js";
  //config.push(a.getSortOptions());
  //console.log(config);
 
+//create class config service. 
+//config service should have information about all columns
+//config service should provide methods for getting information about column type, from column display name or column field name.
+//you should use config service class for getting information about data type of sorting rule  inside sorting service class.
+//config service should provide methods for saving information about sorting rules and column visibility
+//iki metod olacak biri sortrule bilgisi için biri column bilgisi için.
