@@ -1,7 +1,7 @@
 import {MySortingSection} from "./sortModel.js";
 import {ColumnHider} from "./columnHider.js";
 import {SortingService} from "./sortingService.js";
-import { config } from "./config.js";
+import { ConfigService } from "./configService.js";
 const addressSection = document.querySelector("#address-section");
 let allAddressSectionElements;
 let addressSummaryElements;

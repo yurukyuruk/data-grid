@@ -1,4 +1,4 @@
-import { config } from "./config.js";
+import { ConfigService } from "./configService.js";
 const { template } = {
     template: `
     <style>  
@@ -202,16 +202,13 @@ export class ColumnHider extends HTMLElement {
             this.columnCheckboxes.innerHTML = "";
         })
         this.applyButton.addEventListener("click", () => {
-            this.collectColumnInformation();
-            config.columns = this.allColumnsInformation;
-            console.log(config);
+            this.collectColumnInformation(["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"], ["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"], ["string", "string", "string", "string", "date", "number", "string", "string"]);
+            let config = new ConfigService();
+            config.getColumnInformation(this.allColumnsInformation);
         })
     }
 
-    collectColumnInformation() {
-        const columnNames = ["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"];
-        const columnDisplayNames = ["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
-        const columnTypes = ["string", "string", "string", "string", "date", "number", "string", "string"];
+    collectColumnInformation(columnNames, columnDisplayNames, columnTypes) {
         let columnsVisibilityStatus = [];
         for(let i = 1; i < this.columnCheckboxes.childNodes.length; i++) {
             columnsVisibilityStatus.push(this.columnCheckboxes.childNodes[i].getAttribute("data-column-checkbox-checked"));
@@ -219,8 +216,7 @@ export class ColumnHider extends HTMLElement {
         for(let i = 0; i < columnNames.length; i++) {
             const singleColumnInformation = {name: columnNames[i], displayName: columnDisplayNames[i], type: columnTypes[i], visible: columnsVisibilityStatus[i]};
             this.allColumnsInformation.push(singleColumnInformation);
-        }
-        
+        }   
     }
 
     getElementReferences() {

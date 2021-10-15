@@ -1,7 +1,8 @@
 import { SortingRule } from "./SortingRule.js";
 import { SortingService } from "./sortingService.js";
 import { sortingService } from "./index.js";
-import { config } from "./config.js";
+import { ConfigService } from "./configService.js";
+
 
 const { template } = {
   template: `
@@ -205,8 +206,9 @@ export class MySortingSection extends HTMLElement {
         composed: true
       });
       this.shadowRoot.dispatchEvent(toSort);
-      config.sortingRules = this.getSortOptions();
-      console.log(config);
+      let config = new ConfigService(); 
+      config.getSortInformation(this.getSortOptions());
+      
     })
 
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
