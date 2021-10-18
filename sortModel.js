@@ -1,6 +1,6 @@
 import { SortingRule } from "./SortingRule.js";
 import { SortingService } from "./sortingService.js";
-import { sortingService } from "./index.js";
+import { config, sortingService } from "./index.js";
 import { ConfigService } from "./configService.js";
 
 
@@ -146,20 +146,8 @@ export class MySortingSection extends HTMLElement {
     this.allFields = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
     this.sortOptions[0].setSortByOptions(this.allFields);
-    this.fieldMappings = new Map();
-    this.initializeFieldMappings();
     this.initializeListeners();
 
-  }
-  initializeFieldMappings() {
-    this.fieldMappings.set("id", { name: "id", type: "string" });
-    this.fieldMappings.set("gender", { name: "gender", type: "string" });
-    this.fieldMappings.set("first name", { name: "firstName", type: "string" });
-    this.fieldMappings.set("last name", { name: "lastName", type: "string" });
-    this.fieldMappings.set("birth date", { name: "birthDate", type: "date" });
-    this.fieldMappings.set("age", { name: "age", type: "number" });
-    this.fieldMappings.set("e-mail", { name: "email", type: "string" });
-    this.fieldMappings.set("address", { name: "address", type: "string" });
   }
   setButtons() {
     this.submitButton.disabled = false;
@@ -171,7 +159,23 @@ export class MySortingSection extends HTMLElement {
       this.sortDataButton.setAttribute("data-sort-button-visible", "false");
       this.sortingArea.setAttribute("data-sort-fields-visible", "true");
       this.table.classList.toggle("blured");
-
+      let sortInformation = JSON.parse(localStorage.getItem("sortInformation"));
+      if(sortInformation.length === 1 && sortInformation[0].field !== "sort by") {
+        this.sortOptions[0].fieldOption = sortInformation[0].field;
+        this.sortOptions[0].sortDirection.disabled = false;
+        this.sortOptions[0].directionOption = sortInformation[0].direction;
+      } else if(sortInformation.length > 1) {
+        this.sortOptions[0].fieldOption = sortInformation[0].field;
+        this.sortOptions[0].sortDirection.disabled = false;
+        this.sortOptions[0].directionOption = sortInformation[0].direction;
+        for(let i = 1; i < sortInformation.length; i++) {
+          this.createNewSortLine();
+          this.sortOptions[i].fieldOption = sortInformation[i].field;
+          this.sortOptions[i].sortDirection.disabled = false;
+          this.sortOptions[i].directionOption = sortInformation[i].direction;
+        }
+      }
+      
     });
 
     this.closeButton.addEventListener("click", () => {
@@ -194,21 +198,23 @@ export class MySortingSection extends HTMLElement {
       this.sortOptions = [];
       this.createNewSortLine();
       this.sortOptions[0].sortDirection.disabled = true;
+      
     })
 
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       this.getSortOptions();
-      sortingService.sortData(this.getSortOptions());
+      sortingService.sortData(this.setSortInformation(this.getSortOptions()));
       const toSort = new CustomEvent("to-sort", {
         bubbles: true,
         composed: true
       });
       this.shadowRoot.dispatchEvent(toSort);
-      let config = new ConfigService(); 
-      config.getSortInformation(this.getSortOptions());
-      
+      let config = new ConfigService(); //use from index.js
+      config.setSortInformation(this.getSortOptions());
+      console.log(config.getSortInformation());
+      localStorage.setItem("sortInformation", JSON.stringify(config.getSortInformation()));//use in config service
     })
 
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
@@ -251,13 +257,24 @@ export class MySortingSection extends HTMLElement {
   }
   getSortOptions() {
     return this.sortOptions.map(option => {
-      const fieldData = this.fieldMappings.get(option.fieldOption);
       return {
-        field: fieldData.name,
-        type: fieldData.type,
+        field: option.fieldOption, //config.columns.get(option.fieldOption)
         direction: option.directionOption
       }
     })
+  }
+  setSortInformation(sortOptionsList) {//get type from config
+    sortOptionsList.forEach(sortOptions => {
+      const columnName = sortOptions.field;
+      if(columnName === "age") {
+        sortOptions.type = "number";
+      } else if(columnName === "birth date") {
+        sortOptions.type = "date";
+      } else {
+        sortOptions.type = "string";
+      }
+    })
+    return sortOptionsList;
   }
   getElementReferences() {
     this.sortingArea = this.shadowRoot.querySelector(".sorting");

@@ -109,7 +109,19 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
     data = await response.json();
     sortingService = new SortingService(data);
     addAllDataAtOnce(data, createReferenceElement());
-});
+}).then(() => {
+    /*let columnsVisibility = config.getColumnsVisibility();
+    if(columnsVisibility !== null) {
+        let allIdRow = document.querySelectorAll(".id-data");
+        for(let i = 0; i < columnsVisibility.length; i++) {
+            allIdRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[0]));
+        }
+    }*/
+    
+    
+    
+})
+
 sortModel.addEventListener("to-sort", (e) => {
     dataRows.innerHTML = "";
     addAllDataAtOnce(sortingService.data, createReferenceElement());
@@ -121,6 +133,9 @@ addressSection.addEventListener("click", () => {
     addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
     
 })
-
+export let config = new ConfigService();
+config.setcolumnNames(["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"]);
+config.setColumnDisplayNames(["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"])
+config.setColumnTypes(["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"]);
 
 

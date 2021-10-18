@@ -1,3 +1,4 @@
+import { config } from "./index.js";
 import { MySortingSection } from "./sortModel.js";
 export class SortingService {
   constructor(data) {
@@ -6,7 +7,7 @@ export class SortingService {
   sortData(sortConfigDatas) {
     for (const sortRule of sortConfigDatas) {
       if (sortRule.type === "string") {
-        this.data.sort(this.sortStringComparator(sortRule.field, sortRule.direction));
+        this.data.sort(this.sortStringComparator(config.columns.get(sortRule.field).name, sortRule.direction));
       } else if (sortRule.type === "number") {
         this.data.sort(this.sortNumberComparator(sortRule.field, sortRule.direction));
       } else {
