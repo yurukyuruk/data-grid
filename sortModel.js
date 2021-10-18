@@ -160,11 +160,11 @@ export class MySortingSection extends HTMLElement {
       this.sortingArea.setAttribute("data-sort-fields-visible", "true");
       this.table.classList.toggle("blured");
       let sortInformation = JSON.parse(localStorage.getItem("sortInformation"));
-      if(sortInformation.length === 1 && sortInformation[0].field !== "sort by") {
+      if(sortInformation !== null && sortInformation.length === 1 && sortInformation[0].field !== "sort by") {
         this.sortOptions[0].fieldOption = sortInformation[0].field;
         this.sortOptions[0].sortDirection.disabled = false;
         this.sortOptions[0].directionOption = sortInformation[0].direction;
-      } else if(sortInformation.length > 1) {
+      } else if(sortInformation !== null && sortInformation.length > 1) {
         this.sortOptions[0].fieldOption = sortInformation[0].field;
         this.sortOptions[0].sortDirection.disabled = false;
         this.sortOptions[0].directionOption = sortInformation[0].direction;
@@ -198,23 +198,22 @@ export class MySortingSection extends HTMLElement {
       this.sortOptions = [];
       this.createNewSortLine();
       this.sortOptions[0].sortDirection.disabled = true;
-      
+      localStorage.removeItem("sortInformation");
     })
 
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
-      this.getSortOptions();
-      sortingService.sortData(this.setSortInformation(this.getSortOptions()));
+      config.getSortOptions(this.sortOptions);
+      sortingService.sortData(config.setSortInformation(config.getSortOptions(this.sortOptions)));
       const toSort = new CustomEvent("to-sort", {
         bubbles: true,
         composed: true
       });
       this.shadowRoot.dispatchEvent(toSort);
-      let config = new ConfigService(); //use from index.js
-      config.setSortInformation(this.getSortOptions());
-      console.log(config.getSortInformation());
-      localStorage.setItem("sortInformation", JSON.stringify(config.getSortInformation()));//use in config service
+      config.setSortInformation(config.getSortOptions(this.sortOptions));
+      console.log(config.setSortInformation(config.getSortOptions(this.sortOptions)));
+      localStorage.setItem("sortInformation", JSON.stringify(config.getSortOptions(this.sortOptions)));//use in config service
     })
 
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
@@ -255,27 +254,8 @@ export class MySortingSection extends HTMLElement {
     })
     this.sortLines.append(newSortLine);
   }
-  getSortOptions() {
-    return this.sortOptions.map(option => {
-      return {
-        field: option.fieldOption, //config.columns.get(option.fieldOption)
-        direction: option.directionOption
-      }
-    })
-  }
-  setSortInformation(sortOptionsList) {//get type from config
-    sortOptionsList.forEach(sortOptions => {
-      const columnName = sortOptions.field;
-      if(columnName === "age") {
-        sortOptions.type = "number";
-      } else if(columnName === "birth date") {
-        sortOptions.type = "date";
-      } else {
-        sortOptions.type = "string";
-      }
-    })
-    return sortOptionsList;
-  }
+  
+  
   getElementReferences() {
     this.sortingArea = this.shadowRoot.querySelector(".sorting");
     this.sortDataButtonArea = this.shadowRoot.querySelector(".sort-data-button-area");

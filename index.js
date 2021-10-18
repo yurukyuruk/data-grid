@@ -110,16 +110,47 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
     sortingService = new SortingService(data);
     addAllDataAtOnce(data, createReferenceElement());
 }).then(() => {
-    /*let columnsVisibility = config.getColumnsVisibility();
+    let columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
     if(columnsVisibility !== null) {
         let allIdRow = document.querySelectorAll(".id-data");
-        for(let i = 0; i < columnsVisibility.length; i++) {
+        let allGenderRow = document.querySelectorAll(".gender-data");        
+        let allFirstNameRow = document.querySelectorAll(".first-name-data");        
+        let allLastNameRow = document.querySelectorAll(".last-name-data");
+        let allBirthDateRow = document.querySelectorAll(".birth-date-data");
+        let allAgeRow = document.querySelectorAll(".age-data");
+        let allEmailRow = document.querySelectorAll(".email-data");
+        let addressRowHeader = document.querySelector(".address-data");
+        let countryRowHeader = document.querySelector(".country-header");
+        let stateRowHeader = document.querySelector(".state-header");
+        let cityRowHeader = document.querySelector(".city-header");
+        let streetRowHeader = document.querySelector(".street-header");
+        let houseNumberRowHeader = document.querySelector(".street-header");
+        let allAddressSummaryRow = document.querySelectorAll(".address-summary-data");
+        let allCountryData = document.querySelectorAll("country-data");
+        let allStateData = document.querySelectorAll("state-data");
+        let allCityData = document.querySelectorAll("city-data");
+        let allStreetData = document.querySelectorAll("street-data");
+        let allHouseNumberData = document.querySelectorAll("house-number-data");
             allIdRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[0]));
-        }
-    }*/
-    
-    
-    
+            allGenderRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[1]));
+            allFirstNameRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[2]));
+            allLastNameRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[3]));
+            allBirthDateRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[4]));
+            allAgeRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[5]));
+            allEmailRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[6]));
+            addressRowHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[7]);
+            countryRowHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[7]);
+            stateRowHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[7]);
+            cityRowHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[7]);
+            streetRowHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[7]);
+            houseNumberRowHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[7]);
+            allAddressSummaryRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
+            allCountryData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
+            allStateData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
+            allCityData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
+            allStreetData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
+            allHouseNumberData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
+    }
 })
 
 sortModel.addEventListener("to-sort", (e) => {
@@ -135,7 +166,6 @@ addressSection.addEventListener("click", () => {
 })
 export let config = new ConfigService();
 config.setcolumnNames(["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"]);
-config.setColumnDisplayNames(["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"])
-config.setColumnTypes(["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"]);
+config.setColumnDisplayNames(["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"]);
 
 

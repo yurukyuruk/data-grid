@@ -28,24 +28,6 @@ export class ConfigService {
   getColumnDisplayNames() {
     return this.columnDisplayNames;
   }
-  
-
-  setColumnTypes(columnNames) {
-    this.columnTypes = []; 
-    for(let i = 0; i < columnNames.length; i++) {
-      if(columnNames[i] === "age") {
-        this.columnTypes.push("number");
-      } else if(columnNames[i] === "birthDate") {
-        this.columnTypes.push("date");
-      } else {
-        this.columnTypes.push("string");
-      }
-    }
-  }
-  getColumnTypes() {
-    return this.columnTypes;
-  }
-
 
   setColumnsVisibility(columnsVisibility) {
     this.columnsVisibility = columnsVisibility;
@@ -54,14 +36,33 @@ export class ConfigService {
     return this.columnsVisibility;
   }
 
-
-  setSortInformation(data) {
-    this.sortInformation = data;
+  setColumnVisibilityStatus(allColumnCheckboxes) {  
+    let columnsVisibilityStatus = [];
+    for(let i = 0; i < allColumnCheckboxes.length; i++) {//use for each
+        columnsVisibilityStatus.push(allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked"));
+    } 
+    this.setColumnsVisibility(columnsVisibilityStatus); 
+    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+    console.log(this.getColumnsVisibility());
+    return columnsVisibilityStatus;
   }
-  getSortInformation() {
-    return this.sortInformation;
+
+  getSortOptions(sortOptions) {
+    return sortOptions.map(option => {
+      return {
+        field: option.fieldOption, 
+        direction: option.directionOption
+      }
+    })
+  }
+  setSortInformation(sortOptionsList) {
+    sortOptionsList.forEach(sortOptions => {
+      sortOptions.type = this.columns.get(sortOptions.field);
+    })
+    return sortOptionsList;
   }
 }
+
 
 
 
@@ -70,3 +71,4 @@ export class ConfigService {
 //solve storing map in local storage.
 //get rid type methods in sort modal
 //take care of local storage. operations connected with local storage should go through here.
+//get rid of apply button in columnhider

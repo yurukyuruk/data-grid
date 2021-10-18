@@ -91,7 +91,7 @@ const { template } = {
           display: flex;
           align-self: center;
       }
-    .reset-button, .apply-button {
+    .reset-button {
         border: black 1px solid;
         width: 8vw;
         margin: 5px;
@@ -104,7 +104,7 @@ const { template } = {
         font-size: 0.9rem;
         text-align: center;
     }
-    .reset-button:hover, .apply-button:hover {
+    .reset-button:hover {
         background-color: rgb(235, 144, 101);
     }
     
@@ -120,7 +120,6 @@ const { template } = {
     </div>
     <div class="reset-apply-buttons">
         <input class="reset-button" type="button" value="reset">
-        <input class="apply-button" type="button" value="apply">
     </div>
 </div>
 
@@ -139,7 +138,6 @@ export class ColumnHider extends HTMLElement {
         this.columnHiderCloseButton = this.shadowRoot.querySelector(".column-hider-close-button");
         this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes");
         this.resetButton = this.shadowRoot.querySelector(".reset-button");
-        this.applyButton = this.shadowRoot.querySelector(".apply-button");
         this.initilizeListeners();
         
     }
@@ -208,35 +206,23 @@ export class ColumnHider extends HTMLElement {
             }
         })
         this.columnHiderCloseButton.addEventListener("click", () => {
+            config.setColumnVisibilityStatus(this.allColumnCheckboxes);
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
             this.columnCheckboxes.innerHTML = "";
         })
-        this.applyButton.addEventListener("click", () => {
-            this.collectColumnInformation();
-            localStorage.setItem("columnVisibilityInformation", JSON.stringify(config.getColumnsVisibility()));
-            this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
-            this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
-            this.columnCheckboxes.innerHTML = "";
-        })
+       
         this.resetButton.addEventListener("click", () => {
             this.columnCheckboxes.innerHTML = "";
             this.createAndSetCheckboxes(["id", "gender", "first-name", "last-name", "birth-date", "age", "email", "address"]);
             let wholeColumnData = document.querySelectorAll("[data-column-checkbox-checked]");
             wholeColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", "true"));
             this.allColumnCheckboxes.forEach(data => data.setAttribute("data-column-checkbox-checked", "true"));
+            localStorage.removeItem("columnVisibilityInformation");
         })
     }
 
-    collectColumnInformation() {
-        
-        let columnsVisibilityStatus = [];
-        for(let i = 0; i < this.allColumnCheckboxes.length; i++) {
-            columnsVisibilityStatus.push(this.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked"));
-        } 
-        config.setColumnsVisibility(columnsVisibilityStatus); 
-        console.log(config.getColumnsVisibility());
-    }
+    
 
     getElementReferences() {
         this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes");
