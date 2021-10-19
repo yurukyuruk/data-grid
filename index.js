@@ -6,6 +6,7 @@ const addressSection = document.querySelector("#address-section");
 let allAddressSectionElements;
 let addressSummaryElements;
 const dataRows = document.querySelector(".data-rows");
+const addressHeader = document.querySelector(".address-data");
 
 function createReferenceElement() {
     const dataRow = document.createElement("tr");
@@ -110,6 +111,22 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
     sortingService = new SortingService(data);
     addAllDataAtOnce(data, createReferenceElement());
 }).then(() => {
+    if(localStorage.getItem("sortInformation") !== null) {
+        dataRows.innerHTML = "";
+        let sortedData = sortingService.sortData(config.setSortInformation(JSON.parse(localStorage.getItem("sortInformation"))));
+        addAllDataAtOnce(sortedData, createReferenceElement());
+    }
+}).then(() => {
+    const previousAddressSummaryElementState = JSON.parse(localStorage.getItem("addressColumnVisibilityStatus"));
+    let previousAddressSectionElementsState;
+    if(previousAddressSummaryElementState === "false") {
+        previousAddressSectionElementsState = "true";
+    } else {
+        previousAddressSectionElementsState = "false";
+    }
+    allAddressSectionElements.forEach(addressElement => addressElement.setAttribute("data-address-section-expanded", previousAddressSectionElementsState));//true
+    addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", previousAddressSummaryElementState));//false
+}).then(() => {
     let columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
     if(columnsVisibility !== null) {
         let allIdRow = document.querySelectorAll(".id-data");
@@ -124,13 +141,13 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
         let stateRowHeader = document.querySelector(".state-header");
         let cityRowHeader = document.querySelector(".city-header");
         let streetRowHeader = document.querySelector(".street-header");
-        let houseNumberRowHeader = document.querySelector(".street-header");
+        let houseNumberRowHeader = document.querySelector(".house-number-header");
         let allAddressSummaryRow = document.querySelectorAll(".address-summary-data");
-        let allCountryData = document.querySelectorAll("country-data");
-        let allStateData = document.querySelectorAll("state-data");
-        let allCityData = document.querySelectorAll("city-data");
-        let allStreetData = document.querySelectorAll("street-data");
-        let allHouseNumberData = document.querySelectorAll("house-number-data");
+        let allCountryData = document.querySelectorAll(".country-data");
+        let allStateData = document.querySelectorAll(".state-data");
+        let allCityData = document.querySelectorAll(".city-data");
+        let allStreetData = document.querySelectorAll(".street-data");
+        let allHouseNumberData = document.querySelectorAll(".house-number-data");
             allIdRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[0]));
             allGenderRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[1]));
             allFirstNameRow.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[2]));
@@ -150,22 +167,25 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
             allCityData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
             allStreetData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
             allHouseNumberData.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[7]));
-    }
+        }
 })
+
+export let config = new ConfigService();
 
 sortModel.addEventListener("to-sort", (e) => {
     dataRows.innerHTML = "";
     addAllDataAtOnce(sortingService.data, createReferenceElement());
 })
 addressSection.addEventListener("click", () => {
+    config.saveAddressColumnVisibilityStatus(addressHeader);
     const addressSectionElementsStateChange = addressSection.getAttribute("data-address-section-expanded") === "false" ? true : false;
     const addressSummaryElementState = !addressSectionElementsStateChange;
     allAddressSectionElements.forEach(addressElement => addressElement.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
     addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
-    
 })
-export let config = new ConfigService();
-config.setcolumnNames(["id", "gender", "firstName", "lastName", "birthDate", "age", "email", "address"]);
-config.setColumnDisplayNames(["id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"]);
+
+
+
+
 
 

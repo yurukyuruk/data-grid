@@ -206,7 +206,7 @@ export class ColumnHider extends HTMLElement {
             }
         })
         this.columnHiderCloseButton.addEventListener("click", () => {
-            config.setColumnVisibilityStatus(this.allColumnCheckboxes);
+            config.saveColumnVisibilityStatus(this.allColumnCheckboxes);
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
             this.columnCheckboxes.innerHTML = "";

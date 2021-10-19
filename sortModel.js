@@ -204,6 +204,7 @@ export class MySortingSection extends HTMLElement {
     this.submitButton.addEventListener("click", () => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
+      
       config.getSortOptions(this.sortOptions);
       sortingService.sortData(config.setSortInformation(config.getSortOptions(this.sortOptions)));
       const toSort = new CustomEvent("to-sort", {

@@ -12,41 +12,18 @@ export class ConfigService {
     this.columns.set("e-mail", { name: "email", type: "string" });
     this.columns.set("address", { name: "address", type: "string" });
   }
-  
-  
-  setcolumnNames(columnNames) {
-    this.columnNames = columnNames;
-  }
-  getColumnNames() {
-    return this.columnNames;
-  }
 
-
-  setColumnDisplayNames(columnDisplayNames) {
-    this.columnDisplayNames = columnDisplayNames;
-  }
-  getColumnDisplayNames() {
-    return this.columnDisplayNames;
-  }
-
-  setColumnsVisibility(columnsVisibility) {
-    this.columnsVisibility = columnsVisibility;
-  }
-  getColumnsVisibility() {
-    return this.columnsVisibility;
-  }
-
-  setColumnVisibilityStatus(allColumnCheckboxes) {  
+  saveColumnVisibilityStatus(allColumnCheckboxes) {  
     let columnsVisibilityStatus = [];
-    for(let i = 0; i < allColumnCheckboxes.length; i++) {//use for each
-        columnsVisibilityStatus.push(allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked"));
-    } 
-    this.setColumnsVisibility(columnsVisibilityStatus); 
-    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
-    console.log(this.getColumnsVisibility());
+    allColumnCheckboxes.forEach(columnCheckbox => {
+      columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked"));
+    })
+    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));//save them with column names
     return columnsVisibilityStatus;
   }
-
+  saveAddressColumnVisibilityStatus(addressHeader) {
+    localStorage.setItem("addressColumnVisibilityStatus", JSON.stringify(addressHeader.getAttribute("data-address-section-expanded")));
+  }
   getSortOptions(sortOptions) {
     return sortOptions.map(option => {
       return {
@@ -57,7 +34,7 @@ export class ConfigService {
   }
   setSortInformation(sortOptionsList) {
     sortOptionsList.forEach(sortOptions => {
-      sortOptions.type = this.columns.get(sortOptions.field);
+      sortOptions.type = this.columns.get(sortOptions.field).type;
     })
     return sortOptionsList;
   }
