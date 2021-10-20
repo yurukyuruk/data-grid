@@ -105,7 +105,6 @@ export class SortingRule extends HTMLElement {
     this.sortLine = this.shadowRoot.querySelector(".sort-line");
     this.sortField = this.shadowRoot.querySelector(".sort-field");
     this.sortDirection = this.shadowRoot.querySelector(".sort-direction");
-    let options = ["sort direction", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
   }
 }
 customElements.define(SortingRule.TAG, SortingRule);
