@@ -11,7 +11,7 @@ export class SortingService {
       } else if (sortRule.type === "number") {
         this.data.sort(this.sortNumberComparator(sortRule.field, sortRule.direction));
       } else {
-        this.data.sort(this.sortDateComperator(sortRule.field, sortRule.direction));
+        this.data.sort(this.sortDateComperator(config.columns.get(sortRule.field).name, sortRule.direction));
       }
     }
     return this.data;//i doont need that for
