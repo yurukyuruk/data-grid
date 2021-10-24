@@ -207,7 +207,7 @@ export class ColumnHider extends HTMLElement {
             let wholeColumnData = document.querySelectorAll("[data-column-checkbox-checked]");
             wholeColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", "true"));
             this.allColumnCheckboxes.forEach(data => data.setAttribute("data-column-checkbox-checked", "true"));
-            localStorage.removeItem("columnVisibilityInformation");
+            config.clearColumnVisibilityInformation();
         })
     }
 

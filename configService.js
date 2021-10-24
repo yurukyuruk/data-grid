@@ -1,5 +1,7 @@
 import { SortingRule } from "./SortingRule.js";
 import { ColumnHider } from "./columnHider.js";
+//import { a } from "./sortModel.js";
+
 export class ConfigService {
   constructor() {
     this.columns = new Map();
@@ -47,6 +49,9 @@ export class ConfigService {
   saveAddressColumnVisibilityStatus(addressHeader) {
     localStorage.setItem("addressColumnVisibilityStatus", JSON.stringify(addressHeader.getAttribute("data-address-section-expanded")));
   }
+  saveSortInformation(sortOptions) {
+    localStorage.setItem("sortInformation", JSON.stringify(this.getSortOptions(sortOptions)));
+  }
   getSortOptions(sortOptions) {
     return sortOptions.map(option => {
       return {
@@ -60,6 +65,12 @@ export class ConfigService {
       sortOptions.type = this.columns.get(sortOptions.field).type;
     })
     return sortOptionsList;
+  }
+  clearSortInformation() {
+    localStorage.removeItem("sortInformation");
+  }
+  clearColumnVisibilityInformation() {
+    localStorage.removeItem("columnVisibilityInformation");
   }
 }
 

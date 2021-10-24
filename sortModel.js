@@ -147,7 +147,7 @@ export class MySortingSection extends HTMLElement {
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
     this.sortOptions[0].setSortByOptions(this.allFields);
     this.initializeListeners();
-
+    
   }
   setButtons() {
     this.submitButton.disabled = false;
@@ -197,8 +197,8 @@ export class MySortingSection extends HTMLElement {
       this.sortLines.innerHTML = "";
       this.sortOptions = [];
       this.createNewSortLine();
-      this.sortOptions[0].sortDirection.disabled = true;
-      localStorage.removeItem("sortInformation");
+      this.sortOptions[0].sortDirection.disabled = true; 
+      config.clearSortInformation();
     })
 
     this.submitButton.addEventListener("click", () => {
@@ -210,9 +210,7 @@ export class MySortingSection extends HTMLElement {
         composed: true
       });
       this.shadowRoot.dispatchEvent(toSort);
-      config.setSortInformation(config.getSortOptions(this.sortOptions));
-      console.log(config.setSortInformation(config.getSortOptions(this.sortOptions)));
-      localStorage.setItem("sortInformation", JSON.stringify(config.getSortOptions(this.sortOptions)));//use in config service
+      config.saveSortInformation(this.sortOptions);
     })
 
     this.sortOptions[0].sortLine.addEventListener("change", (e) => {
