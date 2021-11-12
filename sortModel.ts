@@ -2,7 +2,7 @@ import { SortingRule } from "./SortingRule.js";
 import { SortingService } from "./sortingService.js";
 import { config, sortingService } from "./index.js";
 import { ConfigService } from "./configService.js";
-
+import { SortRule } from "./types/interfaces.js";
 
 const { template } = {
   template: `
@@ -137,29 +137,40 @@ const { template } = {
 
 export class MySortingSection extends HTMLElement {
   static TAG = "my-sorting-section";
+  readonly shadowRoot: ShadowRoot;
+  private allFields: string[];
+  private sortOptions: SortingRule[];
+  private sortingArea!: HTMLElement;
+  private sortDataButtonArea!: HTMLDivElement; 
+  private sortDataButton!: HTMLInputElement; 
+  private sortAddingButton!: HTMLInputElement; 
+  private submitButton!: HTMLInputElement; 
+  private resetButton!: HTMLInputElement; 
+  private closeButton!: HTMLInputElement; 
+  private table!: HTMLTableElement; 
+  private sortLines!: HTMLDivElement; 
   constructor() {
     super();
-    this.attachShadow({ mode: "open" });
+    this.shadowRoot = this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = template;
     this.getElementReferences();
     this.setButtons();
     this.allFields = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
-    this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
+    this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)] as SortingRule[];
     this.sortOptions[0].setSortByOptions(this.allFields);
-    this.initializeListeners();
-    
+    this.initializeListeners();  
   }
-  setButtons() {
+  setButtons(): void {
     this.submitButton.disabled = false;
     this.sortAddingButton.disabled = true;
   }
-  initializeListeners() {
+  initializeListeners(): void {
     this.sortDataButton.addEventListener("click", () => {
       this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "false");
       this.sortDataButton.setAttribute("data-sort-button-visible", "false");
       this.sortingArea.setAttribute("data-sort-fields-visible", "true");
       this.table.classList.toggle("blured");
-      let sortInformation = JSON.parse(localStorage.getItem("sortInformation"));
+      let sortInformation: SortRule[] = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
       if(sortInformation !== null && sortInformation.length === 1 && sortInformation[0].field !== "sort by") {
         this.sortOptions[0].fieldOption = sortInformation[0].field;
         this.sortOptions[0].sortDirection.disabled = false;
@@ -178,7 +189,7 @@ export class MySortingSection extends HTMLElement {
       
     });
 
-    this.closeButton.addEventListener("click", () => {
+    this.closeButton.addEventListener("click", (): void => {
       this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "true");
       this.sortDataButton.setAttribute("data-sort-button-visible", "true");
       this.sortingArea.setAttribute("data-sort-fields-visible", "false");
@@ -191,7 +202,7 @@ export class MySortingSection extends HTMLElement {
       this.sortOptions[0].sortDirection.disabled = true;
     })
 
-    this.resetButton.addEventListener("click", () => {
+    this.resetButton.addEventListener("click", (): void => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       this.sortLines.innerHTML = "";
@@ -201,11 +212,11 @@ export class MySortingSection extends HTMLElement {
       config.clearSortInformation();
     })
 
-    this.submitButton.addEventListener("click", () => {
+    this.submitButton.addEventListener("click", (): void => {
       this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       sortingService.sortData(config.setSortInformation(config.getSortOptions(this.sortOptions)));
-      const toSort = new CustomEvent("to-sort", {
+      const toSort: CustomEvent = new CustomEvent("to-sort", {
         bubbles: true,
         composed: true
       });
@@ -213,12 +224,12 @@ export class MySortingSection extends HTMLElement {
       config.saveSortInformation(this.sortOptions);
     })
 
-    this.sortOptions[0].sortLine.addEventListener("change", (e) => {
+    this.sortOptions[0].sortLine.addEventListener("change", (): void => {
       if (this.sortOptions[0].fieldOption !== "sort by" && this.sortOptions[0].directionOption !== "sort direction") {
         this.sortAddingButton.disabled = false;
       }
     })
-    this.sortAddingButton.addEventListener("click", () => {
+    this.sortAddingButton.addEventListener("click", (): void => {
       this.submitButton.disabled = true;
       this.sortAddingButton.disabled = true;
       this.disableLastSortLine();
@@ -226,47 +237,47 @@ export class MySortingSection extends HTMLElement {
       this.createNewSortLine();
     })
   }
-  disableLastSortLine() {
+  disableLastSortLine(): void {
     this.sortOptions[this.sortOptions.length - 1].disableSelects();
   }
-  getPreviousChosenFields() {
+  getPreviousChosenFields(): string[] {
     return this.sortOptions.map(option => option.fieldOption);
   }
-  getRemainingFields() {
-    const previousChosenField = this.getPreviousChosenFields();
+  getRemainingFields(): string[] {
+    const previousChosenField: string[] = this.getPreviousChosenFields();
+    console.log(this.allFields.filter((field) => !previousChosenField.includes(field)));
     return this.allFields.filter((field) => !previousChosenField.includes(field));
   }
-  canAddNewSortingRule() {
+  canAddNewSortingRule(): boolean {
     return this.getRemainingFields().length > 1;
   }
-  createNewSortLine() {
-    let newSortLine = new SortingRule(this.getRemainingFields());
+  createNewSortLine(): void {
+    let newSortLine: SortingRule = new SortingRule(this.getRemainingFields());
     this.sortOptions.push(newSortLine);
-    newSortLine.addEventListener("is-direction-set", (e) => {
+    newSortLine.addEventListener("is-direction-set", () => {
       this.submitButton.disabled = false;
       if (this.canAddNewSortingRule()) {
         this.sortAddingButton.disabled = false;
       }
-
     })
     this.sortLines.append(newSortLine);
   }
   
   
   getElementReferences() {
-    this.sortingArea = this.shadowRoot.querySelector(".sorting");
-    this.sortDataButtonArea = this.shadowRoot.querySelector(".sort-data-button-area");
-    this.sortDataButton = this.shadowRoot.querySelector(".sort-data-button");
-    this.sortAddingButton = this.shadowRoot.querySelector(".sort-adding-button");
-    this.submitButton = this.shadowRoot.querySelector(".submit-button");
-    this.resetButton = this.shadowRoot.querySelector(".reset-button");
-    this.columnCount = document.querySelector(".columns").childElementCount;
-    this.closeButton = this.shadowRoot.querySelector(".close-button");
-    this.table = document.querySelector('#data-table');
-    this.sortLines = this.shadowRoot.querySelector(".sort-lines");
-    this.sortLine = this.shadowRoot.querySelector(".sort-line");
-
+    this.sortingArea = this.shadowRoot.querySelector(".sorting") as HTMLElement;
+    this.sortDataButtonArea = this.shadowRoot.querySelector(".sort-data-button-area") as HTMLDivElement;
+    this.sortDataButton = this.shadowRoot.querySelector(".sort-data-button") as HTMLInputElement;
+    this.sortAddingButton = this.shadowRoot.querySelector(".sort-adding-button") as HTMLInputElement;
+    this.submitButton = this.shadowRoot.querySelector(".submit-button") as HTMLInputElement;
+    this.resetButton = this.shadowRoot.querySelector(".reset-button") as HTMLInputElement;
+    this.closeButton = this.shadowRoot.querySelector(".close-button") as HTMLInputElement;
+    this.table = document.querySelector('#data-table') as HTMLTableElement;
+    this.sortLines = this.shadowRoot.querySelector(".sort-lines") as HTMLDivElement;
   }
 }
 
 customElements.define(MySortingSection.TAG, MySortingSection);
+
+console.log(ConfigService);
+console.log(SortingService);

@@ -1,8 +1,14 @@
 import { SortingRule } from "./SortingRule.js";
 import { ColumnHider } from "./columnHider.js";
-//import { a } from "./sortModel.js";
+import { ColumnsInformation } from "./types/interfaces.js";
+import { SortRule } from "./types/interfaces.js";
+import { ColumnType } from "./types/enums.js";
 
 export class ConfigService {
+  columns: Map<string, ColumnsInformation>;
+  private columnKeys: string[];
+  private addressColumn: Map<string, ColumnsInformation>;
+  private addressColumnKeys: string[];
   constructor() {
     this.columns = new Map();
     this.columns.set("id", { name: "id", htmlClassName: "id", type: "string" });//display names became name
@@ -23,36 +29,56 @@ export class ConfigService {
     this.addressColumnKeys = [ ...this.addressColumn.keys() ];
   }
 
-  getColumnHtmlClassNames() {
-    let columnHtmlClassNames = [];
+  getColumnHtmlClassNames(): string[] {
+    let columnHtmlClassNames: string[] = [];
     this.columnKeys.forEach(key => {
-      columnHtmlClassNames.push(this.columns.get(key).htmlClassName);
+      const column = this.columns.get(key);
+      if(column) {
+        columnHtmlClassNames.push(column.htmlClassName);
+      }
     })
     return columnHtmlClassNames;
   }
+
+  getColumnIdFromColumnName(columnName: string): string | void {
+    const column = this.columns.get(columnName);
+    if(column) {
+      return column.name;
+    }
+  }
+
+  getColumnTypeFromColumnName(columnName: string): ColumnType | undefined {
+    const column = this.columns.get(columnName);
+    if(column) {
+      return column.type;
+    }
+  }
   
-  getAddressColumnHtmlClassNames() {
-    let addressColumnHtmlClassNames = [];
+  getAddressColumnHtmlClassNames(): string[] {
+    let addressColumnHtmlClassNames: string[] = [];
     this.addressColumnKeys.forEach(key => {
-      addressColumnHtmlClassNames.push(this.addressColumn.get(key).htmlClassName);
+      const addressColumn = this.addressColumn.get(key);
+      if(addressColumn) {
+        addressColumnHtmlClassNames.push(addressColumn.htmlClassName);
+      }
     })
     return addressColumnHtmlClassNames;
   }
-  saveColumnVisibilityStatus(allColumnCheckboxes) {  
-    let columnsVisibilityStatus = [];
+  saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<Element>): string[] {  
+    let columnsVisibilityStatus: string[] = [];
     allColumnCheckboxes.forEach(columnCheckbox => {
-      columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked"));
+      columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");
     })
     localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));//save them with column names
     return columnsVisibilityStatus;
   }
-  saveAddressColumnVisibilityStatus(addressHeader) {
+  saveAddressColumnVisibilityStatus(addressHeader: HTMLTableCellElement): void {
     localStorage.setItem("addressColumnVisibilityStatus", JSON.stringify(addressHeader.getAttribute("data-address-section-expanded")));
   }
-  saveSortInformation(sortOptions) {
+  saveSortInformation(sortOptions: SortingRule[]): void {
     localStorage.setItem("sortInformation", JSON.stringify(this.getSortOptions(sortOptions)));
   }
-  getSortOptions(sortOptions) {
+  getSortOptions(sortOptions: SortingRule[]) {
     return sortOptions.map(option => {
       return {
         field: option.fieldOption, 
@@ -60,21 +86,22 @@ export class ConfigService {
       }
     })
   }
-  setSortInformation(sortOptionsList) {
+  setSortInformation(sortOptionsList: SortRule[]): SortRule[] {
     sortOptionsList.forEach(sortOptions => {
-      sortOptions.type = this.columns.get(sortOptions.field).type;
+      sortOptions.type = this.columns.get(sortOptions.field)?.type;
     })
     return sortOptionsList;
   }
-  clearSortInformation() {
+  clearSortInformation(): void {
     localStorage.removeItem("sortInformation");
   }
-  clearColumnVisibilityInformation() {
+  clearColumnVisibilityInformation(): void {
     localStorage.removeItem("columnVisibilityInformation");
   }
 }
 
-
+console.log(SortingRule);
+console.log(ColumnHider);
 
 
 
