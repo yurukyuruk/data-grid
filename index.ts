@@ -13,23 +13,25 @@ function createReferenceElement(): HTMLTableRowElement {
     const dataRow = document.createElement("tr") as HTMLTableRowElement;
     dataRow.classList.add("row0");
     dataRow.classList.add("data-row"); 
-    for(let i = 0; i < config.getColumnHtmlClassNames().length; i++) {
+    for(let i = 0; i < config.getHtmlClassNamesOfColumns().length; i++) {
         const dataCell = document.createElement("td") as HTMLTableCellElement;
-        dataCell.classList.add(config.getColumnHtmlClassNames()[i] + "-data");
+        dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        if(i === config.getColumnHtmlClassNames().length - 1) {
+        if(config.checkIfhasChild(config.getHtmlClassNamesOfColumns()[i])) {
             dataCell.setAttribute("data-address-section-closed", "true");
             dataCell.setAttribute("data-address-section-closed", "true");
         }
         dataRow.append(dataCell);
     } 
-    for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
-        const addressDataCell = document.createElement("td") as HTMLTableCellElement;
-        addressDataCell.setAttribute("data-address-section-expanded", "false");
-        addressDataCell.setAttribute("data-column-checkbox-checked", "true");
-        addressDataCell.classList.add(config.getAddressColumnHtmlClassNames()[i] + "-data");
-        dataRow.appendChild(addressDataCell);
-    }
+    config.getHtmlClassNamesOfAllChildColumns().forEach(htmlClassNamesOfChildColumn => {
+        for(let i = 0; i < htmlClassNamesOfChildColumn.length; i++) {
+            const childDataCell = document.createElement("td") as HTMLTableCellElement;
+            childDataCell.setAttribute("data-address-section-expanded", "false");
+            childDataCell.setAttribute("data-column-checkbox-checked", "true");
+            childDataCell.classList.add(htmlClassNamesOfChildColumn[i] + "-data");
+            dataRow.appendChild(childDataCell);
+        }
+    })
     return dataRow;
 }
 
@@ -90,7 +92,7 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
         let sortedData: ColumnRow[] = sortingService.sortData(config.setSortInformation(JSON.parse(localStorage.getItem("sortInformation") ?? "[]")));
         addAllDataAtOnce(sortedData, createReferenceElement());
     }
-}).then(() => {
+})/*.then(() => {
     const previousAddressSummaryElementState: string = JSON.parse(localStorage.getItem("addressColumnVisibilityStatus") ?? "");
     let previousAddressSectionElementsState: string;
     if(previousAddressSummaryElementState === "false") {
@@ -103,8 +105,8 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
 }).then(() => {
     let columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
     
-        for(let i = 0; i <  config.getColumnHtmlClassNames().length; i++) {
-            let eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getColumnHtmlClassNames()[i] + "-data");
+        for(let i = 0; i <  config.getHtmlClassNamesOfColumns().length; i++) {
+            let eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getHtmlClassNamesOfColumns()[i] + "-data");
             eachDataColumnGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
         }
         for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
@@ -116,7 +118,7 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
             eachAddressColumnDataGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]));
         }
     
-})
+})*/
 
 export let config: ConfigService = new ConfigService();
 

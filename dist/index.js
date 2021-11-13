@@ -10,23 +10,25 @@ function createReferenceElement() {
     const dataRow = document.createElement("tr");
     dataRow.classList.add("row0");
     dataRow.classList.add("data-row");
-    for (let i = 0; i < config.getColumnHtmlClassNames().length; i++) {
+    for (let i = 0; i < config.getHtmlClassNamesOfColumns().length; i++) {
         const dataCell = document.createElement("td");
-        dataCell.classList.add(config.getColumnHtmlClassNames()[i] + "-data");
+        dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        if (i === config.getColumnHtmlClassNames().length - 1) {
+        if (config.checkIfhasChild(config.getHtmlClassNamesOfColumns()[i])) {
             dataCell.setAttribute("data-address-section-closed", "true");
             dataCell.setAttribute("data-address-section-closed", "true");
         }
         dataRow.append(dataCell);
     }
-    for (let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
-        const addressDataCell = document.createElement("td");
-        addressDataCell.setAttribute("data-address-section-expanded", "false");
-        addressDataCell.setAttribute("data-column-checkbox-checked", "true");
-        addressDataCell.classList.add(config.getAddressColumnHtmlClassNames()[i] + "-data");
-        dataRow.appendChild(addressDataCell);
-    }
+    config.getHtmlClassNamesOfAllChildColumns().forEach(htmlClassNamesOfChildColumn => {
+        for (let i = 0; i < htmlClassNamesOfChildColumn.length; i++) {
+            const childDataCell = document.createElement("td");
+            childDataCell.setAttribute("data-address-section-expanded", "false");
+            childDataCell.setAttribute("data-column-checkbox-checked", "true");
+            childDataCell.classList.add(htmlClassNamesOfChildColumn[i] + "-data");
+            dataRow.appendChild(childDataCell);
+        }
+    });
     return dataRow;
 }
 function addDataToElement(element, eachPerson) {
@@ -76,35 +78,36 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
 }).then(() => {
     if (localStorage.getItem("sortInformation") !== null) {
         dataRows.innerHTML = "";
-        let sortedData = sortingService.sortData(config.setSortInformation(JSON.parse(localStorage.getItem("sortInformation") ?? "")));
+        let sortedData = sortingService.sortData(config.setSortInformation(JSON.parse(localStorage.getItem("sortInformation") ?? "[]")));
         addAllDataAtOnce(sortedData, createReferenceElement());
     }
-}).then(() => {
-    const previousAddressSummaryElementState = JSON.parse(localStorage.getItem("addressColumnVisibilityStatus") ?? "");
-    let previousAddressSectionElementsState;
-    if (previousAddressSummaryElementState === "false") {
+}); /*.then(() => {
+    const previousAddressSummaryElementState: string = JSON.parse(localStorage.getItem("addressColumnVisibilityStatus") ?? "");
+    let previousAddressSectionElementsState: string;
+    if(previousAddressSummaryElementState === "false") {
         previousAddressSectionElementsState = "true";
-    }
-    else {
+    } else {
         previousAddressSectionElementsState = "false";
     }
     allAddressSectionElements.forEach(addressElement => addressElement.setAttribute("data-address-section-expanded", previousAddressSectionElementsState));
     addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", previousAddressSummaryElementState));
 }).then(() => {
-    let columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-    for (let i = 0; i < config.getColumnHtmlClassNames().length; i++) {
-        let eachDataColumnGroup = document.querySelectorAll("." + config.getColumnHtmlClassNames()[i] + "-data");
-        eachDataColumnGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-    }
-    for (let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
-        let eachAddressDataColumnHeader = document.querySelector("." + config.getAddressColumnHtmlClassNames()[i] + "-header");
-        eachAddressDataColumnHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]);
-    }
-    for (let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
-        let eachAddressColumnDataGroup = document.querySelectorAll("." + config.getAddressColumnHtmlClassNames()[i] + "-data");
-        eachAddressColumnDataGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]));
-    }
-});
+    let columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+    
+        for(let i = 0; i <  config.getHtmlClassNamesOfColumns().length; i++) {
+            let eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getHtmlClassNamesOfColumns()[i] + "-data");
+            eachDataColumnGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+        }
+        for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
+            let eachAddressDataColumnHeader: HTMLTableCellElement = document.querySelector("." + config.getAddressColumnHtmlClassNames()[i] + "-header") as HTMLTableCellElement;
+            eachAddressDataColumnHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]);
+        }
+        for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
+            let eachAddressColumnDataGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getAddressColumnHtmlClassNames()[i] + "-data");
+            eachAddressColumnDataGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]));
+        }
+    
+})*/
 export let config = new ConfigService();
 sortModel.addEventListener("to-sort", () => {
     dataRows.innerHTML = "";

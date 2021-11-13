@@ -42,6 +42,7 @@ export class SortingRule extends HTMLElement {
     shadowRoot;
     sortField;
     sortDirection;
+    sortLine;
     constructor(sortFields) {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -101,6 +102,7 @@ export class SortingRule extends HTMLElement {
     getElementReferences() {
         this.sortField = this.shadowRoot.querySelector(".sort-field");
         this.sortDirection = this.shadowRoot.querySelector(".sort-direction");
+        this.sortLine = this.shadowRoot.querySelector(".sort-line");
     }
 }
 customElements.define(SortingRule.TAG, SortingRule);

@@ -50,4 +50,4 @@ export class SortingService {
   }
 }
 
-console.log(MySortingSection);
+//console.log(MySortingSection);

@@ -1,12 +1,14 @@
-export var SortDirection;
+"use strict";
+exports.__esModule = true;
+exports.ColumnType = exports.SortDirection = void 0;
+var SortDirection;
 (function (SortDirection) {
     SortDirection["ASCENDING"] = "ascending";
     SortDirection["DESCENDING"] = "descending";
-})(SortDirection || (SortDirection = {}));
-export var ColumnType;
+})(SortDirection = exports.SortDirection || (exports.SortDirection = {}));
+var ColumnType;
 (function (ColumnType) {
     ColumnType[ColumnType["NUMBER"] = 0] = "NUMBER";
     ColumnType[ColumnType["STRING"] = 1] = "STRING";
     ColumnType[ColumnType["DATE"] = 2] = "DATE";
-})(ColumnType || (ColumnType = {}));
-//# sourceMappingURL=enums.js.map
+})(ColumnType = exports.ColumnType || (exports.ColumnType = {}));

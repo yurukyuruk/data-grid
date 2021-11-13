@@ -1,5 +1,7 @@
 import { SortingRule } from "./SortingRule.js";
+import { SortingService } from "./sortingService.js";
 import { config, sortingService } from "./index.js";
+import { ConfigService } from "./configService.js";
 const { template } = {
     template: `
   <style>  
@@ -144,7 +146,6 @@ export class MySortingSection extends HTMLElement {
     closeButton;
     table;
     sortLines;
-    sortLine;
     constructor() {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -264,8 +265,9 @@ export class MySortingSection extends HTMLElement {
         this.closeButton = this.shadowRoot.querySelector(".close-button");
         this.table = document.querySelector('#data-table');
         this.sortLines = this.shadowRoot.querySelector(".sort-lines");
-        this.sortLine = this.shadowRoot.querySelector(".sort-line");
     }
 }
 customElements.define(MySortingSection.TAG, MySortingSection);
+console.log(ConfigService);
+console.log(SortingService);
 //# sourceMappingURL=sortModel.js.map

@@ -1,5 +1,5 @@
 import { config } from "./index.js";
-import { MySortingSection } from "./sortModel.js";
+import { ColumnType, SortDirection } from "./types/enums.js";
 export class SortingService {
     data;
     constructor(data) {
@@ -7,10 +7,11 @@ export class SortingService {
     }
     sortData(sortConfigDatas) {
         for (const sortRule of sortConfigDatas) {
-            if (sortRule.type === "string") {
-                this.data.sort(this.sortStringComparator(config.columns.get(sortRule.field)?.name, sortRule.direction));
+            const fieldType = config.getColumnTypeFromColumnName(sortRule.field);
+            if (fieldType === ColumnType.STRING) {
+                this.data.sort(this.sortStringComparator(config.getColumnIdFromColumnName(sortRule.field), sortRule.direction));
             }
-            else if (sortRule.type === "number") {
+            else if (fieldType === ColumnType.NUMBER) {
                 this.data.sort(this.sortNumberComparator(sortRule.field, sortRule.direction));
             }
             else {
@@ -21,16 +22,18 @@ export class SortingService {
     }
     sortStringComparator(sortField, sortDirection) {
         return (a, b) => {
-            if (sortDirection === "ascending") {
-                return a[sortField] > b[sortField] ? 1 : -1;
+            let result = 0;
+            if (sortDirection === SortDirection.ASCENDING) {
+                result = a[sortField] > b[sortField] ? 1 : -1;
             }
-            else if (sortDirection === "descending") {
-                return a[sortField] < b[sortField] ? 1 : -1;
+            else if (sortDirection === SortDirection.DESCENDING) {
+                result = a[sortField] < b[sortField] ? 1 : -1;
             }
+            return result;
         };
     }
     sortNumberComparator(sortField, sortDirection) {
-        return (a, b) => sortDirection === "ascending" ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
+        return (a, b) => sortDirection === SortDirection.ASCENDING ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
     }
     sortDateComperator(sortField, sortDirection) {
         return (a, b) => {
@@ -45,5 +48,5 @@ export class SortingService {
         };
     }
 }
-console.log(MySortingSection);
+//console.log(MySortingSection);
 //# sourceMappingURL=sortingService.js.map

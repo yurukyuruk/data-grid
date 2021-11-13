@@ -10,59 +10,135 @@ export class ConfigService {
   private addressColumn: Map<string, ColumnsInformation>;
   private addressColumnKeys: string[];
   constructor() {
-    this.columns = new Map();
-    this.columns.set("id", { name: "id", htmlClassName: "id", type: "string" });//display names became name
-    this.columns.set("gender", { name: "gender", htmlClassName: "gender", type: "string" });
-    this.columns.set("first name", { name: "firstName", htmlClassName: "first-name", type: "string" });
-    this.columns.set("last name", { name: "lastName", htmlClassName: "last-name", type: "string" });
-    this.columns.set("birth date", { name: "birthDate", htmlClassName: "birth-date", type: "date" });
-    this.columns.set("age", { name: "age", htmlClassName: "age", type: "number" });
-    this.columns.set("e-mail", { name: "email", htmlClassName: "email", type: "string" });
-    this.columns.set("address", { name: "address", htmlClassName: "address", type: "string" });
-    this.columnKeys = [ ...this.columns.keys() ];
-    this.addressColumn = new Map();
-    this.addressColumn.set("country", {name: "country", htmlClassName: "country", type: "string"});
-    this.addressColumn.set("state", {name: "state", htmlClassName: "state", type: "string"});
-    this.addressColumn.set("city", {name: "city", htmlClassName: "city", type: "string"});
-    this.addressColumn.set("street", {name: "street", htmlClassName: "street", type: "string"});
-    this.addressColumn.set("house number", {name: "houseNumber", htmlClassName: "house-number", type: "number"});
-    this.addressColumnKeys = [ ...this.addressColumn.keys() ];
+    this.columns = [
+      { 
+        id : "id",
+        displayName : "id",
+        htmlClassName : "id",
+        type : "string",
+      },
+      {
+        id : "gender",
+        displayName : "gender",
+        htmlClassName : "gender",
+        type : "string",
+      },
+      {
+        id : "firstName",
+        displayName : "first name",
+        htmlClassName : "first-name",
+        type : "string",
+      },
+      {
+        id : "lastName",
+        displayName : "last name",
+        htmlClassName : "last-name",
+        type : "string",
+      },
+      {
+        id : "birthDate",
+        displayName : "birth date",
+        htmlClassName : "birth-date",
+        type : "date",
+      },
+      {
+        id : "age",
+        displayName : "age",
+        htmlClassName : "age",
+        type : "number",
+      },
+      {
+        id : "email",
+        displayName : "e-mail",
+        htmlClassName : "email",
+        type : "string",
+      },
+      {
+        id : "address",
+        displayName : "address",
+        htmlClassName : "address",
+        type : "string",
+        children : [
+          {
+            id : "country",
+            displayName : "country",
+            htmlClassName : "country",
+            type : "string",
+          },
+          {
+            id : "state",
+            displayName : "state",
+            htmlClassName : "state",
+            type : "string",
+          },
+          {
+            id : "city",
+            displayName : "city",
+            htmlClassName : "city",
+            type : "string",
+          },
+          {
+            id : "street",
+            displayName : "street",
+            htmlClassName : "street",
+            type : "string",
+          },
+          {
+            id : "houseNumber",
+            displayName : "house number",
+            htmlClassName : "house-number",
+            type : "number",
+          }
+       ]
+      }
+    ]
   }
 
-  getColumnHtmlClassNames(): string[] {
-    let columnHtmlClassNames: string[] = [];
-    this.columnKeys.forEach(key => {
-      const column = this.columns.get(key);
-      if(column) {
-        columnHtmlClassNames.push(column.htmlClassName);
+  getHtmlClassNamesOfColumns(): string[] {//getColumnHtmlClassNames
+    let htmlClassNamesOfColumns: string[] = [];
+    this.columns.forEach(column => {
+      const currentColumn = column;
+      if(currentColumn) {
+        htmlClassNamesOfColumns.push(currentColumn.htmlClassName);
       }
     })
-    return columnHtmlClassNames;
+    return htmlClassNamesOfColumns;
   }
 
-  getColumnIdFromColumnName(columnName: string): string | void {
-    const column = this.columns.get(columnName);
+  getColumnIdFromColumnDisplayName(columnName: string): string | void {//getColumnIdFromColumnName
+    const column = this.columns.find(column => column.displayName === columnName);
     if(column) {
-      return column.name;
+      return column.id;
     }
   }
 
-  getColumnTypeFromColumnName(columnName: string): ColumnType | undefined {
-    const column = this.columns.get(columnName);
+  getColumnTypeFromColumnDisplayName(columnName: string): ColumnType | undefined {//getColumnTypeFromColumnName
+    const column = this.columns.find(column => column.displayName === columnName);
     if(column) {
       return column.type;
     }
   }
   
-  getAddressColumnHtmlClassNames(): string[] {
-    let addressColumnHtmlClassNames: string[] = [];
-    this.addressColumnKeys.forEach(key => {
-      const addressColumn = this.addressColumn.get(key);
-      if(addressColumn) {
-        addressColumnHtmlClassNames.push(addressColumn.htmlClassName);
-      }
-    })
-    return addressColumnHtmlClassNames;
+  getColumnsWhichHaveChilderenColumns() {
+    return this.columns.filter(column => column.children !== undefined);
+  }
+  getHtmlClassNamesOfAllChildColumns():any {//getAddressColumnHtmlClassNames
+    let htmlClassNamesOfAllChildColumns = [];
+    this.getColumnsWhichHaveChilderenColumns().forEach(column => {
+      let htmlClassNames = [];
+      column.children.forEach(childColumn => {
+        htmlClassNames.push(childColumn.htmlClassName);
+      });
+      htmlClassNamesOfAllChildColumns.push(htmlClassNames);
+    });
+    return htmlClassNamesOfAllChildColumns;
+  }
+  checkIfhasChild(className) {
+    let currentColumn = this.columns.find(column => column.htmlClassName === className);
+    if(currentColumn.children === undefined) {
+        return false;
+    }
+    return true;
   }
   saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<Element>): string[] {  
     let columnsVisibilityStatus: string[] = [];
@@ -86,7 +162,7 @@ export class ConfigService {
       }
     })
   }
-  setSortInformation(sortOptionsList: SortRule[]): SortRule[] {
+  setSortInformation(sortOptionsList: SortRule[]): SortRule[] {//kurtul
     sortOptionsList.forEach(sortOptions => {
       sortOptions.type = this.columns.get(sortOptions.field)?.type;
     })
