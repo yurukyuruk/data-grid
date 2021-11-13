@@ -7,15 +7,15 @@ export class SortingService {
     }
     sortData(sortConfigDatas) {
         for (const sortRule of sortConfigDatas) {
-            const fieldType = config.getColumnTypeFromColumnName(sortRule.field);
+            const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.field);
             if (fieldType === ColumnType.STRING) {
-                this.data.sort(this.sortStringComparator(config.getColumnIdFromColumnName(sortRule.field), sortRule.direction));
+                this.data.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
             }
             else if (fieldType === ColumnType.NUMBER) {
                 this.data.sort(this.sortNumberComparator(sortRule.field, sortRule.direction));
             }
             else {
-                this.data.sort(this.sortDateComperator(config.columns.get(sortRule.field)?.name, sortRule.direction));
+                this.data.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
             }
         }
         return this.data;

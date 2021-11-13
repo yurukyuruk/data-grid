@@ -69,7 +69,7 @@ function addAllDataAtOnce(fetchedData: ColumnRow[], dataReferenceElement: HTMLTa
         allPersonsElements.append(personElement);
         if(fetchedData.indexOf(person) % 2 !== 0) {
             personElement.classList.add("colored-row");
-        }
+        }                                                        //aynı anda id ekle
     });
     const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
     dataRows.append(allPersonsElements); 
@@ -89,7 +89,7 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
 }).then(() => {
     if(localStorage.getItem("sortInformation") !== null) {
         dataRows.innerHTML = "";
-        let sortedData: ColumnRow[] = sortingService.sortData(config.setSortInformation(JSON.parse(localStorage.getItem("sortInformation") ?? "[]")));
+        let sortedData: ColumnRow[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
         addAllDataAtOnce(sortedData, createReferenceElement());
     }
 })/*.then(() => {

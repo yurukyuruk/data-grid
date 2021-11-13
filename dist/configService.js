@@ -137,7 +137,7 @@ export class ConfigService {
         allColumnCheckboxes.forEach(columnCheckbox => {
             columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");
         });
-        localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus)); //save them with column names
+        localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
         return columnsVisibilityStatus;
     }
     saveAddressColumnVisibilityStatus(addressHeader) {
@@ -153,12 +153,6 @@ export class ConfigService {
                 direction: option.directionOption
             };
         });
-    }
-    setSortInformation(sortOptionsList) {
-        sortOptionsList.forEach(sortOptions => {
-            sortOptions.type = this.columns.get(sortOptions.field)?.type;
-        });
-        return sortOptionsList;
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");

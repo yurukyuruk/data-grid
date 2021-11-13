@@ -5,8 +5,8 @@ export var SortDirection;
 })(SortDirection || (SortDirection = {}));
 export var ColumnType;
 (function (ColumnType) {
-    ColumnType[ColumnType["NUMBER"] = 0] = "NUMBER";
-    ColumnType[ColumnType["STRING"] = 1] = "STRING";
-    ColumnType[ColumnType["DATE"] = 2] = "DATE";
+    ColumnType["NUMBER"] = "number";
+    ColumnType["STRING"] = "string";
+    ColumnType["DATE"] = "date";
 })(ColumnType || (ColumnType = {}));
 //# sourceMappingURL=enums.js.map

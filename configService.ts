@@ -94,7 +94,7 @@ export class ConfigService {
     ]
   }
 
-  getHtmlClassNamesOfColumns(): string[] {//getColumnHtmlClassNames
+  getHtmlClassNamesOfColumns(): string[] {
     let htmlClassNamesOfColumns: string[] = [];
     this.columns.forEach(column => {
       const currentColumn = column;
@@ -105,14 +105,14 @@ export class ConfigService {
     return htmlClassNamesOfColumns;
   }
 
-  getColumnIdFromColumnDisplayName(columnName: string): string | void {//getColumnIdFromColumnName
+  getColumnIdFromColumnDisplayName(columnName: string): string | void {
     const column = this.columns.find(column => column.displayName === columnName);
     if(column) {
       return column.id;
     }
   }
 
-  getColumnTypeFromColumnDisplayName(columnName: string): ColumnType | undefined {//getColumnTypeFromColumnName
+  getColumnTypeFromColumnDisplayName(columnName: string): ColumnType | undefined {
     const column = this.columns.find(column => column.displayName === columnName);
     if(column) {
       return column.type;
@@ -122,7 +122,7 @@ export class ConfigService {
   getColumnsWhichHaveChilderenColumns() {
     return this.columns.filter(column => column.children !== undefined);
   }
-  getHtmlClassNamesOfAllChildColumns():any {//getAddressColumnHtmlClassNames
+  getHtmlClassNamesOfAllChildColumns():any {
     let htmlClassNamesOfAllChildColumns = [];
     this.getColumnsWhichHaveChilderenColumns().forEach(column => {
       let htmlClassNames = [];
@@ -145,7 +145,7 @@ export class ConfigService {
     allColumnCheckboxes.forEach(columnCheckbox => {
       columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");
     })
-    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));//save them with column names
+    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
     return columnsVisibilityStatus;
   }
   saveAddressColumnVisibilityStatus(addressHeader: HTMLTableCellElement): void {
@@ -161,12 +161,6 @@ export class ConfigService {
         direction: option.directionOption
       }
     })
-  }
-  setSortInformation(sortOptionsList: SortRule[]): SortRule[] {//kurtul
-    sortOptionsList.forEach(sortOptions => {
-      sortOptions.type = this.columns.get(sortOptions.field)?.type;
-    })
-    return sortOptionsList;
   }
   clearSortInformation(): void {
     localStorage.removeItem("sortInformation");

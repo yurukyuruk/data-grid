@@ -3,7 +3,7 @@ export enum SortDirection {
     DESCENDING = "descending"
 }
 export enum ColumnType {
-    NUMBER,
-    STRING,
-    DATE
+    NUMBER = "number",
+    STRING = "string",
+    DATE = "date"
 }
