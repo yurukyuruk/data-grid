@@ -5,7 +5,7 @@ import { ConfigService } from "./configService.js";
 let allAddressSectionElements;
 let addressSummaryElements;
 const dataRows = document.querySelector(".data-rows");
-const addressHeader = document.querySelector("#address-section");
+const addressHeader = document.querySelector("#address-header");
 function createReferenceElement() {
     const dataRow = document.createElement("tr");
     dataRow.classList.add("row0");
@@ -14,8 +14,7 @@ function createReferenceElement() {
         const dataCell = document.createElement("td");
         dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        if (config.checkIfhasChild(config.getHtmlClassNamesOfColumns()[i])) {
-            dataCell.setAttribute("data-address-section-closed", "true");
+        if (config.checkIfColumnHasChild(config.getHtmlClassNamesOfColumns()[i])) {
             dataCell.setAttribute("data-address-section-closed", "true");
         }
         dataRow.append(dataCell);

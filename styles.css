@@ -31,7 +31,7 @@ tr, td, th {
 th {
   padding: 12px;
 }
-.address-data:hover {
+#address-header:hover {
   color: white;
   cursor: pointer;
 }

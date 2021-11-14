@@ -7,7 +7,8 @@ import { ColumnRow } from "./types/interfaces.js";
 let allAddressSectionElements: NodeListOf<Element>;
 let addressSummaryElements: NodeListOf<Element>;
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
-const addressHeader = document.querySelector("#address-section") as HTMLTableCellElement;
+const addressHeader = document.querySelector("#address-header") as HTMLTableCellElement;
+
 
 function createReferenceElement(): HTMLTableRowElement {
     const dataRow = document.createElement("tr") as HTMLTableRowElement;
@@ -17,8 +18,7 @@ function createReferenceElement(): HTMLTableRowElement {
         const dataCell = document.createElement("td") as HTMLTableCellElement;
         dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        if(config.checkIfhasChild(config.getHtmlClassNamesOfColumns()[i])) {
-            dataCell.setAttribute("data-address-section-closed", "true");
+        if(config.checkIfColumnHasChild(config.getHtmlClassNamesOfColumns()[i])) {
             dataCell.setAttribute("data-address-section-closed", "true");
         }
         dataRow.append(dataCell);

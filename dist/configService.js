@@ -125,7 +125,7 @@ export class ConfigService {
         });
         return htmlClassNamesOfAllChildColumns;
     }
-    checkIfhasChild(className) {
+    checkIfColumnHasChild(className) {
         let currentColumn = this.columns.find(column => column.htmlClassName === className);
         if (currentColumn.children === undefined) {
             return false;
