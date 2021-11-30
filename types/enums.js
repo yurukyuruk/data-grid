@@ -3,8 +3,8 @@ exports.__esModule = true;
 exports.ColumnType = exports.SortDirection = void 0;
 var SortDirection;
 (function (SortDirection) {
-    SortDirection["ASCENDING"] = "ascending";
-    SortDirection["DESCENDING"] = "descending";
+    SortDirection[SortDirection.ASC] = SortDirection.ASC;
+    SortDirection[SortDirection.DESC] = SortDirection.DESC;
 })(SortDirection = exports.SortDirection || (exports.SortDirection = {}));
 var ColumnType;
 (function (ColumnType) {

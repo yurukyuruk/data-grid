@@ -30,9 +30,9 @@ const { template } = {
       <select class="sort-field" name="fields">
       </select>
       <select class="sort-direction" name="direction">
-        <option class="option-default" value="sort direction" selected>sort direction</option>
-        <option value="ascending">ascending</option>
-        <option value="descending">descending</option>
+        <option class="option-default" value="sort direction" selected>Sort direction</option>
+        <option value="ascending">Ascending</option>
+        <option value="descending">Descending</option>
       </select>   
     </div>       
     `
@@ -69,7 +69,7 @@ export class SortingRule extends HTMLElement {
     }
     initilizeListeners() {
         this.sortField.addEventListener("change", () => {
-            if (this.fieldOption !== "sort by") {
+            if (this.fieldOption !== "Sort By") {
                 this.sortDirection.disabled = false;
             }
         });

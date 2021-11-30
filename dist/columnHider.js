@@ -1,4 +1,4 @@
-import { config } from "./index.js";
+import { config } from "./configExport.js";
 const { template } = {
     template: `
     <style>  
@@ -160,18 +160,18 @@ export class ColumnHider extends HTMLElement {
                 const checkboxElementsStateChange = wholeColumnData[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
                 wholeColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
                 checkboxHolder.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString());
-                if (i === columnNames.length - 1) {
-                    for (let i = 0; i < config.getHtmlClassNamesOfAllChildColumns().length; i++) {
-                        let addressHeader = document.querySelector("." + config.getHtmlClassNamesOfAllChildColumns()[i] + "-header");
-                        const addressCheckboxElementsStateChange = addressHeader.getAttribute("data-column-checkbox-checked") === "false" ? true : false;
+                /*if(i === columnNames.length - 1) {
+                    for(let i = 0; i < config.getHtmlClassNamesOfAllChildColumns().length; i++) {
+                        let addressHeader = document.querySelector("." + config.getHtmlClassNamesOfAllChildColumns()[i] + "-header") as HTMLTableCellElement;
+                        const addressCheckboxElementsStateChange: boolean = addressHeader.getAttribute("data-column-checkbox-checked") === "false" ? true : false;
                         addressHeader.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString());
                     }
-                    for (let i = 0; i < config.getHtmlClassNamesOfAllChildColumns().length; i++) {
-                        let wholeAddressColumnData = document.querySelectorAll("." + config.getHtmlClassNamesOfAllChildColumns()[i] + "-data");
-                        const addressCheckboxElementsStateChange = wholeAddressColumnData[0].getAttribute("data-column-checkbox-checked") === "false" ? true : false;
+                    for(let i = 0; i < config.getHtmlClassNamesOfAllChildColumns().length; i++) {
+                        let wholeAddressColumnData: NodeListOf<Element> = document.querySelectorAll("." + config.getHtmlClassNamesOfAllChildColumns()[i] + "-data");
+                        const addressCheckboxElementsStateChange: boolean = wholeAddressColumnData[0].getAttribute("data-column-checkbox-checked") === "false" ? true : false;
                         wholeAddressColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
                     }
-                }
+                }*/
             });
             const checkboxLabel = document.createElement("label");
             checkboxLabel.textContent = columnNames[i];
@@ -186,7 +186,7 @@ export class ColumnHider extends HTMLElement {
             this.getElementReferences();
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
-            let columnVisibilityInformation = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "");
+            let columnVisibilityInformation = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
             this.allColumnCheckboxes = this.shadowRoot.querySelectorAll(".column-checkbox");
             if (localStorage.getItem("columnVisibilityInformation") !== null) {
                 for (let i = 0; i < this.allColumnCheckboxes.length; i++) {

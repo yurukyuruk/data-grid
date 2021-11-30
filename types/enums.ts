@@ -1,9 +1,9 @@
 export enum SortDirection {
-    ASCENDING = "ascending",
-    DESCENDING = "descending"
+    ASC = "ascending",
+    DESC = "descending"
 }
 export enum ColumnType {
-    NUMBER = "number",
-    STRING = "string",
-    DATE = "date"
+    NUMBER = "NUMBER",
+    STRING = "STRING",
+    DATE = "DATE"
 }

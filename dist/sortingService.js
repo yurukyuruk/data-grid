@@ -1,4 +1,4 @@
-import { config } from "./index.js";
+import { config } from "./configExport.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 export class SortingService {
     data;
@@ -23,23 +23,23 @@ export class SortingService {
     sortStringComparator(sortField, sortDirection) {
         return (a, b) => {
             let result = 0;
-            if (sortDirection === SortDirection.ASCENDING) {
+            if (sortDirection === SortDirection.ASC) {
                 result = a[sortField] > b[sortField] ? 1 : -1;
             }
-            else if (sortDirection === SortDirection.DESCENDING) {
+            else if (sortDirection === SortDirection.DESC) {
                 result = a[sortField] < b[sortField] ? 1 : -1;
             }
             return result;
         };
     }
     sortNumberComparator(sortField, sortDirection) {
-        return (a, b) => sortDirection === SortDirection.ASCENDING ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
+        return (a, b) => sortDirection === SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
     }
     sortDateComperator(sortField, sortDirection) {
         return (a, b) => {
             let c = new Date(a[sortField]);
             let d = new Date(b[sortField]);
-            if (sortDirection === "ascending") {
+            if (sortDirection === SortDirection.ASC) {
                 return c - d;
             }
             else {

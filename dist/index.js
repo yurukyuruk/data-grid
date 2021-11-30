@@ -1,7 +1,7 @@
-import { MySortingSection } from "./sortModel.js";
+import { config } from "./configExport.js";
 import { ColumnHider } from "./columnHider.js";
 import { SortingService } from "./sortingService.js";
-import { ConfigService } from "./configService.js";
+import { MySortingSection } from "./sortModel.js";
 let allAddressSectionElements;
 let addressSummaryElements;
 const dataRows = document.querySelector(".data-rows");
@@ -14,9 +14,9 @@ function createReferenceElement() {
         const dataCell = document.createElement("td");
         dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        if (config.checkIfColumnHasChild(config.getHtmlClassNamesOfColumns()[i])) {
+        /*if(config.checkIfColumnHasChild(config.getHtmlClassNamesOfColumns()[i])) {
             dataCell.setAttribute("data-address-section-closed", "true");
-        }
+        }*/
         dataRow.append(dataCell);
     }
     config.getHtmlClassNamesOfAllChildColumns().forEach(htmlClassNamesOfChildColumn => {
@@ -31,19 +31,9 @@ function createReferenceElement() {
     return dataRow;
 }
 function addDataToElement(element, eachPerson) {
-    element.children[0].textContent = eachPerson.id;
-    element.children[1].textContent = eachPerson.gender;
-    element.children[2].textContent = eachPerson.firstName;
-    element.children[3].textContent = eachPerson.lastName;
-    element.children[4].textContent = eachPerson.birthDate;
-    element.children[5].textContent = eachPerson.age.toString();
-    element.children[6].textContent = eachPerson.email;
-    element.children[7].textContent = `${eachPerson.address.city}, ${eachPerson.address.street}, ${eachPerson.address.houseNumber}`;
-    element.children[8].textContent = eachPerson.address.country;
-    element.children[9].textContent = eachPerson.address.state;
-    element.children[10].textContent = eachPerson.address.city;
-    element.children[11].textContent = eachPerson.address.street;
-    element.children[12].textContent = eachPerson.address.houseNumber.toString();
+    for (let i = 0; i < config.columns.length; i++) {
+        element.children[i].textContent = eachPerson[config.columns[i].id];
+    }
 }
 function addClassName(newNumber) {
     return `row${newNumber} data-row`;
@@ -69,45 +59,47 @@ function addAllDataAtOnce(fetchedData, dataReferenceElement) {
 }
 let data;
 export let sortingService;
-const sortModel = document.querySelector(MySortingSection.TAG);
-fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/persons-data-0.json").then(async (response) => {
-    data = await response.json();
-    sortingService = new SortingService(data);
-    addAllDataAtOnce(data, createReferenceElement());
+export const sortModel = document.querySelector(MySortingSection.TAG);
+export function fetchRowDatas() {
+    fetch(config.data.dataUrl).then(async (response) => {
+        data = await response.json();
+        sortingService = new SortingService(data);
+        addAllDataAtOnce(data, createReferenceElement());
+    }).then(() => {
+        if (localStorage.getItem("sortInformation") !== null) {
+            dataRows.innerHTML = "";
+            let sortedData = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+            addAllDataAtOnce(sortedData, createReferenceElement());
+        }
+    });
+}
+/*.then(() => {
+const previousAddressSummaryElementState: string = JSON.parse(localStorage.getItem("addressColumnVisibilityStatus") ?? "");
+let previousAddressSectionElementsState: string;
+if(previousAddressSummaryElementState === "false") {
+    previousAddressSectionElementsState = "true";
+} else {
+    previousAddressSectionElementsState = "false";
+}
+allAddressSectionElements.forEach(addressElement => addressElement.setAttribute("data-address-section-expanded", previousAddressSectionElementsState));
+addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", previousAddressSummaryElementState));
 }).then(() => {
-    if (localStorage.getItem("sortInformation") !== null) {
-        dataRows.innerHTML = "";
-        let sortedData = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-        addAllDataAtOnce(sortedData, createReferenceElement());
+let columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+
+    for(let i = 0; i <  config.getHtmlClassNamesOfColumns().length; i++) {
+        let eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getHtmlClassNamesOfColumns()[i] + "-data");
+        eachDataColumnGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
     }
-}); /*.then(() => {
-    const previousAddressSummaryElementState: string = JSON.parse(localStorage.getItem("addressColumnVisibilityStatus") ?? "");
-    let previousAddressSectionElementsState: string;
-    if(previousAddressSummaryElementState === "false") {
-        previousAddressSectionElementsState = "true";
-    } else {
-        previousAddressSectionElementsState = "false";
+    for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
+        let eachAddressDataColumnHeader: HTMLTableCellElement = document.querySelector("." + config.getAddressColumnHtmlClassNames()[i] + "-header") as HTMLTableCellElement;
+        eachAddressDataColumnHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]);
     }
-    allAddressSectionElements.forEach(addressElement => addressElement.setAttribute("data-address-section-expanded", previousAddressSectionElementsState));
-    addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", previousAddressSummaryElementState));
-}).then(() => {
-    let columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-    
-        for(let i = 0; i <  config.getHtmlClassNamesOfColumns().length; i++) {
-            let eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getHtmlClassNamesOfColumns()[i] + "-data");
-            eachDataColumnGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-        }
-        for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
-            let eachAddressDataColumnHeader: HTMLTableCellElement = document.querySelector("." + config.getAddressColumnHtmlClassNames()[i] + "-header") as HTMLTableCellElement;
-            eachAddressDataColumnHeader.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]);
-        }
-        for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
-            let eachAddressColumnDataGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getAddressColumnHtmlClassNames()[i] + "-data");
-            eachAddressColumnDataGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]));
-        }
-    
+    for(let i = 0; i < config.getAddressColumnHtmlClassNames().length; i++) {
+        let eachAddressColumnDataGroup: NodeListOf<Element> = document.querySelectorAll("." + config.getAddressColumnHtmlClassNames()[i] + "-data");
+        eachAddressColumnDataGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[columnsVisibility.length - 1]));
+    }
+
 })*/
-export let config = new ConfigService();
 sortModel.addEventListener("to-sort", () => {
     dataRows.innerHTML = "";
     addAllDataAtOnce(sortingService.data, createReferenceElement());

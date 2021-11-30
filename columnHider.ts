@@ -1,5 +1,5 @@
 import { ConfigService } from "./configService.js";
-import { config } from "./index.js";
+import { config } from "./configExport.js";
 const { template } = {
     template: `
     <style>  
@@ -164,7 +164,7 @@ export class ColumnHider extends HTMLElement {
                 const checkboxElementsStateChange: boolean = wholeColumnData[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
                 wholeColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
                 checkboxHolder.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString());
-                if(i === columnNames.length - 1) {
+                /*if(i === columnNames.length - 1) {
                     for(let i = 0; i < config.getHtmlClassNamesOfAllChildColumns().length; i++) {
                         let addressHeader = document.querySelector("." + config.getHtmlClassNamesOfAllChildColumns()[i] + "-header") as HTMLTableCellElement;
                         const addressCheckboxElementsStateChange: boolean = addressHeader.getAttribute("data-column-checkbox-checked") === "false" ? true : false;
@@ -175,7 +175,7 @@ export class ColumnHider extends HTMLElement {
                         const addressCheckboxElementsStateChange: boolean = wholeAddressColumnData[0].getAttribute("data-column-checkbox-checked") === "false" ? true : false;
                         wholeAddressColumnData.forEach(data => data.setAttribute("data-column-checkbox-checked", addressCheckboxElementsStateChange.toString()));
                     }
-                }
+                }*/
             });
  
             const checkboxLabel: HTMLLabelElement = document.createElement("label");
@@ -192,7 +192,7 @@ export class ColumnHider extends HTMLElement {
             this.getElementReferences();
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
-            let columnVisibilityInformation = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "");
+            let columnVisibilityInformation = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
             this.allColumnCheckboxes = this.shadowRoot.querySelectorAll(".column-checkbox") as NodeListOf<Element>;
             if(localStorage.getItem("columnVisibilityInformation") !== null) {
                 for(let i = 0; i < this.allColumnCheckboxes.length; i++) {

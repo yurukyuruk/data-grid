@@ -1,6 +1,7 @@
 import { SortingRule } from "./SortingRule.js";
 import { SortingService } from "./sortingService.js";
-import { config, sortingService } from "./index.js";
+import { sortingService } from "./index.js";
+import { config } from "./configExport.js";
 import { ConfigService } from "./configService.js";
 import { SortRule } from "./types/interfaces.js";
 
@@ -155,7 +156,7 @@ export class MySortingSection extends HTMLElement {
     this.shadowRoot.innerHTML = template;
     this.getElementReferences();
     this.setButtons();
-    this.allFields = ["sort by", "id", "gender", "first name", "last name", "birth date", "age", "e-mail", "address"];
+   
     this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)] as SortingRule[];
     this.sortOptions[0].setSortByOptions(this.allFields);
     this.initializeListeners();  
@@ -170,8 +171,16 @@ export class MySortingSection extends HTMLElement {
       this.sortDataButton.setAttribute("data-sort-button-visible", "false");
       this.sortingArea.setAttribute("data-sort-fields-visible", "true");
       this.table.classList.toggle("blured");
+      for(let i = 0; i < this.allFields.length; i++) { 
+        const sortFieldOption = document.createElement("option");
+        sortFieldOption.textContent = this.allFields[i];
+        if(i === 0) {
+          sortFieldOption.classList.add("option-default"); 
+        }
+        this.sortOptions[0].sortField.append(sortFieldOption);        
+      }
       let sortInformation: SortRule[] = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
-      if(sortInformation !== null && sortInformation.length === 1 && sortInformation[0].field !== "sort by") {
+      if(sortInformation !== null && sortInformation.length === 1 && sortInformation[0].field !== "Sort by") {
         this.sortOptions[0].fieldOption = sortInformation[0].field;
         this.sortOptions[0].sortDirection.disabled = false;
         this.sortOptions[0].directionOption = sortInformation[0].direction;
@@ -186,7 +195,7 @@ export class MySortingSection extends HTMLElement {
           this.sortOptions[i].directionOption = sortInformation[i].direction;
         }
       }
-      
+       
     });
 
     this.closeButton.addEventListener("click", (): void => {
@@ -199,6 +208,7 @@ export class MySortingSection extends HTMLElement {
       this.sortLines.innerHTML = "";
       this.sortOptions = [];
       this.createNewSortLine();
+      this.sortOptions[0].sortField.innerHTML = "";
       this.sortOptions[0].sortDirection.disabled = true;
     })
 
@@ -225,7 +235,7 @@ export class MySortingSection extends HTMLElement {
     })
 
     this.sortOptions[0].sortLine.addEventListener("change", (): void => {
-      if (this.sortOptions[0].fieldOption !== "sort by" && this.sortOptions[0].directionOption !== "sort direction") {
+      if (this.sortOptions[0].fieldOption !== "Sort by" && this.sortOptions[0].directionOption !== "Sort direction") {
         this.sortAddingButton.disabled = false;
       }
     })
@@ -262,6 +272,11 @@ export class MySortingSection extends HTMLElement {
     })
     this.sortLines.append(newSortLine);
   }
+  setSortFieldsInSortFieldButton(displayNames) {
+    this.allFields =  displayNames;
+    this.allFields.unshift("Sort by");
+  }
+  
   
   
   getElementReferences() {

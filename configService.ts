@@ -3,6 +3,8 @@ import { ColumnHider } from "./columnHider.js";
 import { ColumnsInformation } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType } from "./types/enums.js";
+import { fetchRowDatas } from "./index.js";
+import { sortModel } from "./index.js";
 
 export class ConfigService {
   columns: Map<string, ColumnsInformation>;
@@ -10,7 +12,17 @@ export class ConfigService {
   private addressColumn: Map<string, ColumnsInformation>;
   private addressColumnKeys: string[];
   constructor() {
-    this.columns = [
+    this.data;
+    fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/config.json").then(async (response) => {
+    this.data = await response.json();
+  }).then(() => {
+    this.columns = this.data.columns;
+  }).then(() => {
+    fetchRowDatas();
+  }).then(() => {
+    sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
+  })
+    /*this.columns = [
       { 
         id : "id",
         displayName : "id",
@@ -26,7 +38,7 @@ export class ConfigService {
       {
         id : "firstName",
         displayName : "first name",
-        htmlClassName : "first-name",
+        htmlClassName : "first-name",  
         type : "string",
       },
       {
@@ -91,16 +103,18 @@ export class ConfigService {
           }
        ]
       }
-    ]
+    ]*/
+  }
+
+  getHtmlClassNameFromDisplayName(displayName) { 
+    return displayName.replace(" ", '-').toLowerCase();
   }
 
   getHtmlClassNamesOfColumns(): string[] {
     let htmlClassNamesOfColumns: string[] = [];
     this.columns.forEach(column => {
-      const currentColumn = column;
-      if(currentColumn) {
-        htmlClassNamesOfColumns.push(currentColumn.htmlClassName);
-      }
+        const htmlClassName = this.getHtmlClassNameFromDisplayName(column.displayName);
+        htmlClassNamesOfColumns.push(htmlClassName); 
     })
     return htmlClassNamesOfColumns;
   }
@@ -133,13 +147,22 @@ export class ConfigService {
     });
     return htmlClassNamesOfAllChildColumns;
   }
-  checkIfColumnHasChild(className) {
+
+  getDisplayNamesOfAllColumns() {
+    let displayNamesOfColumns: string[] = [];
+    this.columns.forEach(column => {
+        displayNamesOfColumns.push(column.displayName); 
+    })
+    return displayNamesOfColumns;
+  }
+
+  /*checkIfColumnHasChild(className) {
     let currentColumn = this.columns.find(column => column.htmlClassName === className);
     if(currentColumn.children === undefined) {
         return false;
     }
     return true;
-  }
+  }*/
   saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<Element>): string[] {  
     let columnsVisibilityStatus: string[] = [];
     allColumnCheckboxes.forEach(columnCheckbox => {

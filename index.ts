@@ -1,14 +1,14 @@
-import {MySortingSection} from "./sortModel.js";
+import { ConfigService } from "./configService.js";
+import { config } from "./configExport.js";
 import {ColumnHider} from "./columnHider.js";
 import {SortingService} from "./sortingService.js";
-import { ConfigService } from "./configService.js";
 import { ColumnRow } from "./types/interfaces.js";
+import {MySortingSection} from "./sortModel.js";
 
 let allAddressSectionElements: NodeListOf<Element>;
 let addressSummaryElements: NodeListOf<Element>;
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
 const addressHeader = document.querySelector("#address-header") as HTMLTableCellElement;
-
 
 function createReferenceElement(): HTMLTableRowElement {
     const dataRow = document.createElement("tr") as HTMLTableRowElement;
@@ -18,9 +18,9 @@ function createReferenceElement(): HTMLTableRowElement {
         const dataCell = document.createElement("td") as HTMLTableCellElement;
         dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        if(config.checkIfColumnHasChild(config.getHtmlClassNamesOfColumns()[i])) {
+        /*if(config.checkIfColumnHasChild(config.getHtmlClassNamesOfColumns()[i])) {
             dataCell.setAttribute("data-address-section-closed", "true");
-        }
+        }*/
         dataRow.append(dataCell);
     } 
     config.getHtmlClassNamesOfAllChildColumns().forEach(htmlClassNamesOfChildColumn => {
@@ -36,19 +36,9 @@ function createReferenceElement(): HTMLTableRowElement {
 }
 
 function addDataToElement(element: HTMLTableRowElement, eachPerson: Data) {
-    element.children[0].textContent = eachPerson.id;
-    element.children[1].textContent = eachPerson.gender;
-    element.children[2].textContent = eachPerson.firstName;
-    element.children[3].textContent = eachPerson.lastName;
-    element.children[4].textContent = eachPerson.birthDate;
-    element.children[5].textContent = eachPerson.age.toString();
-    element.children[6].textContent = eachPerson.email;
-    element.children[7].textContent = `${eachPerson.address.city}, ${eachPerson.address.street}, ${eachPerson.address.houseNumber}`;
-    element.children[8].textContent = eachPerson.address.country;
-    element.children[9].textContent = eachPerson.address.state;
-    element.children[10].textContent = eachPerson.address.city;
-    element.children[11].textContent = eachPerson.address.street;
-    element.children[12].textContent = eachPerson.address.houseNumber.toString();
+    for(let i = 0; i < config.columns.length; i++) {
+        element.children[i].textContent = eachPerson[config.columns[i].id];
+    }
 }
 
 
@@ -80,19 +70,22 @@ function addAllDataAtOnce(fetchedData: ColumnRow[], dataReferenceElement: HTMLTa
 
 let data: ColumnRow[];
 export let sortingService: SortingService;
-const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
+export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
-fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/persons-data-0.json").then(async (response) => {
-    data = await response.json();
-    sortingService = new SortingService(data);
-    addAllDataAtOnce(data, createReferenceElement());
-}).then(() => {
-    if(localStorage.getItem("sortInformation") !== null) {
-        dataRows.innerHTML = "";
-        let sortedData: ColumnRow[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-        addAllDataAtOnce(sortedData, createReferenceElement());
-    }
-})/*.then(() => {
+export function fetchRowDatas() {
+    fetch(config.data.dataUrl).then(async (response) => {
+        data = await response.json();
+        sortingService = new SortingService(data);
+        addAllDataAtOnce(data, createReferenceElement());
+    }).then(() => {
+        if(localStorage.getItem("sortInformation") !== null) {
+            dataRows.innerHTML = "";
+            let sortedData: ColumnRow[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+            addAllDataAtOnce(sortedData, createReferenceElement());
+        }
+    })
+}
+    /*.then(() => {
     const previousAddressSummaryElementState: string = JSON.parse(localStorage.getItem("addressColumnVisibilityStatus") ?? "");
     let previousAddressSectionElementsState: string;
     if(previousAddressSummaryElementState === "false") {
@@ -120,7 +113,7 @@ fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basi
     
 })*/
 
-export let config: ConfigService = new ConfigService();
+
 
 sortModel.addEventListener("to-sort", () => {
     dataRows.innerHTML = "";

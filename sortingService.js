@@ -28,23 +28,23 @@ var SortingService = /** @class */ (function () {
     SortingService.prototype.sortStringComparator = function (sortField, sortDirection) {
         return function (a, b) {
             var result = 0;
-            if (sortDirection === enums_js_1.SortDirection.ASCENDING) {
+            if (sortDirection === enums_js_1.SortDirection.ASC) {
                 result = a[sortField] > b[sortField] ? 1 : -1;
             }
-            else if (sortDirection === enums_js_1.SortDirection.DESCENDING) {
+            else if (sortDirection === enums_js_1.SortDirection.DESC) {
                 result = a[sortField] < b[sortField] ? 1 : -1;
             }
             return result;
         };
     };
     SortingService.prototype.sortNumberComparator = function (sortField, sortDirection) {
-        return function (a, b) { return sortDirection === enums_js_1.SortDirection.ASCENDING ? a[sortField] - b[sortField] : b[sortField] - a[sortField]; };
+        return function (a, b) { return sortDirection === enums_js_1.SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField]; };
     };
     SortingService.prototype.sortDateComperator = function (sortField, sortDirection) {
         return function (a, b) {
             var c = new Date(a[sortField]);
             var d = new Date(b[sortField]);
-            if (sortDirection === "ascending") {
+            if (sortDirection === SortDirection.ASC) {
                 return c - d;
             }
             else {

@@ -1,4 +1,4 @@
-import { config } from "./index.js";
+import { config } from "./configExport.js";
 import { MySortingSection } from "./sortModel.js";
 import { ColumnRow } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
@@ -26,22 +26,22 @@ export class SortingService {
   sortStringComparator(sortField: string, sortDirection: SortDirection) {//create an enum asc desc
     return (a: ColumnRow, b: ColumnRow): number => {
       let result: number = 0;
-      if (sortDirection === SortDirection.ASCENDING) {
+      if (sortDirection === SortDirection.ASC) {
         result = (a[sortField] as string) > (b[sortField] as string) ? 1 : -1;
-      } else if (sortDirection === SortDirection.DESCENDING) {
+      } else if (sortDirection === SortDirection.DESC) {
         result = (a[sortField] as string) < (b[sortField] as string) ? 1 : -1;
       }
       return result;
     }
   }
   sortNumberComparator(sortField: string, sortDirection: SortDirection) {
-    return (a: ColumnRow, b: ColumnRow) => sortDirection === SortDirection.ASCENDING ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
+    return (a: ColumnRow, b: ColumnRow) => sortDirection === SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
   }
   sortDateComperator(sortField: string, sortDirection: SortDirection) {
     return (a: ColumnRow, b: ColumnRow) => {
       let c: Date = new Date(a[sortField]);
       let d: Date = new Date(b[sortField]);
-      if (sortDirection === "ascending") {
+      if (sortDirection === SortDirection.ASC) {
         return c - d;
       } else {
         return d - c;
