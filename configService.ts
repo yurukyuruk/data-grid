@@ -22,88 +22,6 @@ export class ConfigService {
   }).then(() => {
     sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
   })
-    /*this.columns = [
-      { 
-        id : "id",
-        displayName : "id",
-        htmlClassName : "id",
-        type : "string",
-      },
-      {
-        id : "gender",
-        displayName : "gender",
-        htmlClassName : "gender",
-        type : "string",
-      },
-      {
-        id : "firstName",
-        displayName : "first name",
-        htmlClassName : "first-name",  
-        type : "string",
-      },
-      {
-        id : "lastName",
-        displayName : "last name",
-        htmlClassName : "last-name",
-        type : "string",
-      },
-      {
-        id : "birthDate",
-        displayName : "birth date",
-        htmlClassName : "birth-date",
-        type : "date",
-      },
-      {
-        id : "age",
-        displayName : "age",
-        htmlClassName : "age",
-        type : "number",
-      },
-      {
-        id : "email",
-        displayName : "e-mail",
-        htmlClassName : "email",
-        type : "string",
-      },
-      {
-        id : "address",
-        displayName : "address",
-        htmlClassName : "address",
-        type : "string",
-        children : [
-          {
-            id : "country",
-            displayName : "country",
-            htmlClassName : "country",
-            type : "string",
-          },
-          {
-            id : "state",
-            displayName : "state",
-            htmlClassName : "state",
-            type : "string",
-          },
-          {
-            id : "city",
-            displayName : "city",
-            htmlClassName : "city",
-            type : "string",
-          },
-          {
-            id : "street",
-            displayName : "street",
-            htmlClassName : "street",
-            type : "string",
-          },
-          {
-            id : "houseNumber",
-            displayName : "house number",
-            htmlClassName : "house-number",
-            type : "number",
-          }
-       ]
-      }
-    ]*/
   }
 
   getHtmlClassNameFromDisplayName(displayName) { 
@@ -132,9 +50,22 @@ export class ConfigService {
       return column.type;
     }
   }
+
+  getSummaryFieldsFromColumnName(columnIndex) {
+    const summaryDetails = this.columns[columnIndex].summary;
+    return summaryDetails.split("+");
+  }
   
   getColumnsWhichHaveChilderenColumns() {
     return this.columns.filter(column => column.children !== undefined);
+  }
+  
+  getTotalNumberOfChildrenColumns() {
+    let childElementNumberofEachColumn = [];
+    this.getColumnsWhichHaveChilderenColumns().forEach(column => {
+      childElementNumberofEachColumn.push(column.children.length);
+    });
+    return childElementNumberofEachColumn.reduce((a, b) => a + b, 0);
   }
   getHtmlClassNamesOfAllChildColumns():any {
     let htmlClassNamesOfAllChildColumns = [];
@@ -156,13 +87,13 @@ export class ConfigService {
     return displayNamesOfColumns;
   }
 
-  /*checkIfColumnHasChild(className) {
-    let currentColumn = this.columns.find(column => column.htmlClassName === className);
+  checkIfColumnHasChild(id) {
+    let currentColumn = this.columns.find(column => column.id === id);
     if(currentColumn.children === undefined) {
         return false;
     }
     return true;
-  }*/
+  }
   saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<Element>): string[] {  
     let columnsVisibilityStatus: string[] = [];
     allColumnCheckboxes.forEach(columnCheckbox => {
@@ -198,8 +129,4 @@ console.log(ColumnHider);
 
 
 
-//save sortinformation and evetryting about local storage and as a field in here.
-//solve storing map in local storage.
-//get rid type methods in sort modal
-//take care of local storage. operations connected with local storage should go through here.
-//get rid of apply button in columnhider
+

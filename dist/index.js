@@ -14,9 +14,9 @@ function createReferenceElement() {
         const dataCell = document.createElement("td");
         dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        /*if(config.checkIfColumnHasChild(config.getHtmlClassNamesOfColumns()[i])) {
+        if (config.checkIfColumnHasChild(config.columns[i].id)) {
             dataCell.setAttribute("data-address-section-closed", "true");
-        }*/
+        }
         dataRow.append(dataCell);
     }
     config.getHtmlClassNamesOfAllChildColumns().forEach(htmlClassNamesOfChildColumn => {
@@ -30,9 +30,19 @@ function createReferenceElement() {
     });
     return dataRow;
 }
+// [0, 2, 4, 6, 7]
 function addDataToElement(element, eachPerson) {
     for (let i = 0; i < config.columns.length; i++) {
         element.children[i].textContent = eachPerson[config.columns[i].id];
+        if (config.columns[i].children) {
+            const columnWhichHaveChildren = config.columns[i];
+            const fieldNames = config.getSummaryFieldsFromColumnName(i);
+            let summaryText = fieldNames.map(fieldName => eachPerson[columnWhichHaveChildren.id][fieldName]).join(', ');
+            element.children[i].textContent = summaryText;
+            for (let k = 1; k < columnWhichHaveChildren.children.length + 1; k++) {
+                element.children[i + k].textContent = eachPerson[columnWhichHaveChildren.id][columnWhichHaveChildren.children[k - 1].id];
+            }
+        }
     }
 }
 function addClassName(newNumber) {
