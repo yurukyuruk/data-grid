@@ -2,10 +2,31 @@ import { config } from "./configExport.js";
 import { ColumnHider } from "./columnHider.js";
 import { SortingService } from "./sortingService.js";
 import { MySortingSection } from "./sortModel.js";
-let allAddressSectionElements;
-let addressSummaryElements;
+//let allAddressSectionElements: NodeListOf<Element>;
+//let addressSummaryElements: NodeListOf<Element>;
+const allChildColumnElementsTogetherWithParents = [];
 const dataRows = document.querySelector(".data-rows");
-const addressHeader = document.querySelector("#address-header");
+const columnHeaderSection = document.querySelector("thead");
+export function createDataHeaders() {
+    let mainColumnHeadersSection = document.createElement("tr");
+    mainColumnHeadersSection.classList.add("columns");
+    for (let i = 0; i < config.columns.length; i++) {
+        let mainColumn = document.createElement("th");
+        mainColumn.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
+        mainColumn.setAttribute("data-column-checkbox-checked", "true");
+        mainColumn.setAttribute("rowspan", "2");
+        mainColumn.textContent = config.columns[i].displayName.toUpperCase();
+        mainColumnHeadersSection.appendChild(mainColumn);
+        if (config.checkIfColumnHasChild(config.columns[i].id)) {
+            mainColumn.setAttribute("data-address-section-expanded", "false");
+            mainColumn.setAttribute("id", config.getHtmlClassNamesOfColumns()[i] + "-header");
+        }
+        else {
+            mainColumn.setAttribute("rowspan", "2");
+        }
+    }
+    columnHeaderSection.appendChild(mainColumnHeadersSection);
+}
 function createReferenceElement() {
     const dataRow = document.createElement("tr");
     dataRow.classList.add("row0");
@@ -30,7 +51,6 @@ function createReferenceElement() {
     });
     return dataRow;
 }
-// [0, 2, 4, 6, 7]
 function addDataToElement(element, eachPerson) {
     for (let i = 0; i < config.columns.length; i++) {
         element.children[i].textContent = eachPerson[config.columns[i].id];
@@ -64,8 +84,8 @@ function addAllDataAtOnce(fetchedData, dataReferenceElement) {
     });
     const dataRows = document.querySelector(".data-rows");
     dataRows.append(allPersonsElements);
-    allAddressSectionElements = document.querySelectorAll("[data-address-section-expanded]");
-    addressSummaryElements = document.querySelectorAll("[data-address-section-closed]");
+    //allAddressSectionElements = document.querySelectorAll("[data-address-section-expanded]");
+    //addressSummaryElements = document.querySelectorAll("[data-address-section-closed]");
 }
 let data;
 export let sortingService;
@@ -114,12 +134,45 @@ sortModel.addEventListener("to-sort", () => {
     dataRows.innerHTML = "";
     addAllDataAtOnce(sortingService.data, createReferenceElement());
 });
-addressHeader.addEventListener("click", () => {
-    config.saveAddressColumnVisibilityStatus(addressHeader);
-    const addressSectionElementsStateChange = addressHeader.getAttribute("data-address-section-expanded") === "false" ? true : false;
-    const addressSummaryElementState = !addressSectionElementsStateChange;
-    allAddressSectionElements.forEach(addressElement => addressElement.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
-    addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
-});
+export function createChildColumnHeaders() {
+    for (let j = 0; j < config.getColumnsWhichHaveChilderenColumns().length; j++) {
+        let childColumnHeadersSection = document.createElement("tr");
+        let childHeadersGroupWithParent = [];
+        childHeadersGroupWithParent.push(childColumnHeadersSection);
+        childColumnHeadersSection.setAttribute("data-address-section-expanded", "false");
+        const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[j].displayName) + "-header");
+        childHeadersGroupWithParent.push(columnHeaderWhichHasChildColumns);
+        for (let i = 0; i < config.getColumnsWhichHaveChilderenColumns()[j].children.length; i++) {
+            let childColumnHeader = document.createElement("th");
+            childColumnHeader.setAttribute("data-address-section-expanded", "false");
+            childColumnHeader.classList.add(config.getHtmlClassNamesOfAllChildColumns()[j][i] + "-header");
+            childColumnHeader.textContent = config.getColumnsWhichHaveChilderenColumns()[j].children[i].displayName.toUpperCase();
+            childColumnHeadersSection.appendChild(childColumnHeader);
+            childHeadersGroupWithParent.push(childColumnHeader);
+        }
+        allChildColumnElementsTogetherWithParents.push(childHeadersGroupWithParent);
+        columnHeaderSection.appendChild(childColumnHeadersSection);
+    }
+}
+export function addEventListenerToColumnHeadersWhichHasChildren() {
+    for (let i = 0; i < config.getColumnsWhichHaveChilderenColumns().length; i++) {
+        const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-header");
+        columnHeaderWhichHasChildColumns.addEventListener("click", () => {
+            //config.saveAddressColumnVisibilityStatus(columnHeaderWhichHasChildColumns);
+            const addressSectionElementsStateChange = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
+            const addressSummaryElementState = !addressSectionElementsStateChange;
+            allChildColumnElementsTogetherWithParents[i].forEach(element => element.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
+            //addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
+            if (columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false") {
+                columnHeaderWhichHasChildColumns.setAttribute("rowspan", "2");
+                columnHeaderWhichHasChildColumns.setAttribute("colspan", "1");
+            }
+            else {
+                columnHeaderWhichHasChildColumns.setAttribute("rowspan", "1");
+                columnHeaderWhichHasChildColumns.setAttribute("colspan", config.getColumnsWhichHaveChilderenColumns()[i].children.length.toString());
+            }
+        });
+    }
+}
 console.log(ColumnHider);
 //# sourceMappingURL=index.js.map

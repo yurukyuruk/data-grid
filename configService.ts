@@ -5,6 +5,9 @@ import { SortRule } from "./types/interfaces.js";
 import { ColumnType } from "./types/enums.js";
 import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
+import { createDataHeaders } from "./index.js";
+import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
+import { createChildColumnHeaders } from "./index.js";
 
 export class ConfigService {
   columns: Map<string, ColumnsInformation>;
@@ -13,7 +16,7 @@ export class ConfigService {
   private addressColumnKeys: string[];
   constructor() {
     this.data;
-    fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/config.json").then(async (response) => {
+    fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json").then(async (response) => {
     this.data = await response.json();
   }).then(() => {
     this.columns = this.data.columns;
@@ -21,6 +24,10 @@ export class ConfigService {
     fetchRowDatas();
   }).then(() => {
     sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
+  }).then(() => {
+    createDataHeaders();
+    createChildColumnHeaders();
+    addEventListenerToColumnHeadersWhichHasChildren();
   })
   }
 
@@ -60,19 +67,12 @@ export class ConfigService {
     return this.columns.filter(column => column.children !== undefined);
   }
   
-  getTotalNumberOfChildrenColumns() {
-    let childElementNumberofEachColumn = [];
-    this.getColumnsWhichHaveChilderenColumns().forEach(column => {
-      childElementNumberofEachColumn.push(column.children.length);
-    });
-    return childElementNumberofEachColumn.reduce((a, b) => a + b, 0);
-  }
   getHtmlClassNamesOfAllChildColumns():any {
     let htmlClassNamesOfAllChildColumns = [];
     this.getColumnsWhichHaveChilderenColumns().forEach(column => {
       let htmlClassNames = [];
       column.children.forEach(childColumn => {
-        htmlClassNames.push(childColumn.htmlClassName);
+        htmlClassNames.push(this.getHtmlClassNameFromDisplayName(childColumn.displayName));
       });
       htmlClassNamesOfAllChildColumns.push(htmlClassNames);
     });

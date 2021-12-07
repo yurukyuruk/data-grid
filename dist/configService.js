@@ -2,6 +2,9 @@ import { SortingRule } from "./SortingRule.js";
 import { ColumnHider } from "./columnHider.js";
 import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
+import { createDataHeaders } from "./index.js";
+import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
+import { createChildColumnHeaders } from "./index.js";
 export class ConfigService {
     columns;
     columnKeys;
@@ -9,7 +12,7 @@ export class ConfigService {
     addressColumnKeys;
     constructor() {
         this.data;
-        fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/config.json").then(async (response) => {
+        fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json").then(async (response) => {
             this.data = await response.json();
         }).then(() => {
             this.columns = this.data.columns;
@@ -17,6 +20,10 @@ export class ConfigService {
             fetchRowDatas();
         }).then(() => {
             sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
+        }).then(() => {
+            createDataHeaders();
+            createChildColumnHeaders();
+            addEventListenerToColumnHeadersWhichHasChildren();
         });
     }
     getHtmlClassNameFromDisplayName(displayName) {
@@ -49,19 +56,12 @@ export class ConfigService {
     getColumnsWhichHaveChilderenColumns() {
         return this.columns.filter(column => column.children !== undefined);
     }
-    getTotalNumberOfChildrenColumns() {
-        let childElementNumberofEachColumn = [];
-        this.getColumnsWhichHaveChilderenColumns().forEach(column => {
-            childElementNumberofEachColumn.push(column.children.length);
-        });
-        return childElementNumberofEachColumn.reduce((a, b) => a + b, 0);
-    }
     getHtmlClassNamesOfAllChildColumns() {
         let htmlClassNamesOfAllChildColumns = [];
         this.getColumnsWhichHaveChilderenColumns().forEach(column => {
             let htmlClassNames = [];
             column.children.forEach(childColumn => {
-                htmlClassNames.push(childColumn.htmlClassName);
+                htmlClassNames.push(this.getHtmlClassNameFromDisplayName(childColumn.displayName));
             });
             htmlClassNamesOfAllChildColumns.push(htmlClassNames);
         });
