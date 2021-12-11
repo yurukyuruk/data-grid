@@ -7,7 +7,7 @@ import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
 import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
-import { createChildColumnHeaders } from "./index.js";
+
 
 export class ConfigService {
   columns: Map<string, ColumnsInformation>;
@@ -26,7 +26,6 @@ export class ConfigService {
     sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
   }).then(() => {
     createDataHeaders();
-    createChildColumnHeaders();
     addEventListenerToColumnHeadersWhichHasChildren();
   })
   }
@@ -66,17 +65,12 @@ export class ConfigService {
   getColumnsWhichHaveChilderenColumns() {
     return this.columns.filter(column => column.children !== undefined);
   }
-  
-  getHtmlClassNamesOfAllChildColumns():any {
-    let htmlClassNamesOfAllChildColumns = [];
-    this.getColumnsWhichHaveChilderenColumns().forEach(column => {
-      let htmlClassNames = [];
-      column.children.forEach(childColumn => {
-        htmlClassNames.push(this.getHtmlClassNameFromDisplayName(childColumn.displayName));
-      });
-      htmlClassNamesOfAllChildColumns.push(htmlClassNames);
-    });
-    return htmlClassNamesOfAllChildColumns;
+  getHtmlClassNamesOfAllChildColumns(index):any {
+    let htmlClassNamesOfChildColumns = [];
+    this.columns[index].children.forEach(child => {
+      htmlClassNamesOfChildColumns.push(this.getHtmlClassNameFromDisplayName(child.displayName));
+    })
+    return htmlClassNamesOfChildColumns;
   }
 
   getDisplayNamesOfAllColumns() {
@@ -85,14 +79,6 @@ export class ConfigService {
         displayNamesOfColumns.push(column.displayName); 
     })
     return displayNamesOfColumns;
-  }
-
-  checkIfColumnHasChild(id) {
-    let currentColumn = this.columns.find(column => column.id === id);
-    if(currentColumn.children === undefined) {
-        return false;
-    }
-    return true;
   }
   saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<Element>): string[] {  
     let columnsVisibilityStatus: string[] = [];

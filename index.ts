@@ -21,55 +21,81 @@ export function createDataHeaders() {
         mainColumn.setAttribute("rowspan", "2");
         mainColumn.textContent = config.columns[i].displayName.toUpperCase();
         mainColumnHeadersSection.appendChild(mainColumn);
-        if(config.checkIfColumnHasChild(config.columns[i].id)) {
+        if(config.columns[i].children) {
+            let childColumnElementsTogetherWithParents = [];
             mainColumn.setAttribute("data-address-section-expanded", "false");
             mainColumn.setAttribute("id", config.getHtmlClassNamesOfColumns()[i] + "-header");
-        } else {
-            mainColumn.setAttribute("rowspan", "2");
-        }
-    }
-    
-    columnHeaderSection.appendChild(mainColumnHeadersSection); 
+            let childColumnHeadersSection = document.createElement("table");               
+            childColumnHeadersSection.setAttribute("data-address-section-expanded", "false");
+            let childColumnRow = document.createElement("tr");
+            childColumnRow.setAttribute("data-address-section-expanded", "false");
+            for(let k = 0; k < config.columns[i].children.length; k++) {
+                let childColumnHeader = document.createElement("th");
+                childColumnHeader.setAttribute("data-address-section-expanded", "false");
+                childColumnHeader.classList.add(config.getHtmlClassNamesOfAllChildColumns(i)[k] + "-header");
+                childColumnHeader.textContent = config.columns[i].children[k].displayName.toUpperCase();
+                childColumnRow.appendChild(childColumnHeader);
+                childColumnElementsTogetherWithParents.push(childColumnHeader);
+            }
+            childColumnHeadersSection.appendChild(childColumnRow);
+            mainColumn.appendChild(childColumnHeadersSection);   
+            childColumnElementsTogetherWithParents.push(childColumnHeadersSection);
+            childColumnElementsTogetherWithParents.push(childColumnRow);
+            childColumnElementsTogetherWithParents.push(mainColumn);
+            allChildColumnElementsTogetherWithParents.push(childColumnElementsTogetherWithParents);
+        }    
+    }   
+    columnHeaderSection.appendChild(mainColumnHeadersSection);     
 }
 
-
 function createReferenceElement(): HTMLTableRowElement {
-    const dataRow = document.createElement("tr") as HTMLTableRowElement;
+    const dataRow = document.createElement("tr") as HTMLTabelRowElement;
     dataRow.classList.add("row0");
     dataRow.classList.add("data-row"); 
     for(let i = 0; i < config.getHtmlClassNamesOfColumns().length; i++) {
         const dataCell = document.createElement("td") as HTMLTableCellElement;
         dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
-        if(config.checkIfColumnHasChild(config.columns[i].id)) {
+        if(config.columns[i].children) {
             dataCell.setAttribute("data-address-section-closed", "true");
-        }
-        dataRow.append(dataCell);
+            const expandedDataTable = document.createElement("table");
+            expandedDataTable.setAttribute("data-address-section-expanded", "false");
+            expandedDataTable.setAttribute("data-column-checkbox-checked", "true");
+            const expandedDataRow = document.createElement("tr");
+            expandedDataRow.setAttribute("data-address-section-expanded", "false");
+            expandedDataRow.setAttribute("data-column-checkbox-checked", "true");
+            config.columns[i].children.forEach(child => {
+                const childDataCell = document.createElement("td") as HTMLTableCellElement;
+                childDataCell.setAttribute("data-address-section-expanded", "false");
+                childDataCell.setAttribute("data-column-checkbox-checked", "true");
+                expandedDataRow.appendChild(childDataCell);
+                expandedDataTable.appendChild(expandedDataRow);
+                dataCell.appendChild(expandedDataTable);   
+            })
+        }   
+        dataRow.appendChild(dataCell);
     } 
-    config.getHtmlClassNamesOfAllChildColumns().forEach(htmlClassNamesOfChildColumn => {
-        for(let i = 0; i < htmlClassNamesOfChildColumn.length; i++) {
-            const childDataCell = document.createElement("td") as HTMLTableCellElement;
-            childDataCell.setAttribute("data-address-section-expanded", "false");
-            childDataCell.setAttribute("data-column-checkbox-checked", "true");
-            childDataCell.classList.add(htmlClassNamesOfChildColumn[i] + "-data");
-            dataRow.appendChild(childDataCell);
-        }
-    })
+    
+    
     return dataRow;
 }
                               
 function addDataToElement(element: HTMLTableRowElement, eachPerson: Data) {
     for(let i = 0; i < config.columns.length; i++) {
-        element.children[i].textContent = eachPerson[config.columns[i].id];
         if(config.columns[i].children) {
             const columnWhichHaveChildren = config.columns[i];
             const fieldNames = config.getSummaryFieldsFromColumnName(i);
             let summaryText = fieldNames.map(fieldName => eachPerson[columnWhichHaveChildren.id][fieldName]).join(', ');
-            element.children[i].textContent = summaryText;
-            for(let k = 1; k < columnWhichHaveChildren.children.length + 1; k++) {
-                element.children[i + k].textContent = eachPerson[columnWhichHaveChildren.id][columnWhichHaveChildren.children[k - 1].id];
+            const childrenText = document.createTextNode(summaryText);
+            element.children[i].append(childrenText);
+            for(let k = 0; k < element.children[i].children[0].children[0].children.length; k++) {
+                const eachChildrenText = eachPerson[columnWhichHaveChildren.id][columnWhichHaveChildren.children[k].id];
+                element.children[i].children[0].children[0].children[k].append(eachChildrenText);
             }
-        }
+        } else {
+            const text = document.createTextNode(eachPerson[config.columns[i].id]);
+            element.children[i].append(text);
+        }       
     }
 }
 
@@ -153,26 +179,7 @@ sortModel.addEventListener("to-sort", () => {
     addAllDataAtOnce(sortingService.data, createReferenceElement());
 })
 
-export function createChildColumnHeaders() {
-    for(let j = 0; j < config.getColumnsWhichHaveChilderenColumns().length; j++) {
-        let childColumnHeadersSection = document.createElement("tr");
-        let childHeadersGroupWithParent = [];
-        childHeadersGroupWithParent.push(childColumnHeadersSection);
-        childColumnHeadersSection.setAttribute("data-address-section-expanded", "false");
-        const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[j].displayName) + "-header");
-        childHeadersGroupWithParent.push(columnHeaderWhichHasChildColumns);
-        for(let i = 0; i < config.getColumnsWhichHaveChilderenColumns()[j].children.length; i++) {
-            let childColumnHeader = document.createElement("th");
-            childColumnHeader.setAttribute("data-address-section-expanded", "false");
-            childColumnHeader.classList.add(config.getHtmlClassNamesOfAllChildColumns()[j][i] + "-header");
-            childColumnHeader.textContent = config.getColumnsWhichHaveChilderenColumns()[j].children[i].displayName.toUpperCase();
-            childColumnHeadersSection.appendChild(childColumnHeader);
-            childHeadersGroupWithParent.push(childColumnHeader);
-        }
-        allChildColumnElementsTogetherWithParents.push(childHeadersGroupWithParent);
-        columnHeaderSection.appendChild(childColumnHeadersSection);
-    }
-}
+
 export function addEventListenerToColumnHeadersWhichHasChildren() {
     for(let i = 0; i < config.getColumnsWhichHaveChilderenColumns().length; i++) {
         const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-header"); 

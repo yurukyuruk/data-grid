@@ -4,7 +4,6 @@ import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
 import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
-import { createChildColumnHeaders } from "./index.js";
 export class ConfigService {
     columns;
     columnKeys;
@@ -22,7 +21,6 @@ export class ConfigService {
             sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
         }).then(() => {
             createDataHeaders();
-            createChildColumnHeaders();
             addEventListenerToColumnHeadersWhichHasChildren();
         });
     }
@@ -56,16 +54,12 @@ export class ConfigService {
     getColumnsWhichHaveChilderenColumns() {
         return this.columns.filter(column => column.children !== undefined);
     }
-    getHtmlClassNamesOfAllChildColumns() {
-        let htmlClassNamesOfAllChildColumns = [];
-        this.getColumnsWhichHaveChilderenColumns().forEach(column => {
-            let htmlClassNames = [];
-            column.children.forEach(childColumn => {
-                htmlClassNames.push(this.getHtmlClassNameFromDisplayName(childColumn.displayName));
-            });
-            htmlClassNamesOfAllChildColumns.push(htmlClassNames);
+    getHtmlClassNamesOfAllChildColumns(index) {
+        let htmlClassNamesOfChildColumns = [];
+        this.columns[index].children.forEach(child => {
+            htmlClassNamesOfChildColumns.push(this.getHtmlClassNameFromDisplayName(child.displayName));
         });
-        return htmlClassNamesOfAllChildColumns;
+        return htmlClassNamesOfChildColumns;
     }
     getDisplayNamesOfAllColumns() {
         let displayNamesOfColumns = [];
@@ -73,13 +67,6 @@ export class ConfigService {
             displayNamesOfColumns.push(column.displayName);
         });
         return displayNamesOfColumns;
-    }
-    checkIfColumnHasChild(id) {
-        let currentColumn = this.columns.find(column => column.id === id);
-        if (currentColumn.children === undefined) {
-            return false;
-        }
-        return true;
     }
     saveColumnVisibilityStatus(allColumnCheckboxes) {
         let columnsVisibilityStatus = [];
