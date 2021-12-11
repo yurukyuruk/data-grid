@@ -54,14 +54,15 @@ function createReferenceElement() {
         if (config.columns[i].children) {
             dataCell.setAttribute("data-address-section-closed", "true");
             const expandedDataTable = document.createElement("table");
-            expandedDataTable.setAttribute("data-address-section-expanded", "false");
+            expandedDataTable.setAttribute("data-address-section-expanded", "true");
             expandedDataTable.setAttribute("data-column-checkbox-checked", "true");
             const expandedDataRow = document.createElement("tr");
-            expandedDataRow.setAttribute("data-address-section-expanded", "false");
+            expandedDataRow.setAttribute("data-address-section-expanded", "true");
             expandedDataRow.setAttribute("data-column-checkbox-checked", "true");
+            expandedDataRow.setAttribute("colspan", config.columns[i].children.length);
             config.columns[i].children.forEach(child => {
                 const childDataCell = document.createElement("td");
-                childDataCell.setAttribute("data-address-section-expanded", "false");
+                childDataCell.setAttribute("data-address-section-expanded", "true");
                 childDataCell.setAttribute("data-column-checkbox-checked", "true");
                 expandedDataRow.appendChild(childDataCell);
                 expandedDataTable.appendChild(expandedDataRow);
@@ -178,11 +179,9 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
             //addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
             if (columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false") {
                 columnHeaderWhichHasChildColumns.setAttribute("rowspan", "2");
-                columnHeaderWhichHasChildColumns.setAttribute("colspan", "1");
             }
             else {
                 columnHeaderWhichHasChildColumns.setAttribute("rowspan", "1");
-                columnHeaderWhichHasChildColumns.setAttribute("colspan", config.getColumnsWhichHaveChilderenColumns()[i].children.length.toString());
             }
         });
     }
