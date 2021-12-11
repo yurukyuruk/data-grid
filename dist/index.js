@@ -163,6 +163,13 @@ sortModel.addEventListener("to-sort", () => {
 export function addEventListenerToColumnHeadersWhichHasChildren() {
     for (let i = 0; i < config.getColumnsWhichHaveChilderenColumns().length; i++) {
         const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-header");
+        columnHeaderWhichHasChildColumns.addEventListener("mouseover", (e) => {
+            columnHeaderWhichHasChildColumns.style.color = "white";
+            columnHeaderWhichHasChildColumns.style.cursor = "pointer";
+        });
+        columnHeaderWhichHasChildColumns.addEventListener("mouseout", () => {
+            columnHeaderWhichHasChildColumns.style.color = "black";
+        });
         columnHeaderWhichHasChildColumns.addEventListener("click", () => {
             //config.saveAddressColumnVisibilityStatus(columnHeaderWhichHasChildColumns);
             const addressSectionElementsStateChange = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;

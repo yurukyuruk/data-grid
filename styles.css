@@ -31,10 +31,6 @@ tr, td, th {
 th {
   padding: 12px;
 }
-#address-header:hover {
-  color: white;
-  cursor: pointer;
-}
 .colored-row {
   background-color: rgb(253, 206, 184);
 }
