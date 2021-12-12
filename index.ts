@@ -59,15 +59,15 @@ function createReferenceElement(): HTMLTableRowElement {
         if(config.columns[i].children) {
             dataCell.setAttribute("data-address-section-closed", "true");
             const expandedDataTable = document.createElement("table");
-            expandedDataTable.setAttribute("data-address-section-expanded", "true");
+            expandedDataTable.setAttribute("data-address-section-expanded", "false");
             expandedDataTable.setAttribute("data-column-checkbox-checked", "true");
             const expandedDataRow = document.createElement("tr");
-            expandedDataRow.setAttribute("data-address-section-expanded", "true");
+            expandedDataRow.setAttribute("data-address-section-expanded", "false");
             expandedDataRow.setAttribute("data-column-checkbox-checked", "true");
             expandedDataRow.setAttribute("colspan", config.columns[i].children.length);
             config.columns[i].children.forEach(child => {
                 const childDataCell = document.createElement("td") as HTMLTableCellElement;
-                childDataCell.setAttribute("data-address-section-expanded", "true");
+                childDataCell.setAttribute("data-address-section-expanded", "false");
                 childDataCell.setAttribute("data-column-checkbox-checked", "true");
                 expandedDataRow.appendChild(childDataCell);
                 expandedDataTable.appendChild(expandedDataRow);
@@ -96,7 +96,7 @@ function addDataToElement(element: HTMLTableRowElement, eachPerson: Data) {
         } else {
             const text = document.createTextNode(eachPerson[config.columns[i].id]);
             element.children[i].append(text);
-        }       
+        }   
     }
 }
 
@@ -191,11 +191,17 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
         columnHeaderWhichHasChildColumns.addEventListener("mouseout", () => {
             columnHeaderWhichHasChildColumns.style.color = "black";
         })
-        columnHeaderWhichHasChildColumns.addEventListener("click", () => {
+        columnHeaderWhichHasChildColumns.addEventListener("click", (e) => {
             //config.saveAddressColumnVisibilityStatus(columnHeaderWhichHasChildColumns);
             const addressSectionElementsStateChange: boolean = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
             const addressSummaryElementState: boolean = !addressSectionElementsStateChange;
             allChildColumnElementsTogetherWithParents[i].forEach(element => element.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
+            const tableDatasOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr td");
+            const tableRowOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr");
+            let summaryDatasOfClosedColumns = document.querySelectorAll("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data");
+            //summaryDatasOfClosedColumns.forEach(element => element.childNodes[1].textContent = "");
+            tableDatasOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
+            tableRowOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
             //addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
             if(columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false") {
                 columnHeaderWhichHasChildColumns.setAttribute("rowspan", "2");
