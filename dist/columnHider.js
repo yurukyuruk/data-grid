@@ -6,7 +6,7 @@ const { template } = {
         background-color: rgb(252, 252, 184);
         display: flex;
         justify-content: center;
-        padding: 2.1rem;
+        margin-left: 2.1rem;
       }
       .column-hider-button {
         border: 1px solid black;
@@ -17,7 +17,7 @@ const { template } = {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
-        width: 8rem;
+        width: 12rem;
       }
       .column-hider-button:hover {
         transform: scale(1.1);

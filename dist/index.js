@@ -2,6 +2,7 @@ import { config } from "./configExport.js";
 import { ColumnHider } from "./columnHider.js";
 import { SortingService } from "./sortingService.js";
 import { MySortingSection } from "./sortModel.js";
+import { SearchButton } from "./SearchButton.js";
 const allChildColumnElementsTogetherWithParents = [];
 const dataRows = document.querySelector(".data-rows");
 const columnHeaderSection = document.querySelector("thead");
@@ -158,10 +159,8 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
             columnHeaderWhichHasChildColumns.style.color = "black";
         });
         columnHeaderWhichHasChildColumns.addEventListener("click", (e) => {
-            //config.saveAddressColumnVisibilityStatus(columnHeaderWhichHasChildColumns);
             let summaryDataElementsOfClosedColumns = document.querySelectorAll("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data");
             const expandedSectionElementsStateChange = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
-            const addressSummaryElementState = !expandedSectionElementsStateChange;
             if (expandedSectionElementsStateChange) {
                 summaryDataElementsOfClosedColumns.forEach(element => element.childNodes[1].textContent = "");
             }
@@ -183,4 +182,5 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
     }
 }
 console.log(ColumnHider);
+console.log(SearchButton);
 //# sourceMappingURL=index.js.map

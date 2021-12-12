@@ -13,7 +13,7 @@ const { template } = {
     background-color: rgb(252, 252, 184);
     display: flex;
     justify-content: center;
-    margin-right: -1rem;
+    margin-right: 1rem;
   }
   .sort-data-button {
     border: 1px solid black;
@@ -21,7 +21,7 @@ const { template } = {
     cursor: pointer;
     outline: 2px solid white;
     outline-offset: 1rem;
-    width: 8rem;
+    width: 12rem;
   }
   .sort-data-button:hover {
     transform: scale(1.1);
