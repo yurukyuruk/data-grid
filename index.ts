@@ -11,6 +11,7 @@ const allChildColumnElementsTogetherWithParents = [];
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
 const columnHeaderSection = document.querySelector("thead");
 
+
 export function createDataHeaders() {
     let mainColumnHeadersSection = document.createElement("tr");
     mainColumnHeadersSection.classList.add("columns");
@@ -180,7 +181,20 @@ sortModel.addEventListener("to-sort", () => {
     addAllDataAtOnce(sortingService.data, createReferenceElement());
 })
 
-
+function addDataSummaryToParentColumn(columnName, summaryDataElements) {
+    for(let j = 0; j < data.length; j++) {
+        for(let i = 0; i < config.columns.length; i++) {
+            if(config.columns[i] === columnName) {
+                const fieldNames = config.getSummaryFieldsFromColumnName(i);
+                let summaryText = fieldNames.map(fieldName => data[j][columnName.id][fieldName]).join(', ');
+                summaryDataElements[j].childNodes[1].textContent = summaryText;
+            }
+        }
+    }
+    
+        
+    
+}
 export function addEventListenerToColumnHeadersWhichHasChildren() {
     for(let i = 0; i < config.getColumnsWhichHaveChilderenColumns().length; i++) {
         const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-header"); 
@@ -193,13 +207,18 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
         })
         columnHeaderWhichHasChildColumns.addEventListener("click", (e) => {
             //config.saveAddressColumnVisibilityStatus(columnHeaderWhichHasChildColumns);
+            let summaryDatasOfClosedColumns = document.querySelectorAll("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data");
             const addressSectionElementsStateChange: boolean = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
             const addressSummaryElementState: boolean = !addressSectionElementsStateChange;
+            if(addressSectionElementsStateChange) {
+                summaryDatasOfClosedColumns.forEach(element => element.childNodes[1].textContent = "");
+            } else {
+                addDataSummaryToParentColumn(config.getColumnsWhichHaveChilderenColumns()[i], summaryDatasOfClosedColumns);
+            }
             allChildColumnElementsTogetherWithParents[i].forEach(element => element.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
             const tableDatasOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr td");
             const tableRowOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr");
-            let summaryDatasOfClosedColumns = document.querySelectorAll("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data");
-            //summaryDatasOfClosedColumns.forEach(element => element.childNodes[1].textContent = "");
+                
             tableDatasOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
             tableRowOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", addressSectionElementsStateChange.toString()));
             //addressSummaryElements.forEach(element => element.setAttribute("data-address-section-closed", addressSummaryElementState.toString()));
