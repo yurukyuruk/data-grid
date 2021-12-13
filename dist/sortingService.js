@@ -12,7 +12,7 @@ export class SortingService {
                 this.data.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
             }
             else if (fieldType === ColumnType.NUMBER) {
-                this.data.sort(this.sortNumberComparator(sortRule.field, sortRule.direction));
+                this.data.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
             }
             else {
                 this.data.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
