@@ -15,9 +15,11 @@ const { template } = {
             width: 12rem;
             height: 1.1rem;
             border: 1px solid black;
+            backgroundColor: white;
         }
         .search-button {
             width: 2rem;
+            height: 1rem;
             font-family: Arial, Helvetica, sans-serif;
             margin-left: -2.4rem;
             border: none;
@@ -56,8 +58,38 @@ export class SearchButton extends HTMLElement {
         this.initilizeListeners();
     }
     initilizeListeners() {
+        this.searchButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            let inputValue = this.input.value.toLowerCase();
+            let allDataRows = document.querySelectorAll(".data-row");
+            let allTextContentsOfRows = [];
+            allDataRows.forEach(row => {
+                let textContentOfEachRow = [];
+                for (let i = 0; i < row.children.length; i++) {
+                    if (row.children[i].children.length > 0) {
+                        for (let j = 0; j < row.children[i].children[0].children[0].children.length; j++) {
+                            textContentOfEachRow.push(row.children[i].children[0].children[0].children[j].textContent?.toLowerCase());
+                        }
+                    }
+                    else {
+                        textContentOfEachRow.push(row.children[i].textContent.toLowerCase());
+                    }
+                }
+                allTextContentsOfRows.push(textContentOfEachRow);
+            });
+            for (let i = 0; i < allTextContentsOfRows.length; i++) {
+                if (!allTextContentsOfRows[i].includes(inputValue)) {
+                    allDataRows[i].style.display = "none";
+                }
+                else {
+                    allDataRows[i].style.display = "table-row";
+                }
+            }
+        });
     }
     getElementReferences() {
+        this.input = this.shadowRoot.querySelector(".input");
+        this.searchButton = this.shadowRoot.querySelector(".search-button");
     }
 }
 customElements.define(SearchButton.TAG, SearchButton);
