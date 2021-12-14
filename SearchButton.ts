@@ -60,8 +60,16 @@ const { template } = {
     }
     
     initilizeListeners() {
-      this.input.addEventListener("keyup", (e) => {
-        e.preventDefault();
+      const debounce = (func, delay) => {
+        let inDebounce
+        return function() {
+          const context = this
+          const args = arguments
+          clearTimeout(inDebounce)
+          inDebounce = setTimeout(() => func.apply(context, args), delay)
+        }
+      }
+      this.input.addEventListener("keyup", debounce(() => {
         let inputValue = this.input.value.toLowerCase();
         let allDataRows = document.querySelectorAll(".data-row");
         let allTextContentsOfRows = [];
@@ -85,7 +93,8 @@ const { template } = {
             allDataRows[i].style.display = "table-row";
           }
         }
-      })
+      }, 1000))
+       
       this.searchButton.addEventListener("click", (e) => {
         e.preventDefault();
       })
@@ -96,6 +105,7 @@ const { template } = {
     getElementReferences() {
       this.input = this.shadowRoot.querySelector(".input");
       this.searchButton = this.shadowRoot.querySelector(".search-button");
+      
       
     }
   }
