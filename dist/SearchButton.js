@@ -41,7 +41,7 @@ const { template } = {
     </style>
       <form class="search-button-area">
          <input type="text" placeholder="Search" name="search" class="input">  
-         <button type="submit" class="search-button">
+         <button class="search-button">
             <img src="images/search_icon.svg" class="button-icon">
          </button>
       </form>       
@@ -58,7 +58,7 @@ export class SearchButton extends HTMLElement {
         this.initilizeListeners();
     }
     initilizeListeners() {
-        this.searchButton.addEventListener("click", (e) => {
+        this.input.addEventListener("keyup", (e) => {
             e.preventDefault();
             let inputValue = this.input.value.toLowerCase();
             let allDataRows = document.querySelectorAll(".data-row");
@@ -78,13 +78,16 @@ export class SearchButton extends HTMLElement {
                 allTextContentsOfRows.push(textContentOfEachRow);
             });
             for (let i = 0; i < allTextContentsOfRows.length; i++) {
-                if (!allTextContentsOfRows[i].includes(inputValue)) {
+                if (inputValue !== "" && !allTextContentsOfRows[i].includes(inputValue)) {
                     allDataRows[i].style.display = "none";
                 }
                 else {
                     allDataRows[i].style.display = "table-row";
                 }
             }
+        });
+        this.searchButton.addEventListener("click", (e) => {
+            e.preventDefault();
         });
     }
     getElementReferences() {
