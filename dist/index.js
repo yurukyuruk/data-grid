@@ -58,8 +58,8 @@ function createReferenceElement() {
             const expandedDataRow = document.createElement("tr");
             expandedDataRow.setAttribute("data-address-section-expanded", "false");
             expandedDataRow.setAttribute("data-column-checkbox-checked", "true");
-            expandedDataRow.setAttribute("colspan", config.columns[i].children.length);
-            config.columns[i].children.forEach(child => {
+            expandedDataRow.setAttribute("colspan", config.columns[i].children.length.toString());
+            config.columns[i].children.forEach(() => {
                 const childDataCell = document.createElement("td");
                 childDataCell.setAttribute("data-address-section-expanded", "false");
                 childDataCell.setAttribute("data-column-checkbox-checked", "true");
@@ -151,14 +151,14 @@ function addDataSummaryToParentColumn(column, summaryDataElements) {
 export function addEventListenerToColumnHeadersWhichHasChildren() {
     for (let i = 0; i < config.getColumnsWhichHaveChilderenColumns().length; i++) {
         const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-header");
-        columnHeaderWhichHasChildColumns.addEventListener("mouseover", (e) => {
+        columnHeaderWhichHasChildColumns.addEventListener("mouseover", () => {
             columnHeaderWhichHasChildColumns.style.color = "white";
             columnHeaderWhichHasChildColumns.style.cursor = "pointer";
         });
         columnHeaderWhichHasChildColumns.addEventListener("mouseout", () => {
             columnHeaderWhichHasChildColumns.style.color = "black";
         });
-        columnHeaderWhichHasChildColumns.addEventListener("click", (e) => {
+        columnHeaderWhichHasChildColumns.addEventListener("click", () => {
             let summaryDataElementsOfClosedColumns = document.querySelectorAll("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data");
             const expandedSectionElementsStateChange = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
             if (expandedSectionElementsStateChange) {

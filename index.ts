@@ -2,17 +2,17 @@ import { ConfigService } from "./configService.js";
 import { config } from "./configExport.js";
 import { ColumnHider } from "./columnHider.js";
 import { SortingService } from "./sortingService.js";
-import { ColumnRow } from "./types/interfaces.js";
 import { MySortingSection } from "./sortModel.js";
 import { SearchButton } from "./SearchButton.js";
+import { Column } from "./types/interfaces.js";
 
 
-const allChildColumnElementsTogetherWithParents = [];
+const allChildColumnElementsTogetherWithParents: null | HTMLTableCellElement[][] = [];
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
-const columnHeaderSection = document.querySelector("thead");
+const columnHeaderSection = document.querySelector("thead") as 	HTMLTableSectionElement;
 
 
-export function createDataHeaders() {
+export function createDataHeaders():void {
     let mainColumnHeadersSection = document.createElement("tr");
     mainColumnHeadersSection.classList.add("columns");
     for(let i = 0; i < config.columns.length; i++) {
@@ -23,7 +23,7 @@ export function createDataHeaders() {
         mainColumn.textContent = config.columns[i].displayName.toUpperCase();
         mainColumnHeadersSection.appendChild(mainColumn);
         if(config.columns[i].children) {
-            let childColumnElementsTogetherWithParents = [];
+            let childColumnElementsTogetherWithParents:null | HTMLTableCellElement[] = [];
             mainColumn.setAttribute("data-address-section-expanded", "false");
             mainColumn.setAttribute("id", config.getHtmlClassNamesOfColumns()[i] + "-header");
             let childColumnHeadersSection = document.createElement("table");               
@@ -50,11 +50,11 @@ export function createDataHeaders() {
 }
 
 function createReferenceElement(): HTMLTableRowElement {
-    const dataRow = document.createElement("tr") as HTMLTabelRowElement;
+    const dataRow = document.createElement("tr");
     dataRow.classList.add("row0");
     dataRow.classList.add("data-row"); 
     for(let i = 0; i < config.getHtmlClassNamesOfColumns().length; i++) {
-        const dataCell = document.createElement("td") as HTMLTableCellElement;
+        const dataCell = document.createElement("td");
         dataCell.classList.add(config.getHtmlClassNamesOfColumns()[i] + "-data");
         dataCell.setAttribute("data-column-checkbox-checked", "true");
         if(config.columns[i].children) {
@@ -65,9 +65,9 @@ function createReferenceElement(): HTMLTableRowElement {
             const expandedDataRow = document.createElement("tr");
             expandedDataRow.setAttribute("data-address-section-expanded", "false");
             expandedDataRow.setAttribute("data-column-checkbox-checked", "true");
-            expandedDataRow.setAttribute("colspan", config.columns[i].children.length);
-            config.columns[i].children.forEach(child => {
-                const childDataCell = document.createElement("td") as HTMLTableCellElement;
+            expandedDataRow.setAttribute("colspan", config.columns[i].children.length.toString());
+            config.columns[i].children.forEach(() => {
+                const childDataCell = document.createElement("td");
                 childDataCell.setAttribute("data-address-section-expanded", "false");
                 childDataCell.setAttribute("data-column-checkbox-checked", "true");
                 expandedDataRow.appendChild(childDataCell);
@@ -76,22 +76,20 @@ function createReferenceElement(): HTMLTableRowElement {
             })
         }   
         dataRow.appendChild(dataCell);
-    } 
-    
-    
+    }  
     return dataRow;
 }
                               
-function addDataToElement(element: HTMLTableRowElement, eachPerson: Data) {
+function addDataToElement(element: HTMLTableRowElement, eachPerson: Column): void {
     for(let i = 0; i < config.columns.length; i++) {
         if(config.columns[i].children) {
-            const columnWhichHaveChildren = config.columns[i];
-            const fieldNames = config.getSummaryFieldsFromColumnName(i);
-            let summaryText = fieldNames.map(fieldName => eachPerson[columnWhichHaveChildren.id][fieldName]).join(', ');
+            const columnWhichHaveChildren: Column = config.columns[i];
+            const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i);
+            let summaryText: string = fieldNames.map(fieldName => eachPerson[columnWhichHaveChildren.id][fieldName]).join(', ');
             const childrenText = document.createTextNode(summaryText);
             element.children[i].append(childrenText);
             for(let k = 0; k < element.children[i].children[0].children[0].children.length; k++) {
-                const eachChildrenText = eachPerson[columnWhichHaveChildren.id][columnWhichHaveChildren.children[k].id];
+                const eachChildrenText: string = eachPerson[columnWhichHaveChildren.id][columnWhichHaveChildren.children[k].id];
                 element.children[i].children[0].children[0].children[k].append(eachChildrenText);
             }
         } else {
@@ -108,13 +106,11 @@ function addClassName(newNumber: number): string {
 
 let n: number = -1;
 let allPersonsElements: DocumentFragment;
-function addAllDataAtOnce(fetchedData: ColumnRow[], dataReferenceElement: HTMLTableRowElement) {
+function addAllDataAtOnce(fetchedData: Column[], dataReferenceElement: HTMLTableRowElement): void {
     allPersonsElements = document.createDocumentFragment();
     fetchedData.forEach(person =>{
         n += 1;
         let personElement = dataReferenceElement.cloneNode(true) as HTMLTableRowElement;
-        
-        
         addDataToElement(personElement, person);
         personElement.className = addClassName(n);
         allPersonsElements.append(personElement);
@@ -126,12 +122,11 @@ function addAllDataAtOnce(fetchedData: ColumnRow[], dataReferenceElement: HTMLTa
     dataRows.append(allPersonsElements); 
 }
 
-
-let data: ColumnRow[];
+let data: Column[];
 export let sortingService: SortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
-export function fetchRowDatas() {
+export function fetchRowDatas(): void {
     fetch(config.data.dataUrl).then(async (response) => {
         data = await response.json();
         sortingService = new SortingService(data);
@@ -139,7 +134,7 @@ export function fetchRowDatas() {
     }).then(() => {
         if(localStorage.getItem("sortInformation") !== null) {
             dataRows.innerHTML = "";
-            let sortedData: ColumnRow[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+            let sortedData: Column[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
             addAllDataAtOnce(sortedData, createReferenceElement());
         }
     }).then(() => {
@@ -158,12 +153,12 @@ sortModel.addEventListener("to-sort", () => {
     addAllDataAtOnce(sortingService.data, createReferenceElement());
 })
 
-function addDataSummaryToParentColumn(column, summaryDataElements) {
+function addDataSummaryToParentColumn(column: Column, summaryDataElements: HTMLTableCellElement[]) {
     for(let j = 0; j < data.length; j++) {
         for(let i = 0; i < config.columns.length; i++) {
             if(config.columns[i] === column) {
-                const fieldNames = config.getSummaryFieldsFromColumnName(i);
-                let summaryText = fieldNames.map(fieldName => data[j][column.id][fieldName]).join(', ');
+                const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i);
+                let summaryText: string = fieldNames.map(fieldName => data[j][column.id][fieldName]).join(', ');
                 summaryDataElements[j].childNodes[1].textContent = summaryText;
             }
         }
@@ -172,16 +167,16 @@ function addDataSummaryToParentColumn(column, summaryDataElements) {
 
 export function addEventListenerToColumnHeadersWhichHasChildren() {
     for(let i = 0; i < config.getColumnsWhichHaveChilderenColumns().length; i++) {
-        const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-header"); 
-        columnHeaderWhichHasChildColumns.addEventListener("mouseover", (e) => {
+        const columnHeaderWhichHasChildColumns = document.querySelector("#" + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-header") as HTMLTableCellElement; 
+        columnHeaderWhichHasChildColumns.addEventListener("mouseover", () => {
             columnHeaderWhichHasChildColumns.style.color = "white";
             columnHeaderWhichHasChildColumns.style.cursor = "pointer";
         })
         columnHeaderWhichHasChildColumns.addEventListener("mouseout", () => {
             columnHeaderWhichHasChildColumns.style.color = "black";
         })
-        columnHeaderWhichHasChildColumns.addEventListener("click", (e) => {
-            let summaryDataElementsOfClosedColumns = document.querySelectorAll("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data");
+        columnHeaderWhichHasChildColumns.addEventListener("click", () => {
+            let summaryDataElementsOfClosedColumns = document.querySelectorAll("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") as unknown as HTMLTableCellElement[];
             const expandedSectionElementsStateChange: boolean = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
             if(expandedSectionElementsStateChange) {
                 summaryDataElementsOfClosedColumns.forEach(element => element.childNodes[1].textContent = "");
@@ -189,8 +184,8 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
                 addDataSummaryToParentColumn(config.getColumnsWhichHaveChilderenColumns()[i], summaryDataElementsOfClosedColumns);
             }
             allChildColumnElementsTogetherWithParents[i].forEach(element => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
-            const tableDatasOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr td");
-            const tableRowOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr");    
+            const tableDatasOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr td") as unknown as  HTMLTableCellElement[];
+            const tableRowOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getHtmlClassNameFromDisplayName(config.getColumnsWhichHaveChilderenColumns()[i].displayName) + "-data") + " table tr") as unknown as HTMLTableRowElement[];    
             tableDatasOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
             tableRowOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
             if(columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false") {

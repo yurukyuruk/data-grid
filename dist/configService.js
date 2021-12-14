@@ -5,10 +5,8 @@ import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
 import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
 export class ConfigService {
+    data;
     columns;
-    columnKeys;
-    addressColumn;
-    addressColumnKeys;
     constructor() {
         this.data;
         fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json").then(async (response) => {
@@ -75,9 +73,6 @@ export class ConfigService {
         });
         localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
         return columnsVisibilityStatus;
-    }
-    saveAddressColumnVisibilityStatus(addressHeader) {
-        localStorage.setItem("addressColumnVisibilityStatus", JSON.stringify(addressHeader.getAttribute("data-address-section-expanded")));
     }
     saveSortInformation(sortOptions) {
         localStorage.setItem("sortInformation", JSON.stringify(this.getSortOptions(sortOptions)));

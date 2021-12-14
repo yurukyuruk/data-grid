@@ -7,13 +7,13 @@ import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
 import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
+import { Column } from "./types/interfaces.js";
+import { Data } from "./types/interfaces.js";
 
 
 export class ConfigService {
-  columns: Map<string, ColumnsInformation>;
-  private columnKeys: string[];
-  private addressColumn: Map<string, ColumnsInformation>;
-  private addressColumnKeys: string[];
+  data!: null | Data;
+  columns!: Column[];
   constructor() {
     this.data;
     fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json").then(async (response) => {
@@ -87,9 +87,6 @@ export class ConfigService {
     })
     localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
     return columnsVisibilityStatus;
-  }
-  saveAddressColumnVisibilityStatus(addressHeader: HTMLTableCellElement): void {
-    localStorage.setItem("addressColumnVisibilityStatus", JSON.stringify(addressHeader.getAttribute("data-address-section-expanded")));
   }
   saveSortInformation(sortOptions: SortingRule[]): void {
     localStorage.setItem("sortInformation", JSON.stringify(this.getSortOptions(sortOptions)));
