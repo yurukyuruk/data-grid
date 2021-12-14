@@ -167,7 +167,7 @@ export class ColumnHider extends HTMLElement {
             });
  
             const checkboxLabel: HTMLLabelElement = document.createElement("label");
-            checkboxLabel.textContent = columnNames[i];
+            checkboxLabel.textContent = config.columns[i].displayName;
             checkboxHolder.appendChild(checkbox);
             checkboxHolder.appendChild(checkboxLabel);
             this.columnCheckboxes.appendChild(checkboxHolder);

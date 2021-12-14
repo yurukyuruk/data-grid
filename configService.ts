@@ -30,14 +30,10 @@ export class ConfigService {
   })
   }
 
-  getHtmlClassNameFromDisplayName(displayName) { 
-    return displayName.replace(" ", '-').toLowerCase();
-  }
-
   getHtmlClassNamesOfColumns(): string[] {
     let htmlClassNamesOfColumns: string[] = [];
     this.columns.forEach(column => {
-        const htmlClassName = this.getHtmlClassNameFromDisplayName(column.displayName);
+        const htmlClassName: string = column.id;
         htmlClassNamesOfColumns.push(htmlClassName); 
     })
     return htmlClassNamesOfColumns;
@@ -64,13 +60,6 @@ export class ConfigService {
   
   getColumnsWhichHaveChilderenColumns() {
     return this.columns.filter(column => column.children !== undefined);
-  }
-  getHtmlClassNamesOfAllChildColumns(index):any {
-    let htmlClassNamesOfChildColumns = [];
-    this.columns[index].children.forEach(child => {
-      htmlClassNamesOfChildColumns.push(this.getHtmlClassNameFromDisplayName(child.displayName));
-    })
-    return htmlClassNamesOfChildColumns;
   }
 
   getDisplayNamesOfAllColumns() {
