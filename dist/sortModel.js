@@ -175,7 +175,7 @@ export class MySortingSection extends HTMLElement {
                 }
                 this.sortOptions[0].sortField.append(sortFieldOption);
             }
-            let sortInformation = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
+            const sortInformation = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
             if (sortInformation !== null && sortInformation.length === 1 && sortInformation[0].field !== "Sort by") {
                 this.sortOptions[0].fieldOption = sortInformation[0].field;
                 this.sortOptions[0].sortDirection.disabled = false;
@@ -243,7 +243,7 @@ export class MySortingSection extends HTMLElement {
         this.sortOptions[this.sortOptions.length - 1].disableSelects();
     }
     getPreviousChosenFields() {
-        return this.sortOptions.map(option => option.fieldOption);
+        return this.sortOptions.map((option) => option.fieldOption);
     }
     getRemainingFields() {
         const previousChosenField = this.getPreviousChosenFields();
@@ -254,7 +254,7 @@ export class MySortingSection extends HTMLElement {
         return this.getRemainingFields().length > 1;
     }
     createNewSortLine() {
-        let newSortLine = new SortingRule(this.getRemainingFields());
+        const newSortLine = new SortingRule(this.getRemainingFields());
         this.sortOptions.push(newSortLine);
         newSortLine.addEventListener("is-direction-set", () => {
             this.submitButton.disabled = false;
@@ -276,7 +276,7 @@ export class MySortingSection extends HTMLElement {
         this.submitButton = this.shadowRoot.querySelector(".submit-button");
         this.resetButton = this.shadowRoot.querySelector(".reset-button");
         this.closeButton = this.shadowRoot.querySelector(".close-button");
-        this.table = document.querySelector('#data-table');
+        this.table = document.querySelector("#data-table");
         this.sortLines = this.shadowRoot.querySelector(".sort-lines");
     }
 }

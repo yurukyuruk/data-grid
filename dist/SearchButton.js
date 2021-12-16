@@ -49,6 +49,8 @@ const { template } = {
 };
 export class SearchButton extends HTMLElement {
     static TAG = "search-button";
+    input;
+    searchButton;
     shadowRoot;
     constructor() {
         super();
@@ -68,19 +70,19 @@ export class SearchButton extends HTMLElement {
             };
         };
         this.input.addEventListener("keyup", debounce(() => {
-            let inputValue = this.input.value.toLowerCase();
-            let allDataRows = document.querySelectorAll(".data-row");
-            let allTextContentsOfRows = [];
-            allDataRows.forEach(row => {
-                let textContentOfEachRow = [];
+            const inputValue = this.input.value.toLowerCase();
+            const allDataRows = document.querySelectorAll(".data-row");
+            const allTextContentsOfRows = [];
+            allDataRows.forEach((row) => {
+                const textContentOfEachRow = [];
                 for (let i = 0; i < row.children.length; i++) {
                     if (row.children[i].children.length > 0) {
                         for (let j = 0; j < row.children[i].children[0].children[0].children.length; j++) {
-                            textContentOfEachRow.push(row.children[i].children[0].children[0].children[j].textContent?.toLowerCase());
+                            textContentOfEachRow.push(row.children[i].children[0].children[0].children[j].textContent?.toLowerCase() ?? "");
                         }
                     }
                     else {
-                        textContentOfEachRow.push(row.children[i].textContent.toLowerCase());
+                        textContentOfEachRow.push(row.children[i].textContent?.toLowerCase() ?? "");
                     }
                 }
                 allTextContentsOfRows.push(textContentOfEachRow);

@@ -7,25 +7,25 @@ const allChildColumnElementsTogetherWithParents = [];
 const dataRows = document.querySelector(".data-rows");
 const columnHeaderSection = document.querySelector("thead");
 export function createDataHeaders() {
-    let mainColumnHeadersSection = document.createElement("tr");
+    const mainColumnHeadersSection = document.createElement("tr");
     mainColumnHeadersSection.classList.add("columns");
     for (let i = 0; i < config.columns.length; i++) {
-        let mainColumn = document.createElement("th");
+        const mainColumn = document.createElement("th");
         mainColumn.classList.add(config.columns[i].id + "-data");
         mainColumn.setAttribute("data-column-checkbox-checked", "true");
         mainColumn.setAttribute("rowspan", "2");
         mainColumn.textContent = config.columns[i].displayName.toUpperCase();
         mainColumnHeadersSection.appendChild(mainColumn);
         if (config.columns[i].children) {
-            let childColumnElementsTogetherWithParents = [];
+            const childColumnElementsTogetherWithParents = [];
             mainColumn.setAttribute("data-address-section-expanded", "false");
             mainColumn.setAttribute("id", config.columns[i].id + "-header");
-            let childColumnHeadersSection = document.createElement("table");
+            const childColumnHeadersSection = document.createElement("table");
             childColumnHeadersSection.setAttribute("data-address-section-expanded", "false");
-            let childColumnRow = document.createElement("tr");
+            const childColumnRow = document.createElement("tr");
             childColumnRow.setAttribute("data-address-section-expanded", "false");
             for (let k = 0; k < config.columns[i].children.length; k++) {
-                let childColumnHeader = document.createElement("th");
+                const childColumnHeader = document.createElement("th");
                 childColumnHeader.setAttribute("data-address-section-expanded", "false");
                 childColumnHeader.classList.add(config.columns[i].children[k].id + "-header");
                 childColumnHeader.textContent = config.columns[i].children[k].displayName.toUpperCase();
@@ -77,7 +77,7 @@ function addDataToElement(element, eachPerson) {
         if (config.columns[i].children) {
             const columnWhichHaveChildren = config.columns[i];
             const fieldNames = config.getSummaryFieldsFromColumnName(i);
-            let summaryText = fieldNames.map(fieldName => eachPerson[columnWhichHaveChildren.id][fieldName]).join(', ');
+            const summaryText = fieldNames.map((fieldName) => eachPerson[columnWhichHaveChildren.id][fieldName]).join(", ");
             const childrenText = document.createTextNode(summaryText);
             element.children[i].append(childrenText);
             for (let k = 0; k < element.children[i].children[0].children[0].children.length; k++) {
@@ -98,9 +98,9 @@ let n = -1;
 let allPersonsElements;
 function addAllDataAtOnce(fetchedData, dataReferenceElement) {
     allPersonsElements = document.createDocumentFragment();
-    fetchedData.forEach(person => {
+    fetchedData.forEach((person) => {
         n += 1;
-        let personElement = dataReferenceElement.cloneNode(true);
+        const personElement = dataReferenceElement.cloneNode(true);
         addDataToElement(personElement, person);
         personElement.className = addClassName(n);
         allPersonsElements.append(personElement);
@@ -108,28 +108,30 @@ function addAllDataAtOnce(fetchedData, dataReferenceElement) {
             personElement.classList.add("colored-row");
         }
     });
-    const dataRows = document.querySelector(".data-rows");
     dataRows.append(allPersonsElements);
 }
 let data;
 export let sortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG);
 export function fetchRowDatas() {
-    fetch(config.data.dataUrl).then(async (response) => {
+    fetch(config.data.dataUrl)
+        .then(async (response) => {
         data = await response.json();
         sortingService = new SortingService(data);
         addAllDataAtOnce(data, createReferenceElement());
-    }).then(() => {
+    })
+        .then(() => {
         if (localStorage.getItem("sortInformation") !== null) {
             dataRows.innerHTML = "";
-            let sortedData = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+            const sortedData = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
             addAllDataAtOnce(sortedData, createReferenceElement());
         }
-    }).then(() => {
-        let columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+    })
+        .then(() => {
+        const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
         for (let i = 0; i < config.columns.length; i++) {
-            let eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id + "-data");
-            eachDataColumnGroup.forEach(element => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+            const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id + "-data");
+            eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
         }
     });
 }
@@ -142,7 +144,7 @@ function addDataSummaryToParentColumn(column, summaryDataElements) {
         for (let i = 0; i < config.columns.length; i++) {
             if (config.columns[i] === column) {
                 const fieldNames = config.getSummaryFieldsFromColumnName(i);
-                let summaryText = fieldNames.map(fieldName => data[j][column.id][fieldName]).join(', ');
+                const summaryText = fieldNames.map((fieldName) => data[j][column.id][fieldName]).join(", ");
                 summaryDataElements[j].childNodes[1].textContent = summaryText;
             }
         }
@@ -159,19 +161,19 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
             columnHeaderWhichHasChildColumns.style.color = "black";
         });
         columnHeaderWhichHasChildColumns.addEventListener("click", () => {
-            let summaryDataElementsOfClosedColumns = document.querySelectorAll("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data");
+            const summaryDataElementsOfClosedColumns = document.querySelectorAll("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data");
             const expandedSectionElementsStateChange = columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
             if (expandedSectionElementsStateChange) {
-                summaryDataElementsOfClosedColumns.forEach(element => element.childNodes[1].textContent = "");
+                summaryDataElementsOfClosedColumns.forEach((element) => (element.childNodes[1].textContent = ""));
             }
             else {
                 addDataSummaryToParentColumn(config.getColumnsWhichHaveChilderenColumns()[i], summaryDataElementsOfClosedColumns);
             }
-            allChildColumnElementsTogetherWithParents[i].forEach(element => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
-            const tableDatasOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data") + " table tr td");
-            const tableRowOfExpandedColumns = document.querySelectorAll(("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data") + " table tr");
-            tableDatasOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
-            tableRowOfExpandedColumns.forEach(element => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
+            allChildColumnElementsTogetherWithParents[i].forEach((element) => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
+            const tableDatasOfExpandedColumns = document.querySelectorAll("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data" + " table tr td");
+            const tableRowOfExpandedColumns = document.querySelectorAll("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data" + " table tr");
+            tableDatasOfExpandedColumns.forEach((element) => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
+            tableRowOfExpandedColumns.forEach((element) => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
             if (columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false") {
                 columnHeaderWhichHasChildColumns.setAttribute("rowspan", "2");
             }

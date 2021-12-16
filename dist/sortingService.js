@@ -21,6 +21,7 @@ export class SortingService {
         return this.data;
     }
     sortStringComparator(sortField, sortDirection) {
+        //create an enum asc desc
         return (a, b) => {
             let result = 0;
             if (sortDirection === SortDirection.ASC) {
@@ -37,8 +38,8 @@ export class SortingService {
     }
     sortDateComperator(sortField, sortDirection) {
         return (a, b) => {
-            let c = new Date(a[sortField]);
-            let d = new Date(b[sortField]);
+            const c = new Date(a[sortField]);
+            const d = new Date(b[sortField]);
             if (sortDirection === SortDirection.ASC) {
                 return c - d;
             }

@@ -9,56 +9,69 @@ export class ConfigService {
     columns;
     constructor() {
         this.data;
-        fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json").then(async (response) => {
+        fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json")
+            .then(async (response) => {
             this.data = await response.json();
-        }).then(() => {
+        })
+            .then(() => {
             this.columns = this.data.columns;
-        }).then(() => {
+        })
+            .then(() => {
             fetchRowDatas();
-        }).then(() => {
+        })
+            .then(() => {
             sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
-        }).then(() => {
+        })
+            .then(() => {
             createDataHeaders();
             addEventListenerToColumnHeadersWhichHasChildren();
         });
     }
     getHtmlClassNamesOfColumns() {
-        let htmlClassNamesOfColumns = [];
-        this.columns.forEach(column => {
+        const htmlClassNamesOfColumns = [];
+        this.columns.forEach((column) => {
             const htmlClassName = column.id;
             htmlClassNamesOfColumns.push(htmlClassName);
         });
         return htmlClassNamesOfColumns;
     }
     getColumnIdFromColumnDisplayName(columnName) {
-        const column = this.columns.find(column => column.displayName === columnName);
+        const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
         if (column) {
             return column.id;
         }
     }
     getColumnTypeFromColumnDisplayName(columnName) {
-        const column = this.columns.find(column => column.displayName === columnName);
+        const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
         if (column) {
             return column.type;
+        }
+        else {
+            return void 0;
         }
     }
     getSummaryFieldsFromColumnName(columnIndex) {
         const summaryDetails = this.columns[columnIndex].summary;
-        return summaryDetails.split("+");
+        if (summaryDetails) {
+            return summaryDetails.split("+");
+        }
+        else {
+            return void 0;
+        }
     }
     getColumnsWhichHaveChilderenColumns() {
-        return this.columns.filter(column => column.children !== undefined);
+        return this.columns.filter((column) => column.children !== undefined);
     }
     getDisplayNamesOfAllColumns() {
-        let displayNamesOfColumns = [];
-        this.columns.forEach(column => {
+        const displayNamesOfColumns = [];
+        this.columns.forEach((column) => {
             displayNamesOfColumns.push(column.displayName);
         });
         return displayNamesOfColumns;
     }
     saveColumnVisibilityStatus(allColumnCheckboxes) {
-        let columnsVisibilityStatus = [];
-        allColumnCheckboxes.forEach(columnCheckbox => {
+        const columnsVisibilityStatus = [];
+        allColumnCheckboxes.forEach((columnCheckbox) => {
             columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");
         });
         localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
@@ -68,7 +81,7 @@ export class ConfigService {
         localStorage.setItem("sortInformation", JSON.stringify(this.getSortOptions(sortOptions)));
     }
     getSortOptions(sortOptions) {
-        return sortOptions.map(option => {
+        return sortOptions.map((option) => {
             return {
                 field: option.fieldOption,
                 direction: option.directionOption

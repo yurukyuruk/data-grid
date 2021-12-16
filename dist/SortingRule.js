@@ -89,8 +89,8 @@ export class SortingRule extends HTMLElement {
         if (sortFields === undefined) {
             return void 0;
         }
-        sortFields.forEach(item => {
-            let fieldOptionElement = document.createElement("option");
+        sortFields.forEach((item) => {
+            const fieldOptionElement = document.createElement("option");
             fieldOptionElement.textContent = item;
             fieldOptionElement.value = item;
             if (item === sortFields[0]) {

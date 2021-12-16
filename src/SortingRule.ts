@@ -52,7 +52,6 @@ export class SortingRule extends HTMLElement {
     this.initilizeListeners();
     this.setSortByOptions(sortFields);
     this.setButtons();
-    
   }
   set fieldOption(value: string) {
     this.sortField.value = value;
@@ -74,14 +73,14 @@ export class SortingRule extends HTMLElement {
       if (this.fieldOption !== "Sort By") {
         this.sortDirection.disabled = false;
       }
-    })
+    });
     this.sortDirection.addEventListener("change", () => {
       const isDirectionSet: CustomEvent = new CustomEvent("is-direction-set", {
         bubbles: true,
         composed: true
       });
       this.shadowRoot.dispatchEvent(isDirectionSet);
-    })
+    });
   }
   disableSelects(): void {
     this.sortField.disabled = true;
@@ -92,17 +91,17 @@ export class SortingRule extends HTMLElement {
       return void 0;
     }
 
-    sortFields.forEach(item => {
-      let fieldOptionElement = document.createElement("option") as HTMLOptionElement;
+    sortFields.forEach((item) => {
+      const fieldOptionElement = document.createElement("option");
       fieldOptionElement.textContent = item;
       fieldOptionElement.value = item;
       if (item === sortFields[0]) {
         fieldOptionElement.className = "option-default";
       }
       this.sortField.append(fieldOptionElement);
-    })
+    });
   }
-  
+
   getElementReferences() {
     this.sortField = this.shadowRoot.querySelector(".sort-field") as HTMLSelectElement;
     this.sortDirection = this.shadowRoot.querySelector(".sort-direction") as HTMLSelectElement;
@@ -110,4 +109,3 @@ export class SortingRule extends HTMLElement {
   }
 }
 customElements.define(SortingRule.TAG, SortingRule);
-

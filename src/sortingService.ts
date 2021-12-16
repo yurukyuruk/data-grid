@@ -1,16 +1,15 @@
 import { config } from "./configExport.js";
-import { MySortingSection } from "./sortModel.js";
-import { ColumnRow } from "./types/interfaces.js";
+import { Column } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 
 export class SortingService {
-  readonly data: ColumnRow[];
-  constructor(data: ColumnRow[]) {
+  readonly data: Column[];
+  constructor(data: Column[]) {
     this.data = data;
   }
-  
-  sortData(sortConfigDatas: SortRule[]): ColumnRow[] {
+
+  sortData(sortConfigDatas: SortRule[]): Column[] {
     for (const sortRule of sortConfigDatas) {
       const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.field);
       if (fieldType === ColumnType.STRING) {
@@ -23,30 +22,31 @@ export class SortingService {
     }
     return this.data;
   }
-  sortStringComparator(sortField: string, sortDirection: SortDirection) {//create an enum asc desc
-    return (a: ColumnRow, b: ColumnRow): number => {
-      let result: number = 0;
+  sortStringComparator(sortField: string, sortDirection: SortDirection) {
+    //create an enum asc desc
+    return (a: Column, b: Column): number => {
+      let result = 0;
       if (sortDirection === SortDirection.ASC) {
         result = (a[sortField] as string) > (b[sortField] as string) ? 1 : -1;
       } else if (sortDirection === SortDirection.DESC) {
         result = (a[sortField] as string) < (b[sortField] as string) ? 1 : -1;
       }
       return result;
-    }
+    };
   }
   sortNumberComparator(sortField: string, sortDirection: SortDirection) {
-    return (a: ColumnRow, b: ColumnRow) => sortDirection === SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
+    return (a: Column, b: Column) => (sortDirection === SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField]);
   }
   sortDateComperator(sortField: string, sortDirection: SortDirection) {
-    return (a: ColumnRow, b: ColumnRow) => {
-      let c: Date = new Date(a[sortField]);
-      let d: Date = new Date(b[sortField]);
+    return (a: Column, b: Column) => {
+      const c: Date = new Date(a[sortField]);
+      const d: Date = new Date(b[sortField]);
       if (sortDirection === SortDirection.ASC) {
         return c - d;
       } else {
         return d - c;
       }
-    }
+    };
   }
 }
 
