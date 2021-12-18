@@ -179,7 +179,7 @@ export class MySortingSection extends HTMLElement {
         }
         this.sortOptions[0].sortField.append(sortFieldOption);
       }
-      const sortInformation: SortRule[] = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
+      const sortInformation: SortRule[] = JSON.parse(localStorage.getItem("sortInformation") ?? "[]") as SortRule[];
       if (sortInformation !== null && sortInformation.length === 1 && sortInformation[0].field !== "Sort by") {
         this.sortOptions[0].fieldOption = sortInformation[0].field;
         this.sortOptions[0].sortDirection.disabled = false;

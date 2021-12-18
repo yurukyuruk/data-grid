@@ -88,11 +88,17 @@ export class SearchButton extends HTMLElement {
                 allTextContentsOfRows.push(textContentOfEachRow);
             });
             for (let i = 0; i < allTextContentsOfRows.length; i++) {
-                if (inputValue !== "" && !allTextContentsOfRows[i].includes(inputValue)) {
-                    allDataRows[i].style.display = "none";
-                }
-                else {
-                    allDataRows[i].style.display = "table-row";
+                let n = 0;
+                for (let j = 0; j < allTextContentsOfRows[i].length; j++) {
+                    if (allTextContentsOfRows[i][j].includes(inputValue)) {
+                        n += 1;
+                    }
+                    if (inputValue === "" || n > 0) {
+                        allDataRows[i].style.display = "table-row";
+                    }
+                    else {
+                        allDataRows[i].style.display = "none";
+                    }
                 }
             }
         }, 1000));

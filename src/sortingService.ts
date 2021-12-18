@@ -1,15 +1,15 @@
 import { config } from "./configExport.js";
-import { Column } from "./types/interfaces.js";
+import { RowRecord } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 
 export class SortingService {
-  readonly data: Column[];
-  constructor(data: Column[]) {
+  readonly data: RowRecord[];
+  constructor(data: RowRecord[]) {
     this.data = data;
   }
 
-  sortData(sortConfigDatas: SortRule[]): Column[] {
+  sortData(sortConfigDatas: SortRule[]): RowRecord[] {
     for (const sortRule of sortConfigDatas) {
       const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.field);
       if (fieldType === ColumnType.STRING) {
@@ -23,8 +23,7 @@ export class SortingService {
     return this.data;
   }
   sortStringComparator(sortField: string, sortDirection: SortDirection) {
-    //create an enum asc desc
-    return (a: Column, b: Column): number => {
+    return (a: RowRecord, b: RowRecord): number => {
       let result = 0;
       if (sortDirection === SortDirection.ASC) {
         result = (a[sortField] as string) > (b[sortField] as string) ? 1 : -1;
@@ -35,10 +34,11 @@ export class SortingService {
     };
   }
   sortNumberComparator(sortField: string, sortDirection: SortDirection) {
-    return (a: Column, b: Column) => (sortDirection === SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField]);
+    return (a: RowRecord, b: RowRecord) =>
+      sortDirection === SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
   }
   sortDateComperator(sortField: string, sortDirection: SortDirection) {
-    return (a: Column, b: Column) => {
+    return (a: RowRecord, b: RowRecord) => {
       const c: Date = new Date(a[sortField]);
       const d: Date = new Date(b[sortField]);
       if (sortDirection === SortDirection.ASC) {

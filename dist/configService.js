@@ -40,6 +40,7 @@ export class ConfigService {
         if (column) {
             return column.id;
         }
+        throw new Error("Column doesn't exist.");
     }
     getColumnTypeFromColumnDisplayName(columnName) {
         const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
@@ -52,12 +53,7 @@ export class ConfigService {
     }
     getSummaryFieldsFromColumnName(columnIndex) {
         const summaryDetails = this.columns[columnIndex].summary;
-        if (summaryDetails) {
-            return summaryDetails.split("+");
-        }
-        else {
-            return void 0;
-        }
+        return summaryDetails === undefined ? [] : summaryDetails.split("+");
     }
     getColumnsWhichHaveChilderenColumns() {
         return this.columns.filter((column) => column.children !== undefined);

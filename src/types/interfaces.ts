@@ -1,6 +1,8 @@
+import { ColumnType, SortDirection } from "./enums.js";
+
 export interface SortRule {
   field: string;
-  direction: string;
+  direction: SortDirection;
 }
 export interface ColumnsInformation {
   name: string;
@@ -10,11 +12,11 @@ export interface ColumnsInformation {
 export interface Column {
   id: string;
   displayName: string;
-  type: string;
+  type: ColumnType;
   columnIndex: number;
   summary?: string;
   collapsed?: boolean;
-  children: Column[];
+  children?: Column[];
 }
 export interface Data {
   columns: Column[];
@@ -30,3 +32,6 @@ interface SortingRules {
   id: string;
   direction: string;
 }
+export type RowRecord = Record<string, CellData>;
+export type CellData = string | number | NestedCellData;
+export type NestedCellData = Record<string, unknown>;

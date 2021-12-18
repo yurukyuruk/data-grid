@@ -134,7 +134,7 @@ export class ColumnHider extends HTMLElement {
   private readonly columnHiderCloseButton: HTMLInputElement;
   private columnCheckboxes: HTMLDivElement;
   private readonly resetButton: HTMLInputElement;
-  private allColumnCheckboxes?: NodeListOf<Element>;
+  private allColumnCheckboxes!: NodeListOf<HTMLDivElement>;
 
   constructor() {
     super();
@@ -179,13 +179,13 @@ export class ColumnHider extends HTMLElement {
       this.getElementReferences();
       this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
       this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
-      const columnVisibilityInformation: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+      const columnVisibilityInformation: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]") as string[];
       this.allColumnCheckboxes = this.shadowRoot.querySelectorAll(".column-checkbox");
       if (localStorage.getItem("columnVisibilityInformation") !== null) {
         for (let i = 0; i < this.allColumnCheckboxes.length; i++) {
           this.allColumnCheckboxes[i].setAttribute("data-column-checkbox-checked", columnVisibilityInformation[i]);
           if (this.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked") === "false") {
-            this.allColumnCheckboxes[i].firstElementChild.removeAttribute("checked");
+            this.allColumnCheckboxes[i].firstElementChild?.removeAttribute("checked");
           }
         }
       }

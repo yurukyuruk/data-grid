@@ -43,11 +43,12 @@ export class ConfigService {
     return htmlClassNamesOfColumns;
   }
 
-  getColumnIdFromColumnDisplayName(columnName: string): string | void {
+  getColumnIdFromColumnDisplayName(columnName: string): string {
     const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
     if (column) {
       return column.id;
     }
+    throw new Error("Column doesn't exist.");
   }
 
   getColumnTypeFromColumnDisplayName(columnName: string): string | undefined {
@@ -59,13 +60,9 @@ export class ConfigService {
     }
   }
 
-  getSummaryFieldsFromColumnName(columnIndex: number): string[] | undefined {
+  getSummaryFieldsFromColumnName(columnIndex: number): string[] {
     const summaryDetails: string | undefined = this.columns[columnIndex].summary;
-    if (summaryDetails) {
-      return summaryDetails.split("+");
-    } else {
-      return void 0;
-    }
+    return summaryDetails === undefined ? [] : summaryDetails.split("+");
   }
 
   getColumnsWhichHaveChilderenColumns(): Column[] {
@@ -79,7 +76,7 @@ export class ConfigService {
     });
     return displayNamesOfColumns;
   }
-  saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<Element>): string[] {
+  saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<HTMLDivElement>): string[] {
     const columnsVisibilityStatus: string[] = [];
     allColumnCheckboxes.forEach((columnCheckbox) => {
       columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");

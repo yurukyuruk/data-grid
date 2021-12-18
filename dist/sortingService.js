@@ -21,7 +21,6 @@ export class SortingService {
         return this.data;
     }
     sortStringComparator(sortField, sortDirection) {
-        //create an enum asc desc
         return (a, b) => {
             let result = 0;
             if (sortDirection === SortDirection.ASC) {

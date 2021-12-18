@@ -3,6 +3,7 @@ import { ColumnHider } from "./columnHider.js";
 import { SortingService } from "./sortingService.js";
 import { MySortingSection } from "./sortModel.js";
 import { SearchButton } from "./SearchButton.js";
+import { isNestedCellData } from "./types/typeGuards.js";
 const allChildColumnElementsTogetherWithParents = [];
 const dataRows = document.querySelector(".data-rows");
 const columnHeaderSection = document.querySelector("thead");
@@ -59,7 +60,7 @@ function createReferenceElement() {
             expandedDataRow.setAttribute("data-address-section-expanded", "false");
             expandedDataRow.setAttribute("data-column-checkbox-checked", "true");
             expandedDataRow.setAttribute("colspan", config.columns[i].children.length.toString());
-            config.columns[i].children.forEach(() => {
+            config.columns[i].children?.forEach(() => {
                 const childDataCell = document.createElement("td");
                 childDataCell.setAttribute("data-address-section-expanded", "false");
                 childDataCell.setAttribute("data-column-checkbox-checked", "true");
@@ -74,19 +75,20 @@ function createReferenceElement() {
 }
 function addDataToElement(element, eachPerson) {
     for (let i = 0; i < config.columns.length; i++) {
-        if (config.columns[i].children) {
-            const columnWhichHaveChildren = config.columns[i];
-            const fieldNames = config.getSummaryFieldsFromColumnName(i);
-            const summaryText = fieldNames.map((fieldName) => eachPerson[columnWhichHaveChildren.id][fieldName]).join(", ");
+        const columnWhichHaveChildren = config.columns[i];
+        const cell = eachPerson[columnWhichHaveChildren.id];
+        if (isNestedCellData(cell)) {
+            const fieldNames = config.getSummaryFieldsFromColumnName(i); //dont pass index pass columnid
+            const summaryText = fieldNames.map((fieldName) => cell[fieldName]).join(", ");
             const childrenText = document.createTextNode(summaryText);
             element.children[i].append(childrenText);
             for (let k = 0; k < element.children[i].children[0].children[0].children.length; k++) {
-                const eachChildrenText = eachPerson[columnWhichHaveChildren.id][columnWhichHaveChildren.children[k].id];
+                const eachChildrenText = cell[columnWhichHaveChildren.children[k].id];
                 element.children[i].children[0].children[0].children[k].append(eachChildrenText);
             }
         }
         else {
-            const text = document.createTextNode(eachPerson[config.columns[i].id]);
+            const text = document.createTextNode(cell.toString());
             element.children[i].append(text);
         }
     }
@@ -114,9 +116,9 @@ let data;
 export let sortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG);
 export function fetchRowDatas() {
-    fetch(config.data.dataUrl)
+    void fetch(config.data.dataUrl)
         .then(async (response) => {
-        data = await response.json();
+        data = (await response.json());
         sortingService = new SortingService(data);
         addAllDataAtOnce(data, createReferenceElement());
     })
@@ -169,7 +171,9 @@ export function addEventListenerToColumnHeadersWhichHasChildren() {
             else {
                 addDataSummaryToParentColumn(config.getColumnsWhichHaveChilderenColumns()[i], summaryDataElementsOfClosedColumns);
             }
-            allChildColumnElementsTogetherWithParents[i].forEach((element) => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
+            allChildColumnElementsTogetherWithParents[i].forEach((element) => {
+                element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString());
+            });
             const tableDatasOfExpandedColumns = document.querySelectorAll("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data" + " table tr td");
             const tableRowOfExpandedColumns = document.querySelectorAll("td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data" + " table tr");
             tableDatasOfExpandedColumns.forEach((element) => element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString()));
