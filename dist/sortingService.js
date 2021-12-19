@@ -40,10 +40,10 @@ export class SortingService {
             const c = new Date(a[sortField]);
             const d = new Date(b[sortField]);
             if (sortDirection === SortDirection.ASC) {
-                return c - d;
+                return c.getTime() - d.getTime();
             }
             else {
-                return d - c;
+                return d.getTime() - c.getTime();
             }
         };
     }

@@ -35,16 +35,16 @@ export class SortingService {
   }
   sortNumberComparator(sortField: string, sortDirection: SortDirection) {
     return (a: RowRecord, b: RowRecord) =>
-      sortDirection === SortDirection.ASC ? a[sortField] - b[sortField] : b[sortField] - a[sortField];
+      sortDirection === SortDirection.ASC ? (a[sortField] as number) - (b[sortField] as number) : (b[sortField] as number) - (a[sortField]as number);
   }
   sortDateComperator(sortField: string, sortDirection: SortDirection) {
     return (a: RowRecord, b: RowRecord) => {
-      const c: Date = new Date(a[sortField]);
-      const d: Date = new Date(b[sortField]);
+      const c: Date = new Date(a[sortField] as unknown as Date);
+      const d: Date = new Date(b[sortField] as unknown as Date);
       if (sortDirection === SortDirection.ASC) {
-        return c - d;
+        return c.getTime() - d.getTime();
       } else {
-        return d - c;
+        return d.getTime() - c.getTime();
       }
     };
   }

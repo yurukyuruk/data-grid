@@ -4,7 +4,7 @@ import { SortingService } from "./sortingService.js";
 import { MySortingSection } from "./sortModel.js";
 import { SearchButton } from "./SearchButton.js";
 import { Column, RowRecord } from "./types/interfaces.js";
-import { isNestedCellData } from "./types/typeGuards.js";
+import { isRowRecord } from "./types/typeGuards.js";
 
 const allChildColumnElementsTogetherWithParents: (HTMLTableRowElement | HTMLTableElement | HTMLTableCellElement)[][] = [];
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
@@ -82,7 +82,7 @@ function addDataToElement(element: HTMLTableRowElement, eachPerson: RowRecord): 
   for (let i = 0; i < config.columns.length; i++) {
     const columnWhichHaveChildren: Column = config.columns[i];
     const cell = eachPerson[columnWhichHaveChildren.id];
-    if (isNestedCellData(cell)) {
+    if (isRowRecord(cell)) {
       const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i); //dont pass index pass columnid
       const summaryText: string = fieldNames.map((fieldName) => cell[fieldName]).join(", ");
       const childrenText = document.createTextNode(summaryText);
@@ -119,32 +119,27 @@ function addAllDataAtOnce(fetchedData: RowRecord[], dataReferenceElement: HTMLTa
   dataRows.append(allPersonsElements);
 }
 
-let data: RowRecord[];
 export let sortingService: SortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
 export function fetchRowDatas(): Promise<void> {
-  void fetch(config.data.dataUrl)
-    .then(async (response) => {
-      data = (await response.json()) as RowRecord[];
-      sortingService = new SortingService(data);
-      addAllDataAtOnce(data, createReferenceElement());
-    })
-    .then(() => {
+  return fetch(config.data.dataUrl)
+    .then((response) => response.json())//Birinci then in return değerini ikinci thende parametre olarak kullanıyoruz.
+    .then((rowRecords: RowRecord[]) => {
+      sortingService = new SortingService(rowRecords);
+      addAllDataAtOnce(rowRecords, createReferenceElement());
       if (localStorage.getItem("sortInformation") !== null) {
         dataRows.innerHTML = "";
         const sortedData: RowRecord[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
         addAllDataAtOnce(sortedData, createReferenceElement());
       }
-    })
-    .then(() => {
       const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
 
       for (let i = 0; i < config.columns.length; i++) {
         const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-data");
         eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
       }
-    });
+    })
 }
 
 sortModel.addEventListener("to-sort", () => {
@@ -153,11 +148,11 @@ sortModel.addEventListener("to-sort", () => {
 });
 
 function addDataSummaryToParentColumn(column: Column, summaryDataElements: HTMLTableCellElement[]) {
-  for (let j = 0; j < data.length; j++) {
+  for (let j = 0; j < sortingService.data.length; j++) {
     for (let i = 0; i < config.columns.length; i++) {
       if (config.columns[i] === column) {
         const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i);
-        const summaryText: string = fieldNames.map((fieldName) => data[j][column.id][fieldName]).join(", ");
+        const summaryText: string = fieldNames.map((fieldName) => sortingService.data[j][column.id][fieldName]).join(", ");
         summaryDataElements[j].childNodes[1].textContent = summaryText;
       }
     }

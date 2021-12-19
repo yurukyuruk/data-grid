@@ -3,7 +3,7 @@ import { ColumnHider } from "./columnHider.js";
 import { SortingService } from "./sortingService.js";
 import { MySortingSection } from "./sortModel.js";
 import { SearchButton } from "./SearchButton.js";
-import { isNestedCellData } from "./types/typeGuards.js";
+import { isRowRecord } from "./types/typeGuards.js";
 const allChildColumnElementsTogetherWithParents = [];
 const dataRows = document.querySelector(".data-rows");
 const columnHeaderSection = document.querySelector("thead");
@@ -77,7 +77,7 @@ function addDataToElement(element, eachPerson) {
     for (let i = 0; i < config.columns.length; i++) {
         const columnWhichHaveChildren = config.columns[i];
         const cell = eachPerson[columnWhichHaveChildren.id];
-        if (isNestedCellData(cell)) {
+        if (isRowRecord(cell)) {
             const fieldNames = config.getSummaryFieldsFromColumnName(i); //dont pass index pass columnid
             const summaryText = fieldNames.map((fieldName) => cell[fieldName]).join(", ");
             const childrenText = document.createTextNode(summaryText);
@@ -112,24 +112,19 @@ function addAllDataAtOnce(fetchedData, dataReferenceElement) {
     });
     dataRows.append(allPersonsElements);
 }
-let data;
 export let sortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG);
 export function fetchRowDatas() {
-    void fetch(config.data.dataUrl)
-        .then(async (response) => {
-        data = (await response.json());
-        sortingService = new SortingService(data);
-        addAllDataAtOnce(data, createReferenceElement());
-    })
-        .then(() => {
+    return fetch(config.data.dataUrl)
+        .then((response) => response.json()) //Birinci then in return değerini ikinci thende parametre olarak kullanıyoruz.
+        .then((rowRecords) => {
+        sortingService = new SortingService(rowRecords);
+        addAllDataAtOnce(rowRecords, createReferenceElement());
         if (localStorage.getItem("sortInformation") !== null) {
             dataRows.innerHTML = "";
             const sortedData = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
             addAllDataAtOnce(sortedData, createReferenceElement());
         }
-    })
-        .then(() => {
         const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
         for (let i = 0; i < config.columns.length; i++) {
             const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id + "-data");
@@ -142,11 +137,11 @@ sortModel.addEventListener("to-sort", () => {
     addAllDataAtOnce(sortingService.data, createReferenceElement());
 });
 function addDataSummaryToParentColumn(column, summaryDataElements) {
-    for (let j = 0; j < data.length; j++) {
+    for (let j = 0; j < sortingService.data.length; j++) {
         for (let i = 0; i < config.columns.length; i++) {
             if (config.columns[i] === column) {
                 const fieldNames = config.getSummaryFieldsFromColumnName(i);
-                const summaryText = fieldNames.map((fieldName) => data[j][column.id][fieldName]).join(", ");
+                const summaryText = fieldNames.map((fieldName) => sortingService.data[j][column.id][fieldName]).join(", ");
                 summaryDataElements[j].childNodes[1].textContent = summaryText;
             }
         }

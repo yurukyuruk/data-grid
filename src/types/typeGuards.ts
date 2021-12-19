@@ -1,5 +1,5 @@
-import { CellData, NestedCellData } from "./interfaces.js";
+import { CellData, RowRecord } from "./interfaces.js";
 
-export function isNestedCellData(cell: CellData): cell is NestedCellData {
+export function isRowRecord(cell: CellData): cell is RowRecord {
   return typeof cell === "object" && !Array.isArray(cell) && cell !== null;
 }

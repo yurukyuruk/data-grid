@@ -32,6 +32,6 @@ interface SortingRules {
   id: string;
   direction: string;
 }
-export type RowRecord = Record<string, CellData>;
-export type CellData = string | number | NestedCellData;
-export type NestedCellData = Record<string, unknown>;
+export type RowRecord = { [k: string]: CellData };
+export type CellData = string | number | RowRecord;
+
