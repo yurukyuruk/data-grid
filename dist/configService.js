@@ -8,21 +8,15 @@ export class ConfigService {
     data;
     columns;
     constructor() {
-        this.data;
-        fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json")
-            .then(async (response) => {
-            this.data = await response.json();
-        })
-            .then(() => {
-            this.columns = this.data.columns;
-        })
-            .then(() => {
-            fetchRowDatas();
-        })
-            .then(() => {
+        this.fetchConfig();
+    }
+    fetchConfig() {
+        return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
+            .then((response) => response.json())
+            .then((data) => {
+            this.columns = data.columns;
+            fetchRowDatas(data);
             sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
-        })
-            .then(() => {
             createDataHeaders();
             addEventListenerToColumnHeadersWhichHasChildren();
         });
@@ -79,7 +73,7 @@ export class ConfigService {
     getSortOptions(sortOptions) {
         return sortOptions.map((option) => {
             return {
-                field: option.fieldOption,
+                id: option.fieldOption,
                 direction: option.directionOption
             };
         });

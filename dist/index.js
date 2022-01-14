@@ -114,8 +114,8 @@ function addAllDataAtOnce(fetchedData, dataReferenceElement) {
 }
 export let sortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG);
-export function fetchRowDatas() {
-    return fetch(config.data.dataUrl)
+export function fetchRowDatas(data) {
+    return fetch(data.dataUrl)
         .then((response) => response.json()) //Birinci then in return değerini ikinci thende parametre olarak kullanıyoruz.
         .then((rowRecords) => {
         sortingService = new SortingService(rowRecords);
@@ -137,12 +137,14 @@ sortModel.addEventListener("to-sort", () => {
     addAllDataAtOnce(sortingService.data, createReferenceElement());
 });
 function addDataSummaryToParentColumn(column, summaryDataElements) {
-    for (let j = 0; j < sortingService.data.length; j++) {
-        for (let i = 0; i < config.columns.length; i++) {
-            if (config.columns[i] === column) {
-                const fieldNames = config.getSummaryFieldsFromColumnName(i);
-                const summaryText = fieldNames.map((fieldName) => sortingService.data[j][column.id][fieldName]).join(", ");
-                summaryDataElements[j].childNodes[1].textContent = summaryText;
+    if (column.children) {
+        for (let j = 0; j < sortingService.data.length; j++) {
+            for (let i = 0; i < config.columns.length; i++) {
+                if (config.columns[i] === column) {
+                    const fieldNames = config.getSummaryFieldsFromColumnName(i);
+                    const summaryText = fieldNames.map((fieldName) => sortingService.data[j][column.id][fieldName]).join(", ");
+                    summaryDataElements[j].childNodes[1].textContent = summaryText;
+                }
             }
         }
     }

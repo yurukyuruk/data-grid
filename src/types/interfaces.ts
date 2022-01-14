@@ -1,7 +1,7 @@
 import { ColumnType, SortDirection } from "./enums.js";
 
 export interface SortRule {
-  field: string;
+  id: string;
   direction: SortDirection;
 }
 export interface ColumnsInformation {
@@ -22,15 +22,11 @@ export interface Data {
   columns: Column[];
   columnsVisiblity: ColumnsVisiblity[];
   dataUrl: string;
-  sortingRules: SortingRules[];
+  sortingRules: SortRule[];
 }
 interface ColumnsVisiblity {
   id: string;
   visible: boolean;
-}
-interface SortingRules {
-  id: string;
-  direction: string;
 }
 export type RowRecord = { [k: string]: CellData };
 export type CellData = string | number | RowRecord;

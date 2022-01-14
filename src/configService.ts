@@ -12,28 +12,21 @@ export class ConfigService {
   data!: Data;
   columns!: Column[];
   constructor() {
-    this.data;
-    fetch(
+    this.fetchConfig();
+  }
+  fetchConfig(): Promise<void> {
+    return fetch(
       "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/personData/dataset-2/config.json"
     )
-      .then(async (response) => {
-        this.data = await response.json();
-      })
-      .then(() => {
-        this.columns = this.data.columns;
-      })
-      .then(() => {
-        fetchRowDatas();
-      })
-      .then(() => {
+      .then((response) => response.json())
+      .then((data) => {
+        this.columns = data.columns;
+        fetchRowDatas(data);
         sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
-      })
-      .then(() => {
         createDataHeaders();
         addEventListenerToColumnHeadersWhichHasChildren();
-      });
+      })   
   }
-
   getHtmlClassNamesOfColumns(): string[] {
     const htmlClassNamesOfColumns: string[] = [];
     this.columns.forEach((column) => {
@@ -90,7 +83,7 @@ export class ConfigService {
   getSortOptions(sortOptions: SortingRule[]): SortRule[] {
     return sortOptions.map((option) => {
       return {
-        field: option.fieldOption,
+        id: option.fieldOption,
         direction: option.directionOption
       };
     });

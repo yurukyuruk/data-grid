@@ -3,6 +3,7 @@ import { SortingService } from "./sortingService.js";
 import { sortingService } from "./index.js";
 import { config } from "./configExport.js";
 import { ConfigService } from "./configService.js";
+import { SortDirection } from "./types/enums.js";
 const { template } = {
     template: `
   <style>  
@@ -176,18 +177,18 @@ export class MySortingSection extends HTMLElement {
                 this.sortOptions[0].sortField.append(sortFieldOption);
             }
             const sortInformation = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
-            if (sortInformation !== null && sortInformation.length === 1 && sortInformation[0].field !== "Sort by") {
-                this.sortOptions[0].fieldOption = sortInformation[0].field;
+            if (sortInformation !== null && sortInformation.length === 1 && sortInformation[0].id !== "Sort by") {
+                this.sortOptions[0].fieldOption = sortInformation[0].id;
                 this.sortOptions[0].sortDirection.disabled = false;
                 this.sortOptions[0].directionOption = sortInformation[0].direction;
             }
             else if (sortInformation !== null && sortInformation.length > 1) {
-                this.sortOptions[0].fieldOption = sortInformation[0].field;
+                this.sortOptions[0].fieldOption = sortInformation[0].id;
                 this.sortOptions[0].sortDirection.disabled = false;
                 this.sortOptions[0].directionOption = sortInformation[0].direction;
                 for (let i = 1; i < sortInformation.length; i++) {
                     this.createNewSortLine();
-                    this.sortOptions[i].fieldOption = sortInformation[i].field;
+                    this.sortOptions[i].fieldOption = sortInformation[i].id;
                     this.sortOptions[i].sortDirection.disabled = false;
                     this.sortOptions[i].directionOption = sortInformation[i].direction;
                 }
@@ -227,7 +228,7 @@ export class MySortingSection extends HTMLElement {
             config.saveSortInformation(this.sortOptions);
         });
         this.sortOptions[0].sortLine.addEventListener("change", () => {
-            if (this.sortOptions[0].fieldOption !== "Sort by" && this.sortOptions[0].directionOption !== "Sort direction") {
+            if (this.sortOptions[0].fieldOption !== "Sort by" && (this.sortOptions[0].directionOption === SortDirection.ASC || this.sortOptions[0].directionOption === SortDirection.DESC)) {
                 this.sortAddingButton.disabled = false;
             }
         });

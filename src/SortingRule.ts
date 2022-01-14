@@ -1,3 +1,5 @@
+import { SortDirection } from "./types/enums.js";
+
 const { template } = {
   template: `
     <style>  
@@ -59,10 +61,10 @@ export class SortingRule extends HTMLElement {
   get fieldOption(): string {
     return this.sortField.value;
   }
-  set directionOption(value: string) {
+  set directionOption(value: string) {//how to convert a string to enum
     this.sortDirection.value = value;
   }
-  get directionOption(): string {
+  get directionOption(): SortDirection {
     return this.sortDirection.value;
   }
   setButtons(): void {

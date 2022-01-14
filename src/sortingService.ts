@@ -11,13 +11,13 @@ export class SortingService {
 
   sortData(sortConfigDatas: SortRule[]): RowRecord[] {
     for (const sortRule of sortConfigDatas) {
-      const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.field);
+      const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.id);
       if (fieldType === ColumnType.STRING) {
-        this.data.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
+        this.data.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       } else if (fieldType === ColumnType.NUMBER) {
-        this.data.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
+        this.data.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       } else {
-        this.data.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.field), sortRule.direction));
+        this.data.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       }
     }
     return this.data;

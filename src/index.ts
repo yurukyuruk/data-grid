@@ -3,7 +3,7 @@ import { ColumnHider } from "./columnHider.js";
 import { SortingService } from "./sortingService.js";
 import { MySortingSection } from "./sortModel.js";
 import { SearchButton } from "./SearchButton.js";
-import { Column, RowRecord } from "./types/interfaces.js";
+import { Column, Data, RowRecord } from "./types/interfaces.js";
 import { isRowRecord } from "./types/typeGuards.js";
 
 const allChildColumnElementsTogetherWithParents: (HTMLTableRowElement | HTMLTableElement | HTMLTableCellElement)[][] = [];
@@ -122,8 +122,8 @@ function addAllDataAtOnce(fetchedData: RowRecord[], dataReferenceElement: HTMLTa
 export let sortingService: SortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
-export function fetchRowDatas(): Promise<void> {
-  return fetch(config.data.dataUrl)
+export function fetchRowDatas(data: Data): Promise<void> {
+  return fetch(data.dataUrl)
     .then((response) => response.json())//Birinci then in return değerini ikinci thende parametre olarak kullanıyoruz.
     .then((rowRecords: RowRecord[]) => {
       sortingService = new SortingService(rowRecords);
@@ -148,15 +148,18 @@ sortModel.addEventListener("to-sort", () => {
 });
 
 function addDataSummaryToParentColumn(column: Column, summaryDataElements: HTMLTableCellElement[]) {
-  for (let j = 0; j < sortingService.data.length; j++) {
-    for (let i = 0; i < config.columns.length; i++) {
-      if (config.columns[i] === column) {
-        const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i);
-        const summaryText: string = fieldNames.map((fieldName) => sortingService.data[j][column.id][fieldName]).join(", ");
-        summaryDataElements[j].childNodes[1].textContent = summaryText;
+  if(column.children) {
+    for (let j = 0; j < sortingService.data.length; j++) {
+      for (let i = 0; i < config.columns.length; i++) {
+        if (config.columns[i] === column) {
+          const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i);
+          const summaryText: string = fieldNames.map((fieldName) => (sortingService.data[j][column.id] as RowRecord)[fieldName]).join(", ");
+          summaryDataElements[j].childNodes[1].textContent = summaryText;
+        }
       }
     }
   }
+  
 }
 
 export function addEventListenerToColumnHeadersWhichHasChildren() {
