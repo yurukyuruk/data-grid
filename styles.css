@@ -37,18 +37,21 @@ th {
 .blured {
   filter: blur(2px);
 }
-tr[data-address-section-expanded='false'],
-td[data-address-section-expanded='false'],
-td[data-address-section-closed='false'] {
+
+td[data-section-expanded='false'],
+th[data-section-expanded='false'] {
   display: none;
 }
-tr[data-address-section-expanded='true'] {
-  display: table-row;
+td[data-section-expanded='true'] {
+  display: table-cell;
 }
-th[data-address-section-expanded='true'] {
-  padding: 1px;
+
+td[data-header-expanded='true'] {
+  display: none;
 }
-tr[data-address-section-expanded='true'] > * {
-  padding: 1px;
+
+td[data-header-expanded='false'] {
+  display: table-cell;
 }
+
 

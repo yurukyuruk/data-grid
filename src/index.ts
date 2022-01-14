@@ -5,49 +5,87 @@ import { MySortingSection } from "./sortModel.js";
 import { SearchButton } from "./SearchButton.js";
 import { Column, Data, RowRecord } from "./types/interfaces.js";
 import { isRowRecord } from "./types/typeGuards.js";
+import { DATA_ROWS } from "./configExport.js";
 
 const allChildColumnElementsTogetherWithParents: (HTMLTableRowElement | HTMLTableElement | HTMLTableCellElement)[][] = [];
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
 const columnHeaderSection = document.querySelector("thead") as HTMLTableSectionElement;
 
 export function createDataHeaders(): void {
-  const mainColumnHeadersSection = document.createElement("tr");
-  mainColumnHeadersSection.classList.add("columns");
-  for (let i = 0; i < config.columns.length; i++) {
-    const mainColumn = document.createElement("th");
-    mainColumn.classList.add(config.columns[i].id + "-data");
-    mainColumn.setAttribute("data-column-checkbox-checked", "true");
-    mainColumn.setAttribute("rowspan", "2");
-    mainColumn.textContent = config.columns[i].displayName.toUpperCase();
-    mainColumnHeadersSection.appendChild(mainColumn);
-    if (config.columns[i].children) {
-      const childColumnElementsTogetherWithParents: (HTMLTableRowElement | HTMLTableElement | HTMLTableCellElement)[] = [];
-      mainColumn.setAttribute("data-address-section-expanded", "false");
-      mainColumn.setAttribute("id", config.columns[i].id + "-header");
-      const childColumnHeadersSection = document.createElement("table");
-      childColumnHeadersSection.setAttribute("data-address-section-expanded", "false");
-      const childColumnRow = document.createElement("tr");
-      childColumnRow.setAttribute("data-address-section-expanded", "false");
-      for (let k = 0; k < (config.columns[i].children as Column[]).length; k++) {
-        const childColumnHeader = document.createElement("th");
-        childColumnHeader.setAttribute("data-address-section-expanded", "false");
-        childColumnHeader.classList.add((config.columns[i].children as Column[])[k].id + "-header");
-        childColumnHeader.textContent = (config.columns[i].children as Column[])[k].displayName.toUpperCase();
-        childColumnRow.appendChild(childColumnHeader);
-        childColumnElementsTogetherWithParents.push(childColumnHeader);
+  const rowOfMainHeaders = document.createElement("tr");
+    const rowOfChildHeaders = document.createElement("tr");
+    const hasChildrens = config.hasAnyChildren();
+    rowOfMainHeaders.classList.add("header-row");
+    rowOfChildHeaders.classList.add("header-row");
+    for(const column of config.columns) {
+        const columnHeader = document.createElement("th");
+        columnHeader.rowSpan = hasChildrens ? 2 : 1;
+        columnHeader.id = column.id;
+        columnHeader.className = `${column.id}-header`;
+        columnHeader.setAttribute("data-column-checkbox-checked", "true");
+        columnHeader.textContent = column.displayName.toUpperCase();
+        rowOfMainHeaders.append(columnHeader);
+        if (column.children !== undefined) {
+            columnHeader.setAttribute("data-header-expanded", "false");
+          addToogleChildrensVisiblityListener(columnHeader);
+          columnHeader.addEventListener("mouseover", () => {
+            columnHeader.style.color = "white";
+            columnHeader.style.cursor = "pointer";
+          });
+          columnHeader.addEventListener("mouseout", () => {
+            columnHeader.style.color = "black";
+          });
+          for (const childColumn of column.children) {
+            const childColumnHeader = document.createElement("th");
+            childColumnHeader.id = childColumn.id;
+            childColumnHeader.className = `${childColumn.id}-header ${column.id}`;
+            childColumnHeader.setAttribute("data-section-expanded", "false");
+            childColumnHeader.textContent = childColumn.displayName.toUpperCase();
+            rowOfChildHeaders.append(childColumnHeader);
+          }
+        }
       }
-      childColumnHeadersSection.appendChild(childColumnRow);
-      mainColumn.appendChild(childColumnHeadersSection);
-      childColumnElementsTogetherWithParents.push(childColumnHeadersSection);
-      childColumnElementsTogetherWithParents.push(childColumnRow);
-      childColumnElementsTogetherWithParents.push(mainColumn);
-      allChildColumnElementsTogetherWithParents.push(childColumnElementsTogetherWithParents);
-    }
-  }
-  columnHeaderSection.appendChild(mainColumnHeadersSection);
+    columnHeaderSection.appendChild(rowOfMainHeaders);
+    columnHeaderSection.appendChild(rowOfChildHeaders);
 }
 
-function createReferenceElement(): HTMLTableRowElement {
+export function createRows(): void {
+  let n = -1;
+  for (const record of DATA_ROWS.rows) {
+    n += 1;
+    const dataRow = document.createElement("tr");
+    for (const [recordId, recordValue] of Object.entries(record)) {
+      const dataCell = document.createElement("td");
+      dataCell.className = recordId;
+      if (isRowRecord(recordValue)) {
+        dataCell.setAttribute("data-header-expanded", "false");
+        dataCell.textContent = config
+          .getSummaryRule(recordId)
+          .map((fieldId) => recordValue[fieldId])
+          .join(", ");
+        for (const [childrenId, childrenValue] of Object.entries(recordValue)) {
+          const childrenCell = document.createElement("td");
+          childrenCell.className = `${recordId} ${childrenId}`;
+          childrenCell.textContent = childrenValue.toString();
+          childrenCell.setAttribute("data-section-expanded", "false");
+          dataRow.append(childrenCell);
+        }
+      } else {
+        dataCell.textContent = recordValue.toString();
+      }
+      dataRow.append(dataCell);
+    }
+    if (n % 2 !== 0) {
+      dataRow.classList.add("colored-row");
+    }
+    dataRows.append(dataRow);
+    
+    
+  }
+  
+}
+
+/*function createReferenceElement(): HTMLTableRowElement {
   const dataRow = document.createElement("tr");
   dataRow.classList.add("row0");
   dataRow.classList.add("data-row");
@@ -96,9 +134,9 @@ function addDataToElement(element: HTMLTableRowElement, eachPerson: RowRecord): 
       element.children[i].append(text);
     }
   }
-}
+}*/
 
-function addClassName(newNumber: number): string {
+/*function addClassName(newNumber: number): string {
   return `row${newNumber} data-row`;
 }
 
@@ -117,12 +155,12 @@ function addAllDataAtOnce(fetchedData: RowRecord[], dataReferenceElement: HTMLTa
     }
   });
   dataRows.append(allPersonsElements);
-}
+}*/
 
 export let sortingService: SortingService;
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
-export function fetchRowDatas(data: Data): Promise<void> {
+/*export function fetchRowDatas(data: Data): Promise<void> {
   return fetch(data.dataUrl)
     .then((response) => response.json())//Birinci then in return değerini ikinci thende parametre olarak kullanıyoruz.
     .then((rowRecords: RowRecord[]) => {
@@ -140,6 +178,30 @@ export function fetchRowDatas(data: Data): Promise<void> {
         eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
       }
     })
+}*/
+function addToogleChildrensVisiblityListener(headerColumn) {
+  headerColumn.addEventListener("click", () => {
+      const newState = headerColumn.getAttribute("data-header-expanded") === "false" ? "true" : "false";
+      if (newState === "true") {
+          headerColumn.rowSpan = 1;
+          headerColumn.colSpan = config.getChildrens(headerColumn.id).length || 1;
+      } else {
+          headerColumn.rowSpan = 2;
+          headerColumn.colSpan = 1;
+      }
+      headerColumn.setAttribute("data-header-expanded", newState);
+      const childrens = [
+        ...Array.from(columnHeaderSection.querySelectorAll(`.${headerColumn.id}`)),
+        ...Array.from(dataRows.querySelectorAll(`.${headerColumn.id}`))
+      ];
+      for (const children of childrens) {
+        if (children.getAttribute("data-header-expanded")) {
+          children.setAttribute("data-header-expanded", newState);
+        } else {
+          children.setAttribute("data-section-expanded", newState);
+        }
+      }
+    });
 }
 
 sortModel.addEventListener("to-sort", () => {
@@ -147,67 +209,7 @@ sortModel.addEventListener("to-sort", () => {
   addAllDataAtOnce(sortingService.data, createReferenceElement());
 });
 
-function addDataSummaryToParentColumn(column: Column, summaryDataElements: HTMLTableCellElement[]) {
-  if(column.children) {
-    for (let j = 0; j < sortingService.data.length; j++) {
-      for (let i = 0; i < config.columns.length; i++) {
-        if (config.columns[i] === column) {
-          const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i);
-          const summaryText: string = fieldNames.map((fieldName) => (sortingService.data[j][column.id] as RowRecord)[fieldName]).join(", ");
-          summaryDataElements[j].childNodes[1].textContent = summaryText;
-        }
-      }
-    }
-  }
-  
-}
 
-export function addEventListenerToColumnHeadersWhichHasChildren() {
-  for (let i = 0; i < config.getColumnsWhichHaveChilderenColumns().length; i++) {
-    const columnHeaderWhichHasChildColumns = document.querySelector(
-      "#" + config.getColumnsWhichHaveChilderenColumns()[i].id + "-header"
-    ) as HTMLTableCellElement;
-    columnHeaderWhichHasChildColumns.addEventListener("mouseover", () => {
-      columnHeaderWhichHasChildColumns.style.color = "white";
-      columnHeaderWhichHasChildColumns.style.cursor = "pointer";
-    });
-    columnHeaderWhichHasChildColumns.addEventListener("mouseout", () => {
-      columnHeaderWhichHasChildColumns.style.color = "black";
-    });
-    columnHeaderWhichHasChildColumns.addEventListener("click", () => {
-      const summaryDataElementsOfClosedColumns = document.querySelectorAll(
-        "td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data"
-      ) as unknown as HTMLTableCellElement[];
-      const expandedSectionElementsStateChange: boolean =
-        columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false" ? true : false;
-      if (expandedSectionElementsStateChange) {
-        summaryDataElementsOfClosedColumns.forEach((element) => (element.childNodes[1].textContent = ""));
-      } else {
-        addDataSummaryToParentColumn(config.getColumnsWhichHaveChilderenColumns()[i], summaryDataElementsOfClosedColumns);
-      }
-      allChildColumnElementsTogetherWithParents[i].forEach((element) => {
-        element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString());
-      });
-      const tableDatasOfExpandedColumns = document.querySelectorAll(
-        "td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data" + " table tr td"
-      ) as unknown as HTMLTableCellElement[];
-      const tableRowOfExpandedColumns = document.querySelectorAll(
-        "td" + "." + config.getColumnsWhichHaveChilderenColumns()[i].id + "-data" + " table tr"
-      ) as unknown as HTMLTableRowElement[];
-      tableDatasOfExpandedColumns.forEach((element) =>
-        element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString())
-      );
-      tableRowOfExpandedColumns.forEach((element) =>
-        element.setAttribute("data-address-section-expanded", expandedSectionElementsStateChange.toString())
-      );
-      if (columnHeaderWhichHasChildColumns.getAttribute("data-address-section-expanded") === "false") {
-        columnHeaderWhichHasChildColumns.setAttribute("rowspan", "2");
-      } else {
-        columnHeaderWhichHasChildColumns.setAttribute("rowspan", "1");
-      }
-    });
-  }
-}
 
 console.log(ColumnHider);
 console.log(SearchButton);

@@ -1,9 +1,9 @@
 import { SortingRule } from "./SortingRule.js";
 import { ColumnHider } from "./columnHider.js";
-import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
-import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
+import { createRows } from "./index.js";
+import { DATA_ROWS } from "./configExport.js";
 export class ConfigService {
     data;
     columns;
@@ -13,12 +13,16 @@ export class ConfigService {
     fetchConfig() {
         return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
             .then((response) => response.json())
-            .then((data) => {
-            this.columns = data.columns;
-            fetchRowDatas(data);
+            .then(({ columns, columnsVisiblity, dataUrl, sortingRules }) => {
+            this.columns = columns;
+            this.sortingRules = sortingRules;
+            this.columnsVisibility = columnsVisiblity;
             sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
             createDataHeaders();
-            addEventListenerToColumnHeadersWhichHasChildren();
+            return DATA_ROWS.fetchData(dataUrl);
+        })
+            .then(() => {
+            createRows();
         });
     }
     getHtmlClassNamesOfColumns() {
@@ -58,6 +62,15 @@ export class ConfigService {
             displayNamesOfColumns.push(column.displayName);
         });
         return displayNamesOfColumns;
+    }
+    hasAnyChildren() {
+        return this.columns.some((column) => column.children);
+    }
+    getChildrens(columnId) {
+        return this.columns.find((colum) => colum.id === columnId)?.children ?? [];
+    }
+    getSummaryRule(columnId) {
+        return this.columns.find((colum) => colum.id === columnId)?.summary?.split("+") ?? [];
     }
     saveColumnVisibilityStatus(allColumnCheckboxes) {
         const columnsVisibilityStatus = [];
