@@ -106,6 +106,12 @@ const { template } = {
     .reset-button:hover {
         background-color: rgb(235, 144, 101);
     }
+    th[data-column-checkbox-checked="false"] {
+      display: none;
+    }
+    td[data-column-checkbox-checked="false"] {
+      display: none;
+    }
     
   </style>
 <div class="column-hider-button-area" data-column-hider-button-area-visible="true">
@@ -158,7 +164,7 @@ export class ColumnHider extends HTMLElement {
       checkbox.classList.add(columnNames[i] + "-checkbox");
       checkbox.setAttribute("checked", "checked");
       checkbox.addEventListener("click", (): void => {
-        const wholeColumnData: NodeListOf<Element> = document.querySelectorAll("." + columnNames[i] + "-data");
+        const wholeColumnData: NodeListOf<Element> = document.querySelectorAll("." + columnNames[i]);
         const checkboxElementsStateChange: boolean =
           wholeColumnData[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
         wholeColumnData.forEach((data) => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));

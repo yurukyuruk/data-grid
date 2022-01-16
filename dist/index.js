@@ -49,6 +49,7 @@ export function createRows() {
     for (const record of DATA_ROWS.rows) {
         n += 1;
         const dataRow = document.createElement("tr");
+        dataRow.classList.add("data-row");
         for (const [recordId, recordValue] of Object.entries(record)) {
             const dataCell = document.createElement("td");
             dataCell.className = recordId;

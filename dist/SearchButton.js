@@ -76,14 +76,7 @@ export class SearchButton extends HTMLElement {
             allDataRows.forEach((row) => {
                 const textContentOfEachRow = [];
                 for (let i = 0; i < row.children.length; i++) {
-                    if (row.children[i].children.length > 0) {
-                        for (let j = 0; j < row.children[i].children[0].children[0].children.length; j++) {
-                            textContentOfEachRow.push(row.children[i].children[0].children[0].children[j].textContent?.toLowerCase() ?? "");
-                        }
-                    }
-                    else {
-                        textContentOfEachRow.push(row.children[i].textContent?.toLowerCase() ?? "");
-                    }
+                    textContentOfEachRow.push(row.children[i].textContent?.toLowerCase() ?? "");
                 }
                 allTextContentsOfRows.push(textContentOfEachRow);
             });

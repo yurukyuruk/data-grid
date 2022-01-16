@@ -42,16 +42,11 @@ td[data-section-expanded='false'],
 th[data-section-expanded='false'] {
   display: none;
 }
-td[data-section-expanded='true'] {
-  display: table-cell;
-}
 
 td[data-header-expanded='true'] {
   display: none;
 }
 
-td[data-header-expanded='false'] {
-  display: table-cell;
-}
+
 
 
