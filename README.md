@@ -14,7 +14,7 @@ Columns can be hidden or displayed via **HIDE COLUMN** button. It is also possib
 using **SEARCH BAR**.
 ## Requirements
 - To run this project you will need:
-  - Modern browser like **Google Chrome** or **Firefox**
+  - Modern browser like **Google Chrome** or **Firefox**.
 ## Built with:
 - TypeScript
 - JavaScript
