@@ -1,7 +1,7 @@
 # DATA-GRID    
 1. [Project Description](#project-description)
 2. [Requirements](#requirements)
-3. [Built with](#built-with)
+3. [Built with](#built-with:)
 4. [Configuration](#configuration)
 ## Project Description
 Data-Grid app displays given data in a user friendly way by providing multiple displaying options. 
@@ -15,8 +15,7 @@ using **SEARCH BAR**.
 ## Requirements
 - To run this project you will need:
   - Modern browser like **Google Chrome** or **Firefox**
-- To set up configuration you will need:
-## Built with
+## Built with:
 - TypeScript
 - JavaScript
 - CSS
