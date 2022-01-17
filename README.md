@@ -1,8 +1,8 @@
 # DATA-GRID    
-1. Project Description
-2. Requirements
-3. Built with
-4. Configuration
+1. [Project Description](#project-description)
+2. [Requirements](#requirements)
+3. [Built with](#built-with)
+4. [Configuration](#configuration)
 ## Project Description
 Data-Grid app displays given data in a user friendly way by providing multiple displaying options. 
 Number of data-rows and columns to be displayed are flexible and will be created depending on provided data structure. 
