@@ -94,7 +94,7 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
        - **columnIndex**:
        Order of displayed columns can be arranged by assigning an index number for each column.
        - **visible**:
-       Column can be displayed or hidden by default by editing that section. "visible" can be **true** or **false**.
+       Column can be displayed or hidden by default by editing this. "visible" can be **true** or **false**.
        - **summary**:
        Information about sub-datas are displayed here as a summary of them when sup-column is collapsed. It can esaily be personalized by writing id of columns and adding **+** between id names.
        - **collapsed**:
