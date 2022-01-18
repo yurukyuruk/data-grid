@@ -32,5 +32,90 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
 - CSS
 - HTML
 ## Configuration
-   - ### Config.json
    - ### Data.json
+   User can create her own json file depending on her data needs. This structure allows to enter also sub-informations so it is possible to create a detailed personalized data structure.
+   ```json
+    [
+     {
+      "id": "61ab91f6d3979f169b8364cb",
+      "gender": "female",
+      "fullName": {
+        "firstName": "Jewel",
+        "middleName": "Araceli",
+        "lastName": "Lowery"
+      },
+      "birthDate": "1970-06-22T17:58:36.544Z",
+      "age": 51,
+      "email": "jewel@lowery.com",
+      "address": {
+        "country": "USA",
+        "state": "Connecticut",
+        "city": "Dundee",
+        "street": "Furman Street",
+        "houseNumber": 994
+      }
+    },
+    {
+      "id": "61ab91f6919f1f2525b2250d",
+      "gender": "female",
+      "fullName": {
+        "firstName": "Cleo",
+        "middleName": "Joann",
+        "lastName": "Adkins"
+      },
+      "birthDate": "1984-01-10T23:38:29.199Z",
+      "age": 37,
+      "email": "cleo@adkins.com",
+      "address": {
+        "country": "USA",
+        "state": "North Carolina",
+        "city": "Taycheedah",
+        "street": "Jaffray Street",
+        "houseNumber": 283
+      }
+    }
+  ]
+   ```
+   - ### Config.json
+   ```json
+   {
+    "dataUrl": "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/data.json",
+    "columns": [
+      {
+        "id": "id",
+        "displayName": "Id",
+        "type": "STRING",
+        "columnIndex": 0,
+        "visible": false
+      },
+      {
+        "id": "fullName",
+        "displayName": "Full name",
+        "type": "OBJECT",
+        "columnIndex": 2,
+        "visible": true,
+        "summary": "firstName+lastName",
+        "collapsed": false,
+        "children": [
+          {
+            "id": "firstName",
+            "displayName": "First name",
+            "type": "STRING",
+            "columnIndex": 0
+          }
+        ]
+      }
+    ],
+     "sortingRules": [
+      {
+        "id": "firstName",
+        "direction": "ASC"
+      },
+      {
+        "id": "lastName",
+        "direction": "DESC"
+      }    
+    ]
+  }
+   ```
+   
