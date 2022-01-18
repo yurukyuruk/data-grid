@@ -77,6 +77,29 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
   ]
    ```
    - ### Config.json
+     - **dataUrl:** Here the URL of data.json needs to be added.
+     - **columns:** Individual columns are created for each Data.json file object property names. There needs to be a column config description for each of those column names.
+       - **id**:
+       id values needs to be written the same as Data.json file object property names. 
+       - **displayName**:
+       It needs to be written the name of column to be displayed here.
+       - **type**:
+       Type needs to be written in uppercase and type of the data can be a **"STRING"**, **"NUMBER"** or a **"DATE"**.
+       - **columnIndex**:
+       Order of displayed columns can be arranged by assigning an index number for each column.
+       - **visible**:
+       Column can be displayed or hidden by default by editing that section. "visible" can be **true** or **false**.
+       - **summary**:
+       Information about sub-datas are displayed here as a summary of them when sup-column is collapsed. It can esaily be personalized by writing id of columns and adding **+** between id names.
+       - **collapsed**:
+       This is for displaying column expanded or collapsed by default. It can have two values, **true** and **false**.
+       - **children**:
+       Each child column can have **id**, **displayName**, **type**, **columnIndex** and **visible** properties. children is used to define structure of sub-columns.
+     - **sortingRules:**
+       - **id**:
+       id needs to be id of column to be sorted by default.
+       - **direction**:
+       direction can be ascencending(**"ASC"**) or descending (**"DESC"**).
    ```json
    {
     "dataUrl": "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/data.json",
@@ -118,4 +141,4 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
     ]
   }
    ```
-   
+     
