@@ -2,9 +2,7 @@ const { template } = {
   template: `
       <style>  
         .search-button-area {
-            width: 12rem;
-            outline: 2px solid white;
-            outline-offset: 1rem;   
+            width: 12rem;   
             font-size: 0.9rem;
             text-align: center;
             display: flex;

@@ -1,11 +1,11 @@
 import { config } from "./configExport.js";
 import { ColumnHider } from "./columnHider.js";
-import { SortingService } from "./sortingService.js";
 import { MySortingSection } from "./sortModel.js";
 import { SearchButton } from "./SearchButton.js";
 import { Column, Data, RowRecord } from "./types/interfaces.js";
 import { isRowRecord } from "./types/typeGuards.js";
 import { DATA_ROWS } from "./configExport.js";
+import { sortingService } from "./DataRows.js";
 
 const allChildColumnElementsTogetherWithParents: (HTMLTableRowElement | HTMLTableElement | HTMLTableCellElement)[][] = [];
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
@@ -49,9 +49,9 @@ export function createDataHeaders(): void {
     columnHeaderSection.appendChild(rowOfChildHeaders);
 }
 
-export function createRows(): void {
+export function createRows(dataList): void {
   let n = -1;
-  for (const record of DATA_ROWS.rows) {
+  for (const record of dataList) {
     n += 1;
     const dataRow = document.createElement("tr");
     dataRow.classList.add("data-row");
@@ -75,9 +75,6 @@ export function createRows(): void {
         dataCell.textContent = recordValue.toString();
       }
       dataRow.append(dataCell);
-    }
-    if (n % 2 !== 0) {
-      dataRow.classList.add("colored-row");
     }
     dataRows.append(dataRow);
     
@@ -158,7 +155,7 @@ function addAllDataAtOnce(fetchedData: RowRecord[], dataReferenceElement: HTMLTa
   dataRows.append(allPersonsElements);
 }*/
 
-export let sortingService: SortingService;
+
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
 /*export function fetchRowDatas(data: Data): Promise<void> {
@@ -206,8 +203,11 @@ function addToogleChildrensVisiblityListener(headerColumn) {
 }
 
 sortModel.addEventListener("to-sort", () => {
+  //DATA_ROWS.visibleRows = sortingService.sortData(config.sortingRules);
+  
   dataRows.innerHTML = "";
-  addAllDataAtOnce(sortingService.data, createReferenceElement());
+  createRows(sortingService.dataRows);
+  
 });
 
 

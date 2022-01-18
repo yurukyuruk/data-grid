@@ -7,6 +7,7 @@ import { DATA_ROWS } from "./configExport.js";
 export class ConfigService {
     data;
     columns;
+    sortingRules;
     constructor() {
         this.fetchConfig();
     }
@@ -16,13 +17,13 @@ export class ConfigService {
             .then(({ columns, columnsVisiblity, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            this.columnsVisibility = columnsVisiblity;
+            //this.columnsVisibility = columnsVisiblity;
             sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
             createDataHeaders();
             return DATA_ROWS.fetchData(dataUrl);
         })
             .then(() => {
-            createRows();
+            createRows(DATA_ROWS.rows);
         });
     }
     getHtmlClassNamesOfColumns() {
@@ -81,15 +82,8 @@ export class ConfigService {
         return columnsVisibilityStatus;
     }
     saveSortInformation(sortOptions) {
-        localStorage.setItem("sortInformation", JSON.stringify(this.getSortOptions(sortOptions)));
-    }
-    getSortOptions(sortOptions) {
-        return sortOptions.map((option) => {
-            return {
-                id: option.fieldOption,
-                direction: option.directionOption
-            };
-        });
+        localStorage.setItem("sortInformation", JSON.stringify(sortModel.modifySortOptions(sortOptions)));
+        this.sortingRules = sortOptions;
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");

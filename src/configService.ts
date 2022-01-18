@@ -13,6 +13,7 @@ import { DATA_ROWS } from "./configExport.js";
 export class ConfigService {
   data!: Data;
   columns!: Column[];
+  sortingRules!: SortRule[];
   constructor() {
     this.fetchConfig();
   }
@@ -24,13 +25,13 @@ export class ConfigService {
       .then(({ columns, columnsVisiblity, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
         this.sortingRules = sortingRules;
-        this.columnsVisibility = columnsVisiblity;
+        //this.columnsVisibility = columnsVisiblity;
         sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
         createDataHeaders();
         return DATA_ROWS.fetchData(dataUrl);
       })
       .then(() => {
-        createRows();
+        createRows(DATA_ROWS.rows);
       });   
   }
   getHtmlClassNamesOfColumns(): string[] {
@@ -93,16 +94,10 @@ export class ConfigService {
     return columnsVisibilityStatus;
   }
   saveSortInformation(sortOptions: SortingRule[]): void {
-    localStorage.setItem("sortInformation", JSON.stringify(this.getSortOptions(sortOptions)));
+    localStorage.setItem("sortInformation", JSON.stringify(sortModel.modifySortOptions(sortOptions)));
+    this.sortingRules = sortOptions;
   }
-  getSortOptions(sortOptions: SortingRule[]): SortRule[] {
-    return sortOptions.map((option) => {
-      return {
-        id: option.fieldOption,
-        direction: option.directionOption
-      };
-    });
-  }
+  
   clearSortInformation(): void {
     localStorage.removeItem("sortInformation");
   }

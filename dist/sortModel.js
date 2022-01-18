@@ -1,6 +1,6 @@
 import { SortingRule } from "./SortingRule.js";
 import { SortingService } from "./sortingService.js";
-import { sortingService } from "./index.js";
+import { sortingService } from "./DataRows.js";
 import { config } from "./configExport.js";
 import { ConfigService } from "./configService.js";
 import { SortDirection } from "./types/enums.js";
@@ -8,18 +8,15 @@ const { template } = {
     template: `
   <style>  
   .sort-data-button-area {
-    padding: 2.1rem;
-    background-color: rgb(252, 252, 184);
+    padding: 1rem 0 1rem 0;
+    background-color: rgb(253, 206, 184);
     display: flex;
     justify-content: center;
-    margin-right: 1rem;
   }
   .sort-data-button {
     border: 1px solid black;
     background-color: rgb(235, 144, 101);
     cursor: pointer;
-    outline: 2px solid white;
-    outline-offset: 1rem;
     width: 12rem;
   }
   .sort-data-button:hover {
@@ -219,13 +216,13 @@ export class MySortingSection extends HTMLElement {
         this.submitButton.addEventListener("click", () => {
             this.sortAddingButton.disabled = true;
             this.submitButton.disabled = true;
-            sortingService.sortData(config.getSortOptions(this.sortOptions));
+            sortingService.sortData(this.modifySortOptions(this.sortOptions));
             const toSort = new CustomEvent("to-sort", {
                 bubbles: true,
-                composed: true
+                composed: true,
             });
-            this.shadowRoot.dispatchEvent(toSort);
             config.saveSortInformation(this.sortOptions);
+            this.shadowRoot.dispatchEvent(toSort);
         });
         this.sortOptions[0].sortLine.addEventListener("change", () => {
             if (this.sortOptions[0].fieldOption !== "Sort by" && (this.sortOptions[0].directionOption === SortDirection.ASC || this.sortOptions[0].directionOption === SortDirection.DESC)) {
@@ -269,6 +266,14 @@ export class MySortingSection extends HTMLElement {
         this.allFields = displayNames;
         this.allFields.unshift("Sort by");
     }
+    modifySortOptions(sortOptions) {
+        return sortOptions.map((option) => {
+            return {
+                id: option.fieldOption,
+                direction: option.directionOption
+            };
+        });
+    }
     getElementReferences() {
         this.sortingArea = this.shadowRoot.querySelector(".sorting");
         this.sortDataButtonArea = this.shadowRoot.querySelector(".sort-data-button-area");
@@ -284,4 +289,5 @@ export class MySortingSection extends HTMLElement {
 customElements.define(MySortingSection.TAG, MySortingSection);
 console.log(ConfigService);
 console.log(SortingService);
+//getSortOptions will be here
 //# sourceMappingURL=sortModel.js.map

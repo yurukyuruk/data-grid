@@ -1,8 +1,8 @@
 .whole-sort-area {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background-color: rgb(252, 252, 184);
+  background-color: rgb(253, 206, 184);
 }
 th[data-column-checkbox-checked="false"],
 td[data-column-checkbox-checked="false"] {
@@ -31,7 +31,7 @@ tr, td, th {
 th {
   padding: 12px;
 }
-.colored-row {
+.data-row:nth-child(2n) {
   background-color: rgb(253, 206, 184);
 }
 .blured {

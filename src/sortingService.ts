@@ -2,25 +2,26 @@ import { config } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
+import { DataRows } from "./DataRows.js";
 
 export class SortingService {
-  readonly data: RowRecord[];
-  constructor(data: RowRecord[]) {
-    this.data = data;
+  private readonly dataRows: DataRows;
+  constructor(data: DataRows) {
+    this.dataRows = data;
   }
 
   sortData(sortConfigDatas: SortRule[]): RowRecord[] {
     for (const sortRule of sortConfigDatas) {
       const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.id);
       if (fieldType === ColumnType.STRING) {
-        this.data.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
+        this.dataRows.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       } else if (fieldType === ColumnType.NUMBER) {
-        this.data.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
+        this.dataRows.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       } else {
-        this.data.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
+        this.dataRows.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       }
     }
-    return this.data;
+    return this.dataRows;
   }
   sortStringComparator(sortField: string, sortDirection: SortDirection) {
     return (a: RowRecord, b: RowRecord): number => {

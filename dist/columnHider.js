@@ -11,9 +11,7 @@ const { template } = {
       .column-hider-button {
         border: 1px solid black;
         background-color: rgb(235, 144, 101);
-        cursor: pointer;
-        outline: 2px solid white;
-        outline-offset: 1rem;   
+        cursor: pointer; 
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
