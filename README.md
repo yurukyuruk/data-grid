@@ -8,7 +8,7 @@
 5. [Configuration](#configuration)
    - [Config.json](#configjson)
    - [Data.json](#datajson)
-6. [App memory](#app-memory)
+6. [App Memory](#app-memory)
 7. [Built with:](#built-with)
 ## Project Description
 Data-Grid app displays given data in a user friendly way by providing multiple displaying options. Number of data-rows and columns to be displayed are flexible and will be created depending on provided data structure. User can display only desired columns and hide some of them, or can display sup-columns as expanded or collapsed, or can assign index numbers to columns to display them in desired order by default, by editing configuration.It is also possible to display data-columns or rows in different orders during usage.
@@ -26,12 +26,18 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
   - A code editor like **Visual Studio Code**.
   - Your own created data and config **json** files which will be mentioned below.
   - Being familiar with **TypeScript**, **JavaScript**, **CSS** and **HTML**.
-## Built with:
-- TypeScript
-- JavaScript
-- CSS
-- HTML
 ## Configuration
+   To run your own config and datas:
+   1. Create your own Data.json and Config.json files explained below.
+   2. Go to **`configService.ts`**.
+   3. Find **`fetchConfig()`** method.
+   4. ```typescript
+      return fetch(
+      "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json"
+      )
+      ```
+      Replace the link with the link of your **`config.json`** file and that's it.
+   
    - ### Data.json
    User can create her own json file depending on her data needs. This structure allows to enter also sub-informations so it is possible to create a detailed personalized data structure.
    ```json
@@ -141,4 +147,13 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
     ]
   }
    ```
-     
+  ## App Memory
+  - **localStorage** is used for saving user options.
+  - If user hides some columns and reloads the page, column hiding options will be still the same.
+  - If user sorts data-rows and reloads the page, datas will be still sorted.
+  - If user expands a column and reloads the page, that column still will be expanded.
+  ## Built with:
+- TypeScript
+- JavaScript
+- CSS
+- HTML   
