@@ -182,10 +182,12 @@ export class MySortingSection extends HTMLElement {
         this.sortOptions[0].fieldOption = sortInformation[0].id;
         this.sortOptions[0].sortDirection.disabled = false;
         this.sortOptions[0].directionOption = sortInformation[0].direction;
+        this.sortAddingButton.disabled = false;
       } else if (sortInformation !== null && sortInformation.length > 1) {
         this.sortOptions[0].fieldOption = sortInformation[0].id;
         this.sortOptions[0].sortDirection.disabled = false;
         this.sortOptions[0].directionOption = sortInformation[0].direction;
+        this.sortAddingButton.disabled = false;
         for (let i = 1; i < sortInformation.length; i++) {
           this.createNewSortLine();
           this.sortOptions[i].fieldOption = sortInformation[i].id;
@@ -200,7 +202,6 @@ export class MySortingSection extends HTMLElement {
       this.sortDataButton.setAttribute("data-sort-button-visible", "true");
       this.sortingArea.setAttribute("data-sort-fields-visible", "false");
       this.table.classList.toggle("blured");
-      this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
       this.sortLines.innerHTML = "";
       this.sortOptions = [];
@@ -220,9 +221,8 @@ export class MySortingSection extends HTMLElement {
     });
 
     this.submitButton.addEventListener("click", (): void => {
-      this.sortAddingButton.disabled = true;
       this.submitButton.disabled = true;
-      sortingService.sortData(this.modifySortOptions(this.sortOptions));
+      sortingService.sortData(this.mapSortOptions(this.sortOptions));
       const toSort: CustomEvent = new CustomEvent("to-sort", {
         bubbles: true,
         composed: true,
@@ -274,7 +274,7 @@ export class MySortingSection extends HTMLElement {
     this.allFields = displayNames;
     this.allFields.unshift("Sort by");
   }
-  modifySortOptions(sortOptions: SortingRule[]): SortRule[] {
+  mapSortOptions(sortOptions: SortingRule[]): SortRule[] {
     return sortOptions.map((option) => {
       return {
         id: option.fieldOption,

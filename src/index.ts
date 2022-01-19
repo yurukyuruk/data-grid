@@ -7,7 +7,6 @@ import { isRowRecord } from "./types/typeGuards.js";
 import { DATA_ROWS } from "./configExport.js";
 import { sortingService } from "./configExport.js";
 
-const allChildColumnElementsTogetherWithParents: (HTMLTableRowElement | HTMLTableElement | HTMLTableCellElement)[][] = [];
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
 const columnHeaderSection = document.querySelector("thead") as HTMLTableSectionElement;
 
@@ -81,79 +80,6 @@ export function createRows(dataList): void {
   }
   
 }
-
-/*function createReferenceElement(): HTMLTableRowElement {
-  const dataRow = document.createElement("tr");
-  dataRow.classList.add("row0");
-  dataRow.classList.add("data-row");
-  for (let i = 0; i < config.columns.length; i++) {
-    const dataCell = document.createElement("td");
-    dataCell.classList.add(config.columns[i].id + "-data");
-    dataCell.setAttribute("data-column-checkbox-checked", "true");
-    if (config.columns[i].children) {
-      dataCell.setAttribute("data-address-section-closed", "true");
-      const expandedDataTable = document.createElement("table");
-      expandedDataTable.setAttribute("data-address-section-expanded", "false");
-      expandedDataTable.setAttribute("data-column-checkbox-checked", "true");
-      const expandedDataRow = document.createElement("tr");
-      expandedDataRow.setAttribute("data-address-section-expanded", "false");
-      expandedDataRow.setAttribute("data-column-checkbox-checked", "true");
-      expandedDataRow.setAttribute("colspan", (config.columns[i].children as Column[]).length.toString());
-      config.columns[i].children?.forEach(() => {
-        const childDataCell = document.createElement("td");
-        childDataCell.setAttribute("data-address-section-expanded", "false");
-        childDataCell.setAttribute("data-column-checkbox-checked", "true");
-        expandedDataRow.appendChild(childDataCell);
-        expandedDataTable.appendChild(expandedDataRow);
-        dataCell.appendChild(expandedDataTable);
-      });
-    }
-    dataRow.appendChild(dataCell);
-  }
-  return dataRow;
-}
-
-function addDataToElement(element: HTMLTableRowElement, eachPerson: RowRecord): void {
-  for (let i = 0; i < config.columns.length; i++) {
-    const columnWhichHaveChildren: Column = config.columns[i];
-    const cell = eachPerson[columnWhichHaveChildren.id];
-    if (isRowRecord(cell)) {
-      const fieldNames: string[] = config.getSummaryFieldsFromColumnName(i); //dont pass index pass columnid
-      const summaryText: string = fieldNames.map((fieldName) => cell[fieldName]).join(", ");
-      const childrenText = document.createTextNode(summaryText);
-      element.children[i].append(childrenText);
-      for (let k = 0; k < element.children[i].children[0].children[0].children.length; k++) {
-        const eachChildrenText: string = cell[(columnWhichHaveChildren.children as Column[])[k].id] as string;
-        element.children[i].children[0].children[0].children[k].append(eachChildrenText);
-      }
-    } else {
-      const text = document.createTextNode(cell.toString());
-      element.children[i].append(text);
-    }
-  }
-}*/
-
-/*function addClassName(newNumber: number): string {
-  return `row${newNumber} data-row`;
-}
-
-let n = -1;
-let allPersonsElements: DocumentFragment;
-function addAllDataAtOnce(fetchedData: RowRecord[], dataReferenceElement: HTMLTableRowElement): void {
-  allPersonsElements = document.createDocumentFragment();
-  fetchedData.forEach((person) => {
-    n += 1;
-    const personElement = dataReferenceElement.cloneNode(true) as HTMLTableRowElement;
-    addDataToElement(personElement, person);
-    personElement.className = addClassName(n);
-    allPersonsElements.append(personElement);
-    if (fetchedData.indexOf(person) % 2 !== 0) {
-      personElement.classList.add("colored-row");
-    }
-  });
-  dataRows.append(allPersonsElements);
-}*/
-
 
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
