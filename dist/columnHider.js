@@ -161,8 +161,10 @@ export class ColumnHider extends HTMLElement {
             checkbox.setAttribute("checked", "checked");
             checkbox.addEventListener("click", () => {
                 const wholeColumnData = document.querySelectorAll("." + columnNames[i]);
+                const wholeColumnHeaders = document.querySelectorAll("." + columnNames[i] + "-header");
                 const checkboxElementsStateChange = wholeColumnData[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
                 wholeColumnData.forEach((data) => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
+                wholeColumnHeaders.forEach((header) => header.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
                 checkboxHolder.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString());
             });
             const checkboxLabel = document.createElement("label");

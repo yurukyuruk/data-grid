@@ -1,3 +1,5 @@
+import { config, DATA_ROWS } from "./configExport.js";
+import { createRows } from "./index.js";
 const { template } = {
     template: `
       <style>  
@@ -68,15 +70,24 @@ export class SearchButton extends HTMLElement {
             };
         };
         this.input.addEventListener("keyup", debounce(() => {
+            const dataRows = document.querySelector(".data-rows");
+            dataRows.innerHTML = "";
+            createRows(DATA_ROWS.rows);
+            const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+            for (let i = 0; i < config.columns.length; i++) {
+                const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id);
+                eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+            }
             const inputValue = this.input.value.toLowerCase();
-            let dataRows = document.querySelector(".data-rows");
             const allDataRows = document.querySelectorAll(".data-row");
             let dataRowsToBeDisplayed = [];
             const allTextContentsOfRows = [];
             allDataRows.forEach((row) => {
                 const textContentOfEachRow = [];
                 for (let i = 0; i < row.children.length; i++) {
-                    textContentOfEachRow.push(row.children[i].textContent?.toLowerCase() ?? "");
+                    if (row.children[i].getAttribute("data-column-checkbox-checked") === "true") {
+                        textContentOfEachRow.push(row.children[i].textContent?.toLowerCase() ?? "");
+                    }
                 }
                 allTextContentsOfRows.push(textContentOfEachRow);
             });

@@ -51,6 +51,7 @@ export function createRows(dataList) {
         for (const [recordId, recordValue] of Object.entries(record)) {
             const dataCell = document.createElement("td");
             dataCell.className = recordId;
+            dataCell.setAttribute("data-column-checkbox-checked", "true");
             if (isRowRecord(recordValue)) {
                 dataCell.setAttribute("data-header-expanded", "false");
                 dataCell.textContent = config
