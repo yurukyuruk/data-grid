@@ -69,7 +69,9 @@ export class SearchButton extends HTMLElement {
         };
         this.input.addEventListener("keyup", debounce(() => {
             const inputValue = this.input.value.toLowerCase();
+            let dataRows = document.querySelector(".data-rows");
             const allDataRows = document.querySelectorAll(".data-row");
+            let dataRowsToBeDisplayed = [];
             const allTextContentsOfRows = [];
             allDataRows.forEach((row) => {
                 const textContentOfEachRow = [];
@@ -85,13 +87,14 @@ export class SearchButton extends HTMLElement {
                         n += 1;
                     }
                     if (inputValue === "" || n > 0) {
-                        allDataRows[i].style.display = "table-row";
-                    }
-                    else {
-                        allDataRows[i].style.display = "none";
+                        dataRowsToBeDisplayed.push(allDataRows[i]);
                     }
                 }
             }
+            dataRows.innerHTML = "";
+            dataRowsToBeDisplayed.forEach(row => {
+                dataRows.append(row);
+            });
         }, 1000));
         this.searchButton.addEventListener("click", (e) => {
             e.preventDefault();

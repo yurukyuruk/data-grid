@@ -5,7 +5,7 @@ import { SearchButton } from "./SearchButton.js";
 import { Column, Data, RowRecord } from "./types/interfaces.js";
 import { isRowRecord } from "./types/typeGuards.js";
 import { DATA_ROWS } from "./configExport.js";
-import { sortingService } from "./DataRows.js";
+import { sortingService } from "./configExport.js";
 
 const allChildColumnElementsTogetherWithParents: (HTMLTableRowElement | HTMLTableElement | HTMLTableCellElement)[][] = [];
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
@@ -50,9 +50,7 @@ export function createDataHeaders(): void {
 }
 
 export function createRows(dataList): void {
-  let n = -1;
   for (const record of dataList) {
-    n += 1;
     const dataRow = document.createElement("tr");
     dataRow.classList.add("data-row");
     for (const [recordId, recordValue] of Object.entries(record)) {

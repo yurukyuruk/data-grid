@@ -1,6 +1,6 @@
 import { SortingRule } from "./SortingRule.js";
 import { SortingService } from "./sortingService.js";
-import { sortingService } from "./DataRows.js";
+import { sortingService } from "./configExport.js";
 import { config } from "./configExport.js";
 import { ConfigService } from "./configService.js";
 import { SortDirection } from "./types/enums.js";

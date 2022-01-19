@@ -1,5 +1,4 @@
-import { SortingService } from "./sortingService.js";
-export let sortingService;
+//move it to global service page 
 export class DataRows {
     rows = [];
     visibleRows = [];
@@ -9,7 +8,6 @@ export class DataRows {
             .then((response) => response.json())
             .then((rows) => {
             this.rows = rows;
-            sortingService = new SortingService(rows);
             /*if (localStorage.getItem("sortInformation") !== null) {
               dataRows.innerHTML = "";
               const sortedData: RowRecord[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));

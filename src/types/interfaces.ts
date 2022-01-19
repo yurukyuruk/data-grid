@@ -14,13 +14,13 @@ export interface Column {
   displayName: string;
   type: ColumnType;
   columnIndex: number;
+  visible?: boolean;
   summary?: string;
   collapsed?: boolean;
   children?: Column[];
 }
 export interface Data {
   columns: Column[];
-  columnsVisiblity: ColumnsVisiblity[];
   dataUrl: string;
   sortingRules: SortRule[];
 }

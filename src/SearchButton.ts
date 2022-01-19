@@ -1,3 +1,5 @@
+import { DataRows } from "./DataRows";
+
 const { template } = {
   template: `
       <style>  
@@ -73,7 +75,9 @@ export class SearchButton extends HTMLElement {
       "keyup",
       debounce(() => {
         const inputValue: string = this.input.value.toLowerCase();
+        let dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         const allDataRows: NodeListOf<HTMLTableRowElement> = document.querySelectorAll(".data-row");
+        let dataRowsToBeDisplayed = [];
         const allTextContentsOfRows: string[][] = [];
         allDataRows.forEach((row) => {
           const textContentOfEachRow: string[] = [];
@@ -89,12 +93,14 @@ export class SearchButton extends HTMLElement {
               n += 1;
             }
             if (inputValue === "" || n > 0) {
-              allDataRows[i].style.display = "table-row";
-            } else {
-              allDataRows[i].style.display = "none";
+              dataRowsToBeDisplayed.push(allDataRows[i]);
             }
           }
         }
+        dataRows.innerHTML = "";
+        dataRowsToBeDisplayed.forEach(row => {
+          dataRows.append(row);
+        })
       }, 1000)
     );
 
@@ -106,6 +112,7 @@ export class SearchButton extends HTMLElement {
   getElementReferences() {
     this.input = this.shadowRoot.querySelector(".input") as HTMLInputElement;
     this.searchButton = this.shadowRoot.querySelector(".search-button") as HTMLButtonElement;
+    
   }
 }
 customElements.define(SearchButton.TAG, SearchButton);

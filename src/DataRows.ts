@@ -1,7 +1,7 @@
 import { RowRecord } from "./types/interfaces.js";
-import { SortingService } from "./sortingService.js";
 
-export let sortingService: SortingService;
+
+//move it to global service page 
 export class DataRows {
   rows: RowRecord[] = [];
   visibleRows: RowRecord[] = [];
@@ -13,7 +13,7 @@ export class DataRows {
       .then((response: Response) => response.json())
       .then((rows: RowRecord[]) => {
         this.rows = rows;
-        sortingService = new SortingService(rows);
+        
       
       /*if (localStorage.getItem("sortInformation") !== null) {
         dataRows.innerHTML = "";
