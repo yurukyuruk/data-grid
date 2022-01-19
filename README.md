@@ -6,8 +6,8 @@
    - [Quick Search](#quick-search)
 4. [Requirements](#requirements)
 5. [Configuration](#configuration)
-   - [Config.json](#configjson)
-   - [Data.json](#datajson)
+   - [config.json](#configjson)
+   - [data.json](#datajson)
 6. [App Memory](#app-memory)
 7. [Built with:](#built-with)
 ## Project Description
@@ -28,7 +28,7 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
   - Being familiar with **TypeScript**, **JavaScript**, **CSS** and **HTML**.
 ## Configuration
    To run your own config and datas:
-   1. Create your own Data.json and Config.json files explained below.
+   1. Create your own **`data.json`** and **`config.json`** files explained below.
    2. Go to **`configService.ts`**.
    3. Find **`fetchConfig()`** method.
    4. ```typescript
@@ -38,7 +38,7 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
       ```
       Replace the link with the link of your **`config.json`** file and that's it.
    
-   - ### Data.json
+   - ### data.json
    User can create her own json file depending on her data needs. This structure allows to enter also sub-informations so it is possible to create a detailed personalized data structure.
    ```json
     [
@@ -82,11 +82,11 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
     }
   ]
    ```
-   - ### Config.json
+   - ### config.json
      - **dataUrl:** Here the URL of data.json needs to be added.
-     - **columns:** Individual columns are created for each Data.json file object property names. There needs to be a column config description for each of those column names.
+     - **columns:** Individual columns are created for each data.json file object property names. There needs to be a column config description for each of those column names.
        - **id**:
-       id values needs to be written the same as Data.json file object property names. 
+       id values needs to be written the same as data.json file object property names. 
        - **displayName**:
        It needs to be written the name of column to be displayed here.
        - **type**:
@@ -94,11 +94,11 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
        - **columnIndex**:
        Order of displayed columns can be arranged by assigning an index number for each column.
        - **visible**:
-       Column can be displayed or hidden by default by editing this. "visible" can be **true** or **false**.
+       This is an optional feature. Column can be displayed or hidden by default by editing this. "visible" can be **true** or **false**. If visible is undefined, it will be true.
        - **summary**:
-       Information about sub-datas are displayed here as a summary of them when sup-column is collapsed. It can esaily be personalized by writing id of columns and adding **+** between id names.
+       This is needed only if a column have sub-columns. Information about sub-datas are displayed here as a summary of them when sup-column is collapsed. It can esaily be personalized by writing id of columns and adding **+** between id names.
        - **collapsed**:
-       This is for displaying column expanded or collapsed by default. It can have two values, **true** and **false**.
+       collapsed can be used if a column have sub-columns. This is for displaying column expanded or collapsed by default. It can have two values, **true** and **false**. If it is undefined, it will be true by default.
        - **children**:
        Each child column can have **id**, **displayName**, **type**, **columnIndex** and **visible** properties. children is used to define structure of sub-columns.
      - **sortingRules:**
@@ -106,6 +106,28 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
        id needs to be id of column to be sorted by default.
        - **direction**:
        direction can be ascencending(**"ASC"**) or descending (**"DESC"**).
+   ```typescript
+   interface Data {
+     dataUrl: string;
+     columns: Column[];
+     sortingRules: SortRule[];
+   }
+   interface Column {
+     id: string;
+     displayName: string;
+     type: ColumnType;
+     columnIndex: number;
+     visible?: boolean;
+     summary?: string;
+     collapsed?: boolean;
+     children?: Column[];
+   }
+   interface SortRule {
+     id: string;
+     direction: SortDirection;
+   }
+   ```
+   > A sample config.json is shown below:
    ```json
    {
     "dataUrl": "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/data.json",
