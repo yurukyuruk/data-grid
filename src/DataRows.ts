@@ -13,7 +13,7 @@ export class DataRows {
       .then((response: Response) => response.json())
       .then((rows: RowRecord[]) => {
         this.rows = rows;
-        
+        this.visibleRows = this.visibleRows;
       
       /*if (localStorage.getItem("sortInformation") !== null) {
         dataRows.innerHTML = "";

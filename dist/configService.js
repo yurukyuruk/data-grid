@@ -82,7 +82,7 @@ export class ConfigService {
         return columnsVisibilityStatus;
     }
     saveSortInformation(sortOptions) {
-        localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions)));
+        localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions))); //you cant use sort model here.
         this.sortingRules = sortOptions;
     }
     clearSortInformation() {

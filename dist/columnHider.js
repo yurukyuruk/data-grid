@@ -16,6 +16,7 @@ const { template } = {
         font-size: 0.9rem;
         text-align: center;
         width: 12rem;
+        box-shadow: 0 5px 5px 0 black;
       }
       .column-hider-button:hover {
         transform: scale(1.1);
@@ -28,10 +29,8 @@ const { template } = {
         background-color: rgb(252, 252, 184);
         position: absolute;
         top: 45%;
-        left: 30%;
+        left: 40%;
         z-index: 1;
-        max-width: 35vw;
-        flex-wrap: wrap;
         border: 2px solid rgb(235, 144, 101);
       }
       .column-hider-close-button {
@@ -45,9 +44,8 @@ const { template } = {
         background-color: white;
       }
       .column-checkboxes {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr; 
       }
       .column-checkbox {
         max-width: 200px;
@@ -56,14 +54,11 @@ const { template } = {
         font-size: 0.88rem;
       }
       input[type='checkbox']{
-        width: 10px !important;
-        height: 10px !important;
+        width: 10px;
+        height: 10px;
         margin: 5px;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        -o-appearance: none;
         appearance: none;
-        outline: 2px solid rgb(255, 255, 255);
+        outline: 1px solid black;
         font-size: 0.8em;
         text-align: center;
         line-height: 1em;
@@ -74,9 +69,8 @@ const { template } = {
         content: '✔';
         color: rgb(235, 144, 101);
       }
-      .id-checkbox:hover, .gender-checkbox:hover, .first-name-checkbox:hover, .last-name-checkbox:hover,
-      .birth-date-checkbox:hover, .age-checkbox:hover, .email-checkbox:hover, .address-checkbox:hover {
-          cursor: pointer;
+      .checkbox:hover {
+        cursor: pointer;
       }
       div[data-column-hider-button-area-visible="false"] {
         display: none;
@@ -157,7 +151,7 @@ export class ColumnHider extends HTMLElement {
             checkboxHolder.setAttribute("data-column-checkbox-checked", "true");
             const checkbox = document.createElement("input");
             checkbox.setAttribute("type", "checkbox");
-            checkbox.classList.add(columnNames[i] + "-checkbox");
+            checkbox.classList.add("checkbox");
             checkbox.setAttribute("checked", "checked");
             checkbox.addEventListener("click", () => {
                 const wholeColumnData = document.querySelectorAll("." + columnNames[i]);

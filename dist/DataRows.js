@@ -8,6 +8,7 @@ export class DataRows {
             .then((response) => response.json())
             .then((rows) => {
             this.rows = rows;
+            this.visibleRows = this.visibleRows;
             /*if (localStorage.getItem("sortInformation") !== null) {
               dataRows.innerHTML = "";
               const sortedData: RowRecord[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));

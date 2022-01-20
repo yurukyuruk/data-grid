@@ -1,10 +1,7 @@
 import { config } from "./configExport.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 export class SortingService {
-    dataRows;
-    constructor(data) {
-        this.dataRows = data;
-    }
+    constructor() { }
     sortData(sortConfigDatas) {
         for (const sortRule of sortConfigDatas) {
             const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.id);

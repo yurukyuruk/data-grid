@@ -34,6 +34,7 @@ export function createDataHeaders() {
                 const childColumnHeader = document.createElement("th");
                 childColumnHeader.id = childColumn.id;
                 childColumnHeader.className = `${childColumn.id}-header ${column.id}`;
+                childColumnHeader.setAttribute("data-column-checkbox-checked", "true");
                 childColumnHeader.setAttribute("data-section-expanded", "false");
                 childColumnHeader.textContent = childColumn.displayName.toUpperCase();
                 rowOfChildHeaders.append(childColumnHeader);
@@ -60,6 +61,7 @@ export function createRows(dataList) {
                 for (const [childrenId, childrenValue] of Object.entries(recordValue)) {
                     const childrenCell = document.createElement("td");
                     childrenCell.className = `${recordId} ${childrenId}`;
+                    childrenCell.setAttribute("data-column-checkbox-checked", "true");
                     childrenCell.textContent = childrenValue.toString();
                     childrenCell.setAttribute("data-section-expanded", "false");
                     dataRow.append(childrenCell);

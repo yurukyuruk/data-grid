@@ -5,10 +5,7 @@ import { ColumnType, SortDirection } from "./types/enums.js";
 import { DataRows } from "./DataRows.js";
 
 export class SortingService {
-  private readonly dataRows: DataRows;
-  constructor(data: DataRows) {
-    this.dataRows = data;
-  }
+  constructor() {}
 
   sortData(sortConfigDatas: SortRule[]): RowRecord[] {
     for (const sortRule of sortConfigDatas) {

@@ -3,29 +3,24 @@ import { SortDirection } from "./types/enums.js";
 const { template } = {
   template: `
     <style>  
-    .sort-field {
-        width: 20vw;
-        border: black 1px solid;
-        text-align-last: center;
-        margin: 5px;
-      }
-      .sort-direction {
-        width: 20vw;
-        border: black 1px solid;
-        text-align-last: center;
-        margin: 5px;
-      }
       .option-default {
         display: none;
       }
       .sort-field, .sort-direction {
+        width: 20vw;
+        border: black 1px solid;
+        text-align-last: center;
+        margin: 5px;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
+        background-color: white;
       }
-      
       .sort-line {
         display:flex;
+      }
+      .option{
+        background-color: rgb(235, 144, 101);
       }
   </style>
     <div class="sort-line">
@@ -33,8 +28,8 @@ const { template } = {
       </select>
       <select class="sort-direction" name="direction">
         <option class="option-default" value="sort direction" selected>Sort direction</option>
-        <option value="ascending">Ascending</option>
-        <option value="descending">Descending</option>
+        <option class="option" value="ascending">Ascending</option>
+        <option class="option" value="descending">Descending</option>
       </select>   
     </div>       
     `

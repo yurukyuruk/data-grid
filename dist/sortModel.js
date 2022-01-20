@@ -18,6 +18,9 @@ const { template } = {
     background-color: rgb(235, 144, 101);
     cursor: pointer;
     width: 12rem;
+    box-shadow: 0 5px 5px 0 black;
+    transform: scale(1);
+    transition: transform 300ms ease-in-out;
   }
   .sort-data-button:hover {
     transform: scale(1.1);
@@ -95,15 +98,24 @@ const { template } = {
     margin-bottom: 10px;
     padding-top: 0;
     padding-bottom: 0;
+    background-color: rgb(235, 144, 101);
+  }
+  .submit-button:hover {
     background-color: white;
   }
-  .reset-button:hover, .submit-button:hover, .sort-adding-button:hover {
+  .submit-button:disabled {
+    background-color: rgb(235, 144, 101);
+  }
+  .reset-button:hover, .sort-adding-button:hover {
     background-color: rgb(235, 144, 101);
   }
   .sort-data-button, .sort-adding-button, .close-button, .reset-button, .submit-button, .addition-symbol {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9rem;
     text-align: center;
+  }
+  .sort-adding-button:disabled {
+    background-color: white;
   }
   input[data-sort-button-visible="false"] {
     display: none;
@@ -167,6 +179,7 @@ export class MySortingSection extends HTMLElement {
             this.table.classList.toggle("blured");
             for (let i = 0; i < this.allFields.length; i++) {
                 const sortFieldOption = document.createElement("option");
+                sortFieldOption.classList.add("option");
                 sortFieldOption.textContent = this.allFields[i];
                 if (i === 0) {
                     sortFieldOption.classList.add("option-default");
