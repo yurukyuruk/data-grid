@@ -4,12 +4,11 @@
    - [Sort Data](#sort-data)
    - [Hide Column](#hide-column)
    - [Quick Search](#quick-search)
-4. [Requirements](#requirements)
-5. [Configuration](#configuration)
+4. [Configuration](#configuration)
    - [config.json](#configjson)
    - [data.json](#datajson)
-6. [App Memory](#app-memory)
-7. [Built with:](#built-with)
+5. [App Memory](#app-memory)
+6. [Built with:](#built-with)
 ## Project Description
 Data-Grid app displays given data in a user friendly way by providing multiple displaying options. Number of data-rows and columns to be displayed are flexible and will be created depending on provided data structure. User can display only desired columns and hide some of them, or can display sup-columns as expanded or collapsed, or can assign index numbers to columns to display them in desired order by default, by editing configuration.It is also possible to display data-columns or rows in different orders during usage.
 ## Features
@@ -19,13 +18,6 @@ Data-Grid app displays given data in a user friendly way by providing multiple d
 Each columns can be hidden or displayed via **HIDE COLUMN** button. All user needs to do is clicking on the checkbox next to the column name. On each click column display options will toggle and the column will be hidden or displayed that way.
 - ### Quick Search
 **QUICK SEARCH** is another feature to search needed data-rows depending on user input. Quick search compares each data-cell information with entered input values and displays matched data-rows.
-## Requirements
-- To run this project you will need:
-  - Modern browser like **Google Chrome** or **Firefox**.
-- To apply your own datas and config options you will need:
-  - A code editor like **Visual Studio Code**.
-  - Your own created data and config **json** files which will be mentioned below.
-  - Being familiar with **TypeScript**, **JavaScript**, **CSS** and **HTML**.
 ## Configuration
    To run your own config and datas:
    1. Create your own **`data.json`** and **`config.json`** files explained below.
@@ -107,7 +99,7 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
        - **direction**:
        direction can be ascencending(**"ASC"**) or descending (**"DESC"**).
    ```typescript
-   interface Data {
+   interface GridConfig {
      dataUrl: string;
      columns: Column[];
      sortingRules: SortRule[];
@@ -126,6 +118,15 @@ Each columns can be hidden or displayed via **HIDE COLUMN** button. All user nee
      id: string;
      direction: SortDirection;
    }
+   enum SortDirection {
+     ASC = "ascending",
+     DESC = "descending"
+   }
+  enum ColumnType {
+    NUMBER = "NUMBER",
+    STRING = "STRING",
+    DATE = "DATE"
+  }
    ```
    > A sample config.json is shown below:
    ```json
