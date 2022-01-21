@@ -1,4 +1,5 @@
 import { config } from "./configExport.js";
+import { sortModel } from "./index.js";
 const { template } = {
     template: `
     <style>  
@@ -16,7 +17,9 @@ const { template } = {
         font-size: 0.9rem;
         text-align: center;
         width: 12rem;
-        box-shadow: 0 5px 5px 0 black;
+        box-shadow: 0px 4px 5px 1px rgba(0, 0, 0, 0.4);
+        transform: scale(1);
+        transition: transform 300ms ease-in-out;  
       }
       .column-hider-button:hover {
         transform: scale(1.1);
@@ -26,7 +29,7 @@ const { template } = {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        background-color: rgb(252, 252, 184);
+        background-color: rgb(248 248 214);
         position: absolute;
         top: 45%;
         left: 40%;
@@ -38,7 +41,7 @@ const { template } = {
         border: black 1px solid;
         background-color: rgb(235, 144, 101);
         cursor: pointer;
-        margin: 1px 1px 0 0;
+        margin: -2px -2px 0 0;
       }
       .column-hider-close-button:hover {
         background-color: white;
@@ -52,21 +55,25 @@ const { template } = {
         min-width: 100px;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.88rem;
+        display: flex;
+        align-items: center;
       }
-      input[type='checkbox']{
-        width: 10px;
-        height: 10px;
+      .checkbox{
+        width: 15px;
+        height: 15px;
         margin: 5px;
+        padding-top: 1px;
         appearance: none;
         outline: 1px solid black;
         font-size: 0.8em;
         text-align: center;
         line-height: 1em;
-        background: rgb(252, 252, 184);
+        background-color: white;
       }
       
-      input[type='checkbox']:checked:after {
+      .checkbox:checked:after {
         content: '✔';
+        height: 15px;
         color: rgb(235, 144, 101);
       }
       .checkbox:hover {
@@ -90,13 +97,17 @@ const { template } = {
         cursor: pointer;
         padding-top: 0;
         padding-bottom: 0;
-        background-color: white;
+        background-color: rgb(248 248 214);
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
+        box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
     }
     .reset-button:hover {
         background-color: rgb(235, 144, 101);
+    }
+    .blured {
+      filter: blur(2px);
     }
     th[data-column-checkbox-checked="false"] {
       display: none;
@@ -172,6 +183,8 @@ export class ColumnHider extends HTMLElement {
         this.columnHiderButton.addEventListener("click", () => {
             this.createAndSetCheckboxes(config.getHtmlClassNamesOfColumns());
             this.getElementReferences();
+            this.table.classList.toggle("blured");
+            sortModel.sortDataButton.classList.toggle("blured");
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
             const columnVisibilityInformation = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
@@ -186,6 +199,8 @@ export class ColumnHider extends HTMLElement {
             }
         });
         this.columnHiderCloseButton.addEventListener("click", () => {
+            this.table.classList.toggle("blured");
+            sortModel.sortDataButton.classList.toggle("blured");
             config.saveColumnVisibilityStatus(this.allColumnCheckboxes);
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
@@ -205,6 +220,7 @@ export class ColumnHider extends HTMLElement {
     }
     getElementReferences() {
         this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes");
+        this.table = document.querySelector("#data-table");
     }
 }
 customElements.define(ColumnHider.TAG, ColumnHider);

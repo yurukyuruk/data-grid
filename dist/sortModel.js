@@ -18,7 +18,7 @@ const { template } = {
     background-color: rgb(235, 144, 101);
     cursor: pointer;
     width: 12rem;
-    box-shadow: 0 5px 5px 0 black;
+    box-shadow: 0px 4px 5px 1px rgba(0, 0, 0, 0.4);
     transform: scale(1);
     transition: transform 300ms ease-in-out;
   }
@@ -29,13 +29,14 @@ const { template } = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgb(252, 252, 184);
+    background-color: rgb(248 248 214);
     position: absolute;
     top: 45%;
     left: 30%;
     z-index: 1;
     max-height: 50vh;
     border: 2px solid rgb(235, 144, 101);
+    box-shadow: 0 10px 10px 5px rgba(0, 0, 0, 0.4);
   }
   .sort-lines {
     display: flex;
@@ -66,7 +67,7 @@ const { template } = {
     border: black 1px solid;
     background-color: rgb(235, 144, 101);
     cursor: pointer;
-    margin: 1px 1px 0 0;
+    margin: -2px -2px 0 0;
   }
   .close-button:hover {
     background-color: white;
@@ -77,8 +78,9 @@ const { template } = {
     padding: 0 2px;
     margin: 5px;
     cursor: pointer;
-    background-color: white;
+    background-color: rgba(104, 104, 46, 0.37);
     border: 1px solid black;
+    box-shadow: 0 3px 3px 1px rgba(0, 0, 0, 0.4);
   }
   .reset-button {
     border: black 1px solid;
@@ -88,7 +90,8 @@ const { template } = {
     cursor: pointer;
     padding-top: 0;
     padding-bottom: 0;
-    background-color: white;
+    background-color: rgb(248 248 214);
+    box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
   }
   .submit-button {
     border: black 1px solid;
@@ -99,9 +102,10 @@ const { template } = {
     padding-top: 0;
     padding-bottom: 0;
     background-color: rgb(235, 144, 101);
+    box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
   }
   .submit-button:hover {
-    background-color: white;
+    background-color: rgb(248 248 214);
   }
   .submit-button:disabled {
     background-color: rgb(235, 144, 101);
@@ -115,7 +119,10 @@ const { template } = {
     text-align: center;
   }
   .sort-adding-button:disabled {
-    background-color: white;
+    background-color: rgba(104, 104, 46, 0.37);
+  }
+  .blured {
+    filter: blur(2px);
   }
   input[data-sort-button-visible="false"] {
     display: none;
@@ -179,7 +186,6 @@ export class MySortingSection extends HTMLElement {
             this.table.classList.toggle("blured");
             for (let i = 0; i < this.allFields.length; i++) {
                 const sortFieldOption = document.createElement("option");
-                sortFieldOption.classList.add("option");
                 sortFieldOption.textContent = this.allFields[i];
                 if (i === 0) {
                     sortFieldOption.classList.add("option-default");

@@ -75,43 +75,15 @@ export class SearchButton extends HTMLElement {
     this.input.addEventListener(
       "keyup",
       debounce(() => {
+        
         const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         dataRows.innerHTML = "";
-        createRows(DATA_ROWS.rows);
-        const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-        for (let i = 0; i < config.columns.length; i++) {
-          const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
-          eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-        }
         const inputValue: string = this.input.value.toLowerCase();
-        const allDataRows: NodeListOf<HTMLTableRowElement> = document.querySelectorAll(".data-row");
-        let dataRowsToBeDisplayed = [];
-        const allTextContentsOfRows: string[][] = [];
-        allDataRows.forEach((row) => {
-          const textContentOfEachRow: string[] = [];
-          
-          for (let i = 0; i < row.children.length; i++) {
-            if(row.children[i].getAttribute("data-column-checkbox-checked") === "true") {
-              textContentOfEachRow.push(row.children[i].textContent?.toLowerCase() ?? "");
-            }              
-          }
-          allTextContentsOfRows.push(textContentOfEachRow);
-        });
-        for (let i = 0; i < allTextContentsOfRows.length; i++) {
-          let n = 0;
-          for (let j = 0; j < allTextContentsOfRows[i].length; j++) {
-            if (allTextContentsOfRows[i][j].includes(inputValue)) {
-              n += 1;
-            }
-            if (inputValue === "" || n > 0) {
-              dataRowsToBeDisplayed.push(allDataRows[i]);
-            }
-          }
-        }
-        dataRows.innerHTML = "";
-        dataRowsToBeDisplayed.forEach(row => {
-          dataRows.append(row);
-        })
+        DATA_ROWS.visibleRows = DATA_ROWS.rows.filter(row => row === inputValue)//object
+        createRows(DATA_ROWS.visibleRows);
+        
+        
+        
       }, 1000)
     );
 

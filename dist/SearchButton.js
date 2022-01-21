@@ -1,4 +1,4 @@
-import { config, DATA_ROWS } from "./configExport.js";
+import { DATA_ROWS } from "./configExport.js";
 import { createRows } from "./index.js";
 const { template } = {
     template: `
@@ -72,40 +72,9 @@ export class SearchButton extends HTMLElement {
         this.input.addEventListener("keyup", debounce(() => {
             const dataRows = document.querySelector(".data-rows");
             dataRows.innerHTML = "";
-            createRows(DATA_ROWS.rows);
-            const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-            for (let i = 0; i < config.columns.length; i++) {
-                const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id);
-                eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-            }
             const inputValue = this.input.value.toLowerCase();
-            const allDataRows = document.querySelectorAll(".data-row");
-            let dataRowsToBeDisplayed = [];
-            const allTextContentsOfRows = [];
-            allDataRows.forEach((row) => {
-                const textContentOfEachRow = [];
-                for (let i = 0; i < row.children.length; i++) {
-                    if (row.children[i].getAttribute("data-column-checkbox-checked") === "true") {
-                        textContentOfEachRow.push(row.children[i].textContent?.toLowerCase() ?? "");
-                    }
-                }
-                allTextContentsOfRows.push(textContentOfEachRow);
-            });
-            for (let i = 0; i < allTextContentsOfRows.length; i++) {
-                let n = 0;
-                for (let j = 0; j < allTextContentsOfRows[i].length; j++) {
-                    if (allTextContentsOfRows[i][j].includes(inputValue)) {
-                        n += 1;
-                    }
-                    if (inputValue === "" || n > 0) {
-                        dataRowsToBeDisplayed.push(allDataRows[i]);
-                    }
-                }
-            }
-            dataRows.innerHTML = "";
-            dataRowsToBeDisplayed.forEach(row => {
-                dataRows.append(row);
-            });
+            DATA_ROWS.visibleRows = DATA_ROWS.rows.filter(row => row === inputValue); //object
+            createRows(DATA_ROWS.visibleRows);
         }, 1000));
         this.searchButton.addEventListener("click", (e) => {
             e.preventDefault();

@@ -14,13 +14,11 @@ const { template } = {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
-        background-color: white;
+        background-color: rgb(248 248 214);
+        box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
       }
       .sort-line {
         display:flex;
-      }
-      .option{
-        background-color: rgb(235, 144, 101);
       }
   </style>
     <div class="sort-line">
