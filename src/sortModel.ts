@@ -37,8 +37,9 @@ const { template } = {
     left: 30%;
     z-index: 1;
     max-height: 50vh;
-    border: 2px solid rgb(235, 144, 101);
+    border-top: 20px solid rgb(235, 144, 101);;
     box-shadow: 0 10px 10px 5px rgba(0, 0, 0, 0.4);
+    margin-bottom: -20px;
   }
   .sort-lines {
     display: flex;
@@ -66,13 +67,13 @@ const { template } = {
   }
   .close-button {
     align-self: flex-end;
-    border: black 1px solid;
+    border: none;
     background-color: rgb(235, 144, 101);
     cursor: pointer;
-    margin: -2px -2px 0 0;
+    margin: -20px 0 0 0;
   }
   .close-button:hover {
-    background-color: white;
+    background-color: rgb(248 248 214);
   }
 
   .sort-adding-button {
@@ -82,7 +83,6 @@ const { template } = {
     cursor: pointer;
     background-color: rgba(104, 104, 46, 0.37);
     border: 1px solid black;
-    box-shadow: 0 3px 3px 1px rgba(0, 0, 0, 0.4);
   }
   .reset-button {
     border: black 1px solid;
@@ -92,7 +92,7 @@ const { template } = {
     cursor: pointer;
     padding-top: 0;
     padding-bottom: 0;
-    background-color: rgb(248 248 214);
+    background-color: rgba(104, 104, 46, 0.37);
     box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
   }
   .submit-button {
@@ -113,7 +113,7 @@ const { template } = {
     background-color: rgb(235, 144, 101);
   }
   .reset-button:hover, .sort-adding-button:hover {
-    background-color: rgb(235, 144, 101);
+    background-color: rgb(248 248 214);
   }
   .sort-data-button, .sort-adding-button, .close-button, .reset-button, .submit-button, .addition-symbol {
     font-family: Arial, Helvetica, sans-serif;
@@ -122,9 +122,6 @@ const { template } = {
   }
   .sort-adding-button:disabled {
     background-color: rgba(104, 104, 46, 0.37);
-  }
-  .blured {
-    filter: blur(2px);
   }
   input[data-sort-button-visible="false"] {
     display: none;

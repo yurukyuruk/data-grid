@@ -73,7 +73,10 @@ export class SearchButton extends HTMLElement {
             const dataRows = document.querySelector(".data-rows");
             dataRows.innerHTML = "";
             const inputValue = this.input.value.toLowerCase();
-            DATA_ROWS.visibleRows = DATA_ROWS.rows.filter(row => row === inputValue); //object
+            /*DATA_ROWS.visibleRows = DATA_ROWS.rows.forEach(row => {
+              row.
+            })*/
+            //DATA_ROWS.visibleRows = DATA_ROWS.rows.filter(row => row === inputValue)//object
             createRows(DATA_ROWS.visibleRows);
         }, 1000));
         this.searchButton.addEventListener("click", (e) => {

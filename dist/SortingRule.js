@@ -13,7 +13,7 @@ const { template } = {
         font-size: 0.9rem;
         text-align: center;
         background-color: rgb(248 248 214);
-        box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
+        margin-top: 12px;
       }
       .sort-line {
         display:flex;

@@ -32,19 +32,20 @@ const { template } = {
         background-color: rgb(248 248 214);
         position: absolute;
         top: 45%;
-        left: 40%;
+        left: 35%;
         z-index: 1;
-        border: 2px solid rgb(235, 144, 101);
+        border-top: 20px solid rgb(235, 144, 101);
+        box-shadow: 0 10px 10px 5px rgba(0, 0, 0, 0.4);
       }
       .column-hider-close-button {
         align-self: flex-end;
-        border: black 1px solid;
+        border: none;
         background-color: rgb(235, 144, 101);
         cursor: pointer;
-        margin: -2px -2px 0 0;
+        margin-top: -20px;
       }
       .column-hider-close-button:hover {
-        background-color: white;
+        background-color: rgb(248 248 214);
       }
       .column-checkboxes {
           display: grid;
@@ -69,6 +70,7 @@ const { template } = {
         text-align: center;
         line-height: 1em;
         background-color: white;
+        box-shadow: 0 3px 3px 1px rgba(0, 0, 0, 0.4);
       }
       
       .checkbox:checked:after {
@@ -97,7 +99,7 @@ const { template } = {
         cursor: pointer;
         padding-top: 0;
         padding-bottom: 0;
-        background-color: rgb(248 248 214);
+        background-color: rgba(104, 104, 46, 0.37);
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
@@ -105,9 +107,6 @@ const { template } = {
     }
     .reset-button:hover {
         background-color: rgb(235, 144, 101);
-    }
-    .blured {
-      filter: blur(2px);
     }
     th[data-column-checkbox-checked="false"] {
       display: none;
@@ -190,7 +189,6 @@ export class ColumnHider extends HTMLElement {
       this.createAndSetCheckboxes(config.getHtmlClassNamesOfColumns());
       this.getElementReferences();
       this.table.classList.toggle("blured");
-      sortModel.sortDataButton.classList.toggle("blured");
       this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
       this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
       const columnVisibilityInformation: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]") as string[];

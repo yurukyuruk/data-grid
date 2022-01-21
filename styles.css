@@ -1,3 +1,6 @@
+body {
+  margin: 0;
+}
 .whole-sort-area {
   display: flex;
   justify-content: space-between;

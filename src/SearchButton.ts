@@ -79,7 +79,10 @@ export class SearchButton extends HTMLElement {
         const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         dataRows.innerHTML = "";
         const inputValue: string = this.input.value.toLowerCase();
-        DATA_ROWS.visibleRows = DATA_ROWS.rows.filter(row => row === inputValue)//object
+        /*DATA_ROWS.visibleRows = DATA_ROWS.rows.forEach(row => {
+          row.
+        })*/
+        //DATA_ROWS.visibleRows = DATA_ROWS.rows.filter(row => row === inputValue)//object
         createRows(DATA_ROWS.visibleRows);
         
         
