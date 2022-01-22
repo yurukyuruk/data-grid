@@ -30,6 +30,7 @@ export function createDataHeaders(): void {
           columnHeader.addEventListener("mouseover", () => {
             columnHeader.style.color = "white";
             columnHeader.style.cursor = "pointer";
+            columnHeader.style.transition = "color 500ms ease-in-out";
           });
           columnHeader.addEventListener("mouseout", () => {
             columnHeader.style.color = "black";

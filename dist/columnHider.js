@@ -43,6 +43,7 @@ const { template } = {
         background-color: rgb(235, 144, 101);
         cursor: pointer;
         margin-top: -20px;
+        transition: background-color 500ms ease-in-out;
       }
       .column-hider-close-button:hover {
         background-color: rgb(248 248 214);
@@ -104,6 +105,7 @@ const { template } = {
         font-size: 0.9rem;
         text-align: center;
         box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
+        transition: background-color 500ms ease-in-out;
     }
     .reset-button:hover {
         background-color: rgb(235, 144, 101);
