@@ -23,7 +23,6 @@ export function createDataHeaders(): void {
         columnHeader.className = `${column.id}-header`;
         columnHeader.setAttribute("data-column-checkbox-checked", "true");
         columnHeader.textContent = column.displayName.toUpperCase();
-        columnHeader.style.boxShadow = "0 5px 5px 1px rgba(0, 0, 0, 0.5)";
         rowOfMainHeaders.append(columnHeader);
         if (column.children !== undefined) {
             columnHeader.setAttribute("data-header-expanded", "false");
