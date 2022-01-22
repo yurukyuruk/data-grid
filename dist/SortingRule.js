@@ -12,7 +12,7 @@ const { template } = {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
-        background-color: rgb(248 248 214);
+        background-color: rgb(253 206 184);
         margin-top: 12px;
       }
       .sort-line {

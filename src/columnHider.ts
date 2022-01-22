@@ -28,7 +28,7 @@ const { template } = {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        background-color: rgb(248 248 214);
+        background-color: rgb(253 206 184);
         position: absolute;
         top: 45%;
         left: 35%;
@@ -51,7 +51,7 @@ const { template } = {
         transition: background-color 250ms ease-in-out;
       }
       .column-hider-close-button:hover {
-        background-color: rgb(248 248 214);
+        background-color: rgb(253 206 184);
       }
       .column-checkboxes {
           display: grid;
@@ -105,7 +105,7 @@ const { template } = {
         cursor: pointer;
         padding-top: 0;
         padding-bottom: 0;
-        background-color: rgba(104, 104, 46, 0.37);
+        background-color: rgb(197 159 142);
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;

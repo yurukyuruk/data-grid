@@ -31,7 +31,7 @@ const { template } = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgb(248 248 214);
+    background-color: rgb(253 206 184);
     position: absolute;
     top: 45%;
     left: 30%;
@@ -79,7 +79,7 @@ const { template } = {
     position: absolute;
   }
   .close-button:hover {
-    background-color: rgb(248 248 214);
+    background-color: rgb(253 206 184);
   }
 
   .sort-adding-button {
@@ -87,7 +87,7 @@ const { template } = {
     padding: 0 2px;
     margin: 5px;
     cursor: pointer;
-    background-color: rgba(104, 104, 46, 0.37);
+    background-color: rgb(197 159 142);
     border: 1px solid black;
     transition: background-color 250ms ease-in-out;
   }
@@ -99,7 +99,7 @@ const { template } = {
     cursor: pointer;
     padding-top: 0;
     padding-bottom: 0;
-    background-color: rgba(104, 104, 46, 0.37);
+    background-color: rgb(197 159 142);
     box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
     transition: background-color 250ms ease-in-out;
   }

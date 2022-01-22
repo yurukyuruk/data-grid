@@ -15,7 +15,7 @@ const { template } = {
         .input {
             width: 12rem;
             height: 1.1rem;
-            border: 1px solid black;
+            border: #c67b58 1px solid;
             backgroundColor: white;
         }
         .search-button {
