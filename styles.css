@@ -17,7 +17,6 @@ table {
 
 .scroll-bar {
   height: 96vh;
-  overflow-y: scroll;
 }
 thead {
   position: sticky;

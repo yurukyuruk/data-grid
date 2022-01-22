@@ -1,8 +1,8 @@
 import { SortingRule } from "./SortingRule.js";
-import { SortingService } from "./sortingService.js";
+import { SortingService } from "./SortingService.js";
 import { sortingService } from "./configExport.js";
 import { config } from "./configExport.js";
-import { ConfigService } from "./configService.js";
+import { ConfigService } from "./ConfigService.js";
 import { SortRule } from "./types/interfaces.js";
 import { SortDirection } from "./types/enums.js";
 
@@ -37,9 +37,7 @@ const { template } = {
     left: 30%;
     z-index: 1;
     max-height: 50vh;
-    border-top: 20px solid rgb(235, 144, 101);;
     box-shadow: 0 10px 10px 5px rgba(0, 0, 0, 0.4);
-    margin-bottom: -20px;
   }
   .sort-lines {
     display: flex;
@@ -65,13 +63,20 @@ const { template } = {
   .option-default {
     display: none;
   }
+  .top-of-box {
+    height: 20px;
+    width: 100%;
+    background-color: rgb(235, 144, 101);
+  }
   .close-button {
+    height: 20px;
+    width: 20px;
     align-self: flex-end;
     border: none;
     background-color: rgb(235, 144, 101);
     cursor: pointer;
-    margin: -20px 0 0 0;
-    transition: background-color 500ms ease-in-out;
+    transition: background-color 250ms ease-in-out;
+    position: absolute;
   }
   .close-button:hover {
     background-color: rgb(248 248 214);
@@ -84,7 +89,7 @@ const { template } = {
     cursor: pointer;
     background-color: rgba(104, 104, 46, 0.37);
     border: 1px solid black;
-    transition: background-color 500ms ease-in-out;
+    transition: background-color 250ms ease-in-out;
   }
   .reset-button {
     border: black 1px solid;
@@ -96,7 +101,7 @@ const { template } = {
     padding-bottom: 0;
     background-color: rgba(104, 104, 46, 0.37);
     box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
-    transition: background-color 500ms ease-in-out;
+    transition: background-color 250ms ease-in-out;
   }
   .submit-button {
     border: black 1px solid;
@@ -108,7 +113,7 @@ const { template } = {
     padding-bottom: 0;
     background-color: rgb(235, 144, 101);
     box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
-    transition: background-color 500ms ease-in-out;
+    transition: background-color 250ms ease-in-out;
   }
   .submit-button:hover {
     background-color: rgb(248 248 214);
@@ -141,6 +146,7 @@ const { template } = {
   <input class="sort-data-button" data-sort-button-visible="true" type="button" value="SORT DATA">
 </div>
 <section class="sorting" data-sort-fields-visible="false">
+  <div class="top-of-box"></div>
   <input class="close-button" type="button" value="x">
   <div class="sort-lines"> 
     <${SortingRule.TAG}></${SortingRule.TAG}>

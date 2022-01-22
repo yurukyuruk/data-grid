@@ -1,5 +1,5 @@
 import { SortingRule } from "./SortingRule.js";
-import { ColumnHider } from "./columnHider.js";
+import { ColumnHider } from "./ColumnHider.js";
 import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
@@ -84,6 +84,16 @@ export class ConfigService {
   }
   getSummaryRule(columnId: string): string[] {
     return this.columns.find((colum) => colum.id === columnId)?.summary?.split("+") ?? [];
+  }
+  getVisibleColumnIds() {
+    const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+    let visibleColumnIds = [];
+    for(let i = 0; i < columnsVisibility.length; i++) {
+      if(columnsVisibility[i] === "true") {
+        visibleColumnIds.push(this.columns[i].id);
+      }
+    }
+    return visibleColumnIds;
   }
   saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<HTMLDivElement>): string[] {
     const columnsVisibilityStatus: string[] = [];

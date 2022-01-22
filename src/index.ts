@@ -1,6 +1,6 @@
 import { config } from "./configExport.js";
-import { ColumnHider } from "./columnHider.js";
-import { MySortingSection } from "./sortModel.js";
+import { ColumnHider } from "./ColumnHider.js";
+import { MySortingSection } from "./MySortingSection.js";
 import { SearchButton } from "./SearchButton.js";
 import { Column, Data, RowRecord } from "./types/interfaces.js";
 import { isRowRecord } from "./types/typeGuards.js";
@@ -23,6 +23,7 @@ export function createDataHeaders(): void {
         columnHeader.className = `${column.id}-header`;
         columnHeader.setAttribute("data-column-checkbox-checked", "true");
         columnHeader.textContent = column.displayName.toUpperCase();
+        columnHeader.style.boxShadow = "0 5px 5px 1px rgba(0, 0, 0, 0.5)";
         rowOfMainHeaders.append(columnHeader);
         if (column.children !== undefined) {
             columnHeader.setAttribute("data-header-expanded", "false");
@@ -30,7 +31,7 @@ export function createDataHeaders(): void {
           columnHeader.addEventListener("mouseover", () => {
             columnHeader.style.color = "white";
             columnHeader.style.cursor = "pointer";
-            columnHeader.style.transition = "color 500ms ease-in-out";
+            columnHeader.style.transition = "color 250ms ease-in-out";
           });
           columnHeader.addEventListener("mouseout", () => {
             columnHeader.style.color = "black";
@@ -134,7 +135,7 @@ sortModel.addEventListener("to-sort", () => {
   //DATA_ROWS.visibleRows = sortingService.sortData(config.sortingRules);
   
   dataRows.innerHTML = "";
-  createRows(sortingService.dataRows);
+  createRows(DATA_ROWS.visibleRows);
   
 });
 

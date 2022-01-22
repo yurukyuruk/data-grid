@@ -1,5 +1,6 @@
 import { config, DATA_ROWS } from "./configExport.js";
 import { createRows } from "./index.js";
+import { extractValuesFromKeys, isObject } from "./utils.js";
 
 const { template } = {
   template: `
@@ -33,6 +34,7 @@ const { template } = {
         .button-icon {
             margin-left: 1.4rem;
             height: 1.2rem;
+            transition: transform 250ms ease-in-out;
         }
         .button-icon:hover {
             transform: scale(1.2);
@@ -61,7 +63,7 @@ export class SearchButton extends HTMLElement {
     this.getElementReferences();
     this.initilizeListeners();
   }
-
+  
   initilizeListeners() {
     const debounce = (func, delay) => {
       let inDebounce;
@@ -79,11 +81,44 @@ export class SearchButton extends HTMLElement {
         const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         dataRows.innerHTML = "";
         const inputValue: string = this.input.value.toLowerCase();
-        /*DATA_ROWS.visibleRows = DATA_ROWS.rows.forEach(row => {
-          row.
+        
+
+        function filterRows(rows, searchValue) {
+          const columnNames = config.getVisibleColumnIds();
+          return rows.filter(row => {
+              const visibleValues = extractValuesFromKeys(row, columnNames);
+              return visibleValues.some(value => {
+                  return isObject(value)
+                      ? Object.values(value)
+                              .some(cellValue => cellValue.toString().toLowerCase().includes(searchValue))
+                      : value.toString().toLowerCase().includes(searchValue);
+              })
+          })
+      }
+      
+      
+      DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
+      createRows(DATA_ROWS.visibleRows);    
+      
+        /*DATA_ROWS.visibleRows = [];
+        DATA_ROWS.rows.forEach(row => {
+          let i = 0;
+          Object.keys(row).forEach(key => {
+            if(typeof row[key] === "object") {
+              Object.keys(row[key]).forEach(keyOfRowKey => {
+                if(row[key][keyOfRowKey].toString().toLowerCase().includes(inputValue) === true) {
+                  i += 1;
+                }
+              })
+            } else if(typeof row[key] !== "object" && row[key].toString().toLowerCase().includes(inputValue) === true) {
+              i += 1;
+            }
+          })
+          if(i > 0) {
+            DATA_ROWS.visibleRows.push(row);
+          }
         })*/
-        //DATA_ROWS.visibleRows = DATA_ROWS.rows.filter(row => row === inputValue)//object
-        createRows(DATA_ROWS.visibleRows);
+        
         
         
         

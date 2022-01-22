@@ -1,8 +1,8 @@
-import { ConfigService } from "./configService.js";
+import { ConfigService } from "./ConfigService.js";
 import { DataRows } from "./DataRows.js";
-import { SortingService } from "./sortingService.js";
+import { SortingService } from "./SortingService.js";
 
 export const config: ConfigService = new ConfigService();
 export const DATA_ROWS: DataRows = new DataRows();
-export let sortingService: SortingService = new SortingService(DATA_ROWS.rows);
+export let sortingService: SortingService = new SortingService();
 

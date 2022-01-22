@@ -25,7 +25,6 @@ const { template } = {
         transform: scale(1.1);
       }
       .column-checkboxes-area {
-        
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -34,16 +33,22 @@ const { template } = {
         top: 45%;
         left: 35%;
         z-index: 1;
-        border-top: 20px solid rgb(235, 144, 101);
         box-shadow: 0 10px 10px 5px rgba(0, 0, 0, 0.4);
       }
+      .modal-header {
+        height: 20px;
+        width: 100%;
+        background-color: rgb(235, 144, 101);
+      }
       .column-hider-close-button {
+        height: 20px;
+        width: 20px;
         align-self: flex-end;
         border: none;
         background-color: rgb(235, 144, 101);
         cursor: pointer;
         margin-top: -20px;
-        transition: background-color 500ms ease-in-out;
+        transition: background-color 250ms ease-in-out;
       }
       .column-hider-close-button:hover {
         background-color: rgb(248 248 214);
@@ -105,7 +110,7 @@ const { template } = {
         font-size: 0.9rem;
         text-align: center;
         box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.4);
-        transition: background-color 500ms ease-in-out;
+        transition: background-color 250ms ease-in-out;
     }
     .reset-button:hover {
         background-color: rgb(235, 144, 101);
@@ -122,11 +127,9 @@ const { template } = {
   <input class="column-hider-button" type="button" value="HIDE COLUMN">
 </div>
 <div class="column-checkboxes-area" data-column-checkboxes-area-visible="false">
-    <div>
-        <input class="column-hider-close-button" type="button" value="x">
-    </div>
-    <div class="column-checkboxes">
-    </div>
+    <div class="modal-header"></div>
+    <input class="column-hider-close-button" type="button" value="x">
+    <div class="column-checkboxes"></div>
     <div class="reset-apply-buttons">
         <input class="reset-button" type="button" value="reset">
     </div>

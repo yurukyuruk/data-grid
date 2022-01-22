@@ -1,9 +1,9 @@
 import { config } from "./configExport.js";
-import { ColumnHider } from "./columnHider.js";
-import { MySortingSection } from "./sortModel.js";
+import { ColumnHider } from "./ColumnHider.js";
+import { MySortingSection } from "./MySortingSection.js";
 import { SearchButton } from "./SearchButton.js";
 import { isRowRecord } from "./types/typeGuards.js";
-import { sortingService } from "./configExport.js";
+import { DATA_ROWS } from "./configExport.js";
 const dataRows = document.querySelector(".data-rows");
 const columnHeaderSection = document.querySelector("thead");
 export function createDataHeaders() {
@@ -19,6 +19,7 @@ export function createDataHeaders() {
         columnHeader.className = `${column.id}-header`;
         columnHeader.setAttribute("data-column-checkbox-checked", "true");
         columnHeader.textContent = column.displayName.toUpperCase();
+        columnHeader.style.boxShadow = "0 5px 5px 1px rgba(0, 0, 0, 0.5)";
         rowOfMainHeaders.append(columnHeader);
         if (column.children !== undefined) {
             columnHeader.setAttribute("data-header-expanded", "false");
@@ -26,7 +27,7 @@ export function createDataHeaders() {
             columnHeader.addEventListener("mouseover", () => {
                 columnHeader.style.color = "white";
                 columnHeader.style.cursor = "pointer";
-                columnHeader.style.transition = "color 500ms ease-in-out";
+                columnHeader.style.transition = "color 250ms ease-in-out";
             });
             columnHeader.addEventListener("mouseout", () => {
                 columnHeader.style.color = "black";
@@ -125,7 +126,7 @@ function addToogleChildrensVisiblityListener(headerColumn) {
 sortModel.addEventListener("to-sort", () => {
     //DATA_ROWS.visibleRows = sortingService.sortData(config.sortingRules);
     dataRows.innerHTML = "";
-    createRows(sortingService.dataRows);
+    createRows(DATA_ROWS.visibleRows);
 });
 console.log(ColumnHider);
 console.log(SearchButton);

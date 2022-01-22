@@ -1,4 +1,4 @@
-import { config } from "./configExport.js";
+import { config, DATA_ROWS } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
@@ -11,11 +11,11 @@ export class SortingService {
     for (const sortRule of sortConfigDatas) {
       const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.id);
       if (fieldType === ColumnType.STRING) {
-        this.dataRows.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
+        DATA_ROWS.visibleRows.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       } else if (fieldType === ColumnType.NUMBER) {
-        this.dataRows.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
+        DATA_ROWS.visibleRows.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       } else {
-        this.dataRows.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
+        DATA_ROWS.visibleRows.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
       }
     }
     return this.dataRows;
@@ -48,4 +48,4 @@ export class SortingService {
   }
 }
 
-//console.log(MySortingSection);
+

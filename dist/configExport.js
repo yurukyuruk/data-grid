@@ -1,7 +1,7 @@
-import { ConfigService } from "./configService.js";
+import { ConfigService } from "./ConfigService.js";
 import { DataRows } from "./DataRows.js";
-import { SortingService } from "./sortingService.js";
+import { SortingService } from "./SortingService.js";
 export const config = new ConfigService();
 export const DATA_ROWS = new DataRows();
-export let sortingService = new SortingService(DATA_ROWS.rows);
+export let sortingService = new SortingService();
 //# sourceMappingURL=configExport.js.map
