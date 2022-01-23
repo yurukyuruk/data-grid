@@ -76,13 +76,10 @@ export class SearchButton extends HTMLElement {
     };
     this.input.addEventListener(
       "keyup",
-      debounce(() => {
-        
+      debounce(() => { 
         const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         dataRows.innerHTML = "";
         const inputValue: string = this.input.value.toLowerCase();
-        
-
         function filterRows(rows, searchValue) {
           const columnNames = config.getVisibleColumnIds();
           return rows.filter(row => {
@@ -94,37 +91,11 @@ export class SearchButton extends HTMLElement {
                       : value.toString().toLowerCase().includes(searchValue);
               })
           })
-      }
-      
-      
+      }      
       DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
-      createRows(DATA_ROWS.visibleRows);    
-      
-        /*DATA_ROWS.visibleRows = [];
-        DATA_ROWS.rows.forEach(row => {
-          let i = 0;
-          Object.keys(row).forEach(key => {
-            if(typeof row[key] === "object") {
-              Object.keys(row[key]).forEach(keyOfRowKey => {
-                if(row[key][keyOfRowKey].toString().toLowerCase().includes(inputValue) === true) {
-                  i += 1;
-                }
-              })
-            } else if(typeof row[key] !== "object" && row[key].toString().toLowerCase().includes(inputValue) === true) {
-              i += 1;
-            }
-          })
-          if(i > 0) {
-            DATA_ROWS.visibleRows.push(row);
-          }
-        })*/
-        
-        
-        
-        
+      createRows(DATA_ROWS.visibleRows);     
       }, 1000)
     );
-
     this.searchButton.addEventListener("click", (e) => {
       e.preventDefault();
     });
@@ -132,8 +103,7 @@ export class SearchButton extends HTMLElement {
 
   getElementReferences() {
     this.input = this.shadowRoot.querySelector(".input") as HTMLInputElement;
-    this.searchButton = this.shadowRoot.querySelector(".search-button") as HTMLButtonElement;
-    
+    this.searchButton = this.shadowRoot.querySelector(".search-button") as HTMLButtonElement; 
   }
 }
 customElements.define(SearchButton.TAG, SearchButton);

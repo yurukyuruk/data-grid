@@ -89,24 +89,6 @@ export class SearchButton extends HTMLElement {
             }
             DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
             createRows(DATA_ROWS.visibleRows);
-            /*DATA_ROWS.visibleRows = [];
-            DATA_ROWS.rows.forEach(row => {
-              let i = 0;
-              Object.keys(row).forEach(key => {
-                if(typeof row[key] === "object") {
-                  Object.keys(row[key]).forEach(keyOfRowKey => {
-                    if(row[key][keyOfRowKey].toString().toLowerCase().includes(inputValue) === true) {
-                      i += 1;
-                    }
-                  })
-                } else if(typeof row[key] !== "object" && row[key].toString().toLowerCase().includes(inputValue) === true) {
-                  i += 1;
-                }
-              })
-              if(i > 0) {
-                DATA_ROWS.visibleRows.push(row);
-              }
-            })*/
         }, 1000));
         this.searchButton.addEventListener("click", (e) => {
             e.preventDefault();

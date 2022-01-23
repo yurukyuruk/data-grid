@@ -21,6 +21,7 @@ const { template } = {
       .sort-direction:disabled, .sort-field:disabled {
         cursor: auto;
         background-color: rgb(255 226 213);
+        color: #000000c9;
       }
       .sort-line {
         display:flex;

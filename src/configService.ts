@@ -8,7 +8,7 @@ import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
 import { Column } from "./types/interfaces.js";
 import { Data } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
-import { DATA_ROWS } from "./configExport.js";
+import { config, DATA_ROWS, sortingService } from "./configExport.js";
 
 export class ConfigService {
   data!: Data;
@@ -25,13 +25,25 @@ export class ConfigService {
       .then(({ columns, columnsVisiblity, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
         this.sortingRules = sortingRules;
-        //this.columnsVisibility = columnsVisiblity;
         sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
         createDataHeaders();
         return DATA_ROWS.fetchData(dataUrl);
       })
       .then(() => {
         createRows(DATA_ROWS.rows);
+        /*if (localStorage.getItem("sortInformation") !== null) {
+        const dataRows = document.querySelector(".data-rows");
+        dataRows.innerHTML = "";
+        const sortedData: RowRecord[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+        createRows(sortedData);
+      }*/
+      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+      for (let i = 0; i < config.columns.length; i++) {
+        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
+        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-header");
+        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+      }
       });   
   }
   getHtmlClassNamesOfColumns(): string[] {
