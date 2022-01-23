@@ -86,25 +86,6 @@ export function createRows(dataList): void {
 
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
-/*export function fetchRowDatas(data: Data): Promise<void> {
-  return fetch(data.dataUrl)
-    .then((response) => response.json())//Birinci then in return değerini ikinci thende parametre olarak kullanıyoruz.
-    .then((rowRecords: RowRecord[]) => {
-      sortingService = new SortingService(rowRecords);
-      addAllDataAtOnce(rowRecords, createReferenceElement());
-      if (localStorage.getItem("sortInformation") !== null) {
-        dataRows.innerHTML = "";
-        const sortedData: RowRecord[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-        addAllDataAtOnce(sortedData, createReferenceElement());
-      }
-      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-
-      for (let i = 0; i < config.columns.length; i++) {
-        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-data");
-        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-      }
-    })
-}*/
 function addToogleChildrensVisiblityListener(headerColumn) {
   headerColumn.addEventListener("click", () => {
       const newState = headerColumn.getAttribute("data-header-expanded") === "false" ? "true" : "false";
@@ -131,10 +112,15 @@ function addToogleChildrensVisiblityListener(headerColumn) {
 }
 
 sortModel.addEventListener("to-sort", () => {
-  //DATA_ROWS.visibleRows = sortingService.sortData(config.sortingRules);
-  
   dataRows.innerHTML = "";
   createRows(DATA_ROWS.visibleRows);
+  const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+      for (let i = 0; i < config.columns.length; i++) {
+        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
+        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-header");
+        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+      }
   
 });
 

@@ -93,7 +93,14 @@ export class SearchButton extends HTMLElement {
           })
       }      
       DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
-      createRows(DATA_ROWS.visibleRows);     
+      createRows(DATA_ROWS.visibleRows); 
+      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+      for (let i = 0; i < config.columns.length; i++) {
+        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
+        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-header");
+        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+      }    
       }, 1000)
     );
     this.searchButton.addEventListener("click", (e) => {
