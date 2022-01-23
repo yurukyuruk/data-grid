@@ -14,7 +14,7 @@ export class ConfigService {
     fetchConfig() {
         return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
             .then((response) => response.json())
-            .then(({ columns, columnsVisiblity, dataUrl, sortingRules }) => {
+            .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
             sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
@@ -104,8 +104,7 @@ export class ConfigService {
         return columnsVisibilityStatus;
     }
     saveSortInformation(sortOptions) {
-        localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions))); //you cant use sort model here.
-        this.sortingRules = sortOptions;
+        localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions)));
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");

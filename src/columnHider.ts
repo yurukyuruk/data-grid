@@ -148,6 +148,7 @@ export class ColumnHider extends HTMLElement {
   private columnCheckboxes: HTMLDivElement;
   private readonly resetButton: HTMLInputElement;
   private allColumnCheckboxes!: NodeListOf<HTMLDivElement>;
+  private table!: HTMLTableElement;
 
   constructor() {
     super();

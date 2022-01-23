@@ -2,10 +2,9 @@ import { config } from "./configExport.js";
 import { ColumnHider } from "./ColumnHider.js";
 import { MySortingSection } from "./MySortingSection.js";
 import { SearchButton } from "./SearchButton.js";
-import { Column, Data, RowRecord } from "./types/interfaces.js";
 import { isRowRecord } from "./types/typeGuards.js";
 import { DATA_ROWS } from "./configExport.js";
-import { sortingService } from "./configExport.js";
+import { RowRecord } from "./types/interfaces.js";
 
 const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
 const columnHeaderSection = document.querySelector("thead") as HTMLTableSectionElement;
@@ -50,7 +49,7 @@ export function createDataHeaders(): void {
     columnHeaderSection.appendChild(rowOfChildHeaders);
 }
 
-export function createRows(dataList): void {
+export function createRows(dataList: RowRecord[]): void {
   for (const record of dataList) {
     const dataRow = document.createElement("tr");
     dataRow.classList.add("data-row");
@@ -86,7 +85,7 @@ export function createRows(dataList): void {
 
 export const sortModel = document.querySelector(MySortingSection.TAG) as unknown as MySortingSection;
 
-function addToogleChildrensVisiblityListener(headerColumn) {
+function addToogleChildrensVisiblityListener(headerColumn: HTMLTableCellElement) {
   headerColumn.addEventListener("click", () => {
       const newState = headerColumn.getAttribute("data-header-expanded") === "false" ? "true" : "false";
       if (newState === "true") {

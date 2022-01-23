@@ -1,6 +1,7 @@
 import { config, DATA_ROWS } from "./configExport.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 export class SortingService {
+    dataRows;
     constructor() { }
     sortData(sortConfigDatas) {
         for (const sortRule of sortConfigDatas) {

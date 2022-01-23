@@ -5,7 +5,7 @@ import { RowRecord } from "./types/interfaces.js";
 
 //move it to global service page 
 export class DataRows {
-  readonly rows: RowRecord[] = [];
+  rows: RowRecord[] = [];
   visibleRows: RowRecord[] = [];
   
   constructor() {}

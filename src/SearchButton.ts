@@ -1,5 +1,6 @@
 import { config, DATA_ROWS } from "./configExport.js";
 import { createRows } from "./index.js";
+import { RowRecord } from "./types/interfaces.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 
 const { template } = {
@@ -80,7 +81,7 @@ export class SearchButton extends HTMLElement {
         const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         dataRows.innerHTML = "";
         const inputValue: string = this.input.value.toLowerCase();
-        function filterRows(rows, searchValue) {
+        function filterRows(rows: RowRecord[], searchValue: string) {
           const columnNames = config.getVisibleColumnIds();
           return rows.filter(row => {
               const visibleValues = extractValuesFromKeys(row, columnNames);

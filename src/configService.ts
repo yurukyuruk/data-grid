@@ -1,14 +1,12 @@
 import { SortingRule } from "./SortingRule.js";
 import { ColumnHider } from "./ColumnHider.js";
-import { fetchRowDatas } from "./index.js";
 import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
 import { createRows } from "./index.js";
-import { addEventListenerToColumnHeadersWhichHasChildren } from "./index.js";
-import { Column } from "./types/interfaces.js";
+import { Column, GridConfig } from "./types/interfaces.js";
 import { Data } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
-import { config, DATA_ROWS, sortingService } from "./configExport.js";
+import { config, DATA_ROWS} from "./configExport.js";
 
 export class ConfigService {
   data!: Data;
@@ -22,7 +20,7 @@ export class ConfigService {
       "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json"
     )
       .then((response) => response.json())
-      .then(({ columns, columnsVisiblity, dataUrl, sortingRules }: GridConfig) => {
+      .then(({ columns, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
         this.sortingRules = sortingRules;
         sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
@@ -116,8 +114,7 @@ export class ConfigService {
     return columnsVisibilityStatus;
   }
   saveSortInformation(sortOptions: SortingRule[]): void {
-    localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions)));//you cant use sort model here.
-    this.sortingRules = sortOptions;
+    localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions)));
   }
   
   clearSortInformation(): void {

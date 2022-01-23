@@ -319,5 +319,4 @@ export class MySortingSection extends HTMLElement {
 customElements.define(MySortingSection.TAG, MySortingSection);
 console.log(ConfigService);
 console.log(SortingService);
-//getSortOptions will be here
 //# sourceMappingURL=MySortingSection.js.map

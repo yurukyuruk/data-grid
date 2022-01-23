@@ -2,9 +2,9 @@ import { config, DATA_ROWS } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
-import { DataRows } from "./DataRows.js";
 
 export class SortingService {
+  dataRows!: RowRecord[];
   constructor() {}
 
   sortData(sortConfigDatas: SortRule[]): RowRecord[] {

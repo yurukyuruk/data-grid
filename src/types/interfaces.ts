@@ -24,6 +24,11 @@ export interface Data {
   dataUrl: string;
   sortingRules: SortRule[];
 }
+export interface GridConfig {
+  columns: Column[];
+  dataUrl: string;
+  sortingRules: SortRule[];
+}
 interface ColumnsVisiblity {
   id: string;
   visible: boolean;
