@@ -12,8 +12,13 @@ const { template } = {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.9rem;
         text-align: center;
-        background-color: rgb(255 226 213);
+        background-color: rgb(253 206 184);
         margin-top: 12px;
+        cursor: pointer;
+      }
+      .sort-direction:disabled, .sort-field:disabled {
+        cursor: auto;
+        background-color: rgb(255 226 213);
       }
       .sort-line {
         display:flex;

@@ -29,7 +29,7 @@ const { template } = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgb(253 206 184);
+    background-color: rgb(255 226 213);
     position: absolute;
     top: 45%;
     left: 30%;
@@ -77,7 +77,7 @@ const { template } = {
     position: absolute;
   }
   .close-button:hover {
-    background-color: rgb(255 226 213);
+    background-color: rgb(253 206 184);
   }
 
   .sort-adding-button {
@@ -114,14 +114,15 @@ const { template } = {
     transition: background-color 250ms ease-in-out;
   }
   .submit-button:hover {
-    background-color: rgb(255 226 213);
+    background-color: rgb(253 206 184);
   }
   .submit-button:disabled {
-    background-color: rgb(253 206 184);
+    background-color: rgb(255 226 213);
     color: #0000009c;
+    cursor: auto;
   }
   .reset-button:hover, .sort-adding-button:hover {
-    background-color: rgb(255 226 213);
+    background-color: rgb(253 206 184);
   }
   .sort-data-button, .sort-adding-button, .close-button, .reset-button, .submit-button, .addition-symbol {
     font-family: Arial, Helvetica, sans-serif;
@@ -129,8 +130,9 @@ const { template } = {
     text-align: center;
   }
   .sort-adding-button:disabled {
-    background-color: rgb(253 206 184);
+    background-color: rgb(255 226 213);
     color: #0000009c;
+    cursor: auto;
   }
   input[data-sort-button-visible="false"] {
     display: none;

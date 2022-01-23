@@ -28,7 +28,7 @@ const { template } = {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        background-color: rgb(253 206 184);
+        background-color: rgb(255 226 213);
         position: absolute;
         top: 45%;
         left: 35%;
@@ -51,7 +51,7 @@ const { template } = {
         transition: background-color 250ms ease-in-out;
       }
       .column-hider-close-button:hover {
-        background-color: rgb(255 226 213);
+        background-color: rgb(253 206 184);
       }
       .column-checkboxes {
           display: grid;
@@ -113,7 +113,7 @@ const { template } = {
         transition: background-color 250ms ease-in-out;
     }
     .reset-button:hover {
-        background-color: rgb(255 226 213);
+        background-color: rgb(253 206 184);
     }
     th[data-column-checkbox-checked="false"] {
       display: none;
