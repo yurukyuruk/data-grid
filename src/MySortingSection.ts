@@ -79,7 +79,7 @@ const { template } = {
     position: absolute;
   }
   .close-button:hover {
-    background-color: rgb(253 206 184);
+    background-color: rgb(255 226 213);
   }
 
   .sort-adding-button {
@@ -116,13 +116,14 @@ const { template } = {
     transition: background-color 250ms ease-in-out;
   }
   .submit-button:hover {
-    background-color: rgb(248 248 214);
+    background-color: rgb(255 226 213);
   }
   .submit-button:disabled {
-    background-color: rgb(235, 144, 101);
+    background-color: rgb(253 206 184);
+    color: #0000009c;
   }
   .reset-button:hover, .sort-adding-button:hover {
-    background-color: rgb(248 248 214);
+    background-color: rgb(255 226 213);
   }
   .sort-data-button, .sort-adding-button, .close-button, .reset-button, .submit-button, .addition-symbol {
     font-family: Arial, Helvetica, sans-serif;
@@ -130,7 +131,8 @@ const { template } = {
     text-align: center;
   }
   .sort-adding-button:disabled {
-    background-color: rgba(104, 104, 46, 0.37);
+    background-color: rgb(253 206 184);
+    color: #0000009c;
   }
   input[data-sort-button-visible="false"] {
     display: none;

@@ -51,7 +51,7 @@ const { template } = {
         transition: background-color 250ms ease-in-out;
       }
       .column-hider-close-button:hover {
-        background-color: rgb(253 206 184);
+        background-color: rgb(255 226 213);
       }
       .column-checkboxes {
           display: grid;
@@ -113,7 +113,7 @@ const { template } = {
         transition: background-color 250ms ease-in-out;
     }
     .reset-button:hover {
-        background-color: rgb(235, 144, 101);
+        background-color: rgb(255 226 213);
     }
     th[data-column-checkbox-checked="false"] {
       display: none;
