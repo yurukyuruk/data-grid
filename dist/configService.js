@@ -3,7 +3,7 @@ import { ColumnHider } from "./ColumnHider.js";
 import { sortModel } from "./index.js";
 import { createDataHeaders } from "./index.js";
 import { createRows } from "./index.js";
-import { config, DATA_ROWS } from "./configExport.js";
+import { config, DATA_ROWS, sortingService } from "./configExport.js";
 export class ConfigService {
     data;
     columns;
@@ -23,12 +23,14 @@ export class ConfigService {
         })
             .then(() => {
             createRows(DATA_ROWS.rows);
-            /*if (localStorage.getItem("sortInformation") !== null) {
-            const dataRows = document.querySelector(".data-rows");
-            dataRows.innerHTML = "";
-            const sortedData: RowRecord[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-            createRows(sortedData);
-          }*/
+            if (localStorage.getItem("sortInformation") !== null) {
+                const dataRows = document.querySelector(".data-rows");
+                if (dataRows) {
+                    dataRows.innerHTML = "";
+                }
+                sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+                createRows(DATA_ROWS.visibleRows);
+            }
             const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
             for (let i = 0; i < config.columns.length; i++) {
                 const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id);

@@ -6,7 +6,7 @@ import { createRows } from "./index.js";
 import { Column, GridConfig } from "./types/interfaces.js";
 import { Data } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
-import { config, DATA_ROWS} from "./configExport.js";
+import { config, DATA_ROWS, sortingService} from "./configExport.js";
 
 export class ConfigService {
   data!: Data;
@@ -29,12 +29,14 @@ export class ConfigService {
       })
       .then(() => {
         createRows(DATA_ROWS.rows);
-        /*if (localStorage.getItem("sortInformation") !== null) {
+        if (localStorage.getItem("sortInformation") !== null) {
         const dataRows = document.querySelector(".data-rows");
-        dataRows.innerHTML = "";
-        const sortedData: RowRecord[] = sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-        createRows(sortedData);
-      }*/
+        if(dataRows) {
+          dataRows.innerHTML = "";
+        }
+        sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+        createRows(DATA_ROWS.visibleRows);
+      }
       const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
       for (let i = 0; i < config.columns.length; i++) {
         const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
