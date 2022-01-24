@@ -1,4 +1,4 @@
-import { config, DATA_ROWS } from "./configExport.js";
+import { config, DATA_ROWS, sortingService } from "./configExport.js";
 import { createRows } from "./index.js";
 import { RowRecord } from "./types/interfaces.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
@@ -80,6 +80,7 @@ export class SearchButton extends HTMLElement {
       debounce(() => { 
         const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         dataRows.innerHTML = "";
+        sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
         const inputValue: string = this.input.value.toLowerCase();
         function filterRows(rows: RowRecord[], searchValue: string) {
           const columnNames = config.getVisibleColumnIds();

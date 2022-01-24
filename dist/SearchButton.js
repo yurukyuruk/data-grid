@@ -1,4 +1,4 @@
-import { config, DATA_ROWS } from "./configExport.js";
+import { config, DATA_ROWS, sortingService } from "./configExport.js";
 import { createRows } from "./index.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 const { template } = {
@@ -74,6 +74,7 @@ export class SearchButton extends HTMLElement {
         this.input.addEventListener("keyup", debounce(() => {
             const dataRows = document.querySelector(".data-rows");
             dataRows.innerHTML = "";
+            sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
             const inputValue = this.input.value.toLowerCase();
             function filterRows(rows, searchValue) {
                 const columnNames = config.getVisibleColumnIds();

@@ -306,7 +306,7 @@ export class MySortingSection extends HTMLElement {
   mapSortOptions(sortOptions: SortingRule[]): SortRule[] {
     return sortOptions.map((option) => {
       return {
-        id: option.fieldOption,
+        id: config.getColumnIdFromColumnDisplayName(option.fieldOption),
         direction: option.directionOption
       };
     });

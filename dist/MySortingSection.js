@@ -299,7 +299,7 @@ export class MySortingSection extends HTMLElement {
     mapSortOptions(sortOptions) {
         return sortOptions.map((option) => {
             return {
-                id: option.fieldOption,
+                id: config.getColumnIdFromColumnDisplayName(option.fieldOption),
                 direction: option.directionOption
             };
         });

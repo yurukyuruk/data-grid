@@ -123,7 +123,5 @@ sortModel.addEventListener("to-sort", () => {
   
 });
 
-
-
 console.log(ColumnHider);
 console.log(SearchButton);
