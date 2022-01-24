@@ -1,4 +1,3 @@
-//move it to global service page 
 export class DataRows {
     rows = [];
     visibleRows = [];

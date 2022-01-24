@@ -1,9 +1,7 @@
-import { config, sortingService } from "./configExport.js";
-import { createRows } from "./index.js";
 import { RowRecord } from "./types/interfaces.js";
 
 
-//move it to global service page 
+
 export class DataRows {
   rows: RowRecord[] = [];
   visibleRows: RowRecord[] = [];

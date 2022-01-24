@@ -29,10 +29,6 @@ export interface GridConfig {
   dataUrl: string;
   sortingRules: SortRule[];
 }
-interface ColumnsVisiblity {
-  id: string;
-  visible: boolean;
-}
 export type RowRecord = { [k: string]: CellData };
 export type CellData = string | number | RowRecord;
 
