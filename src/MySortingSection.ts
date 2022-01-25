@@ -208,18 +208,18 @@ export class MySortingSection extends HTMLElement {
       }
       const sortInformation: SortRule[] = JSON.parse(localStorage.getItem("sortInformation") ?? "[]") as SortRule[];
       if (sortInformation !== null && sortInformation.length === 1 && sortInformation[0].id !== "Sort by") {
-        this.sortOptions[0].fieldOption = sortInformation[0].id;
+        this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
         this.sortOptions[0].sortDirection.disabled = false;
         this.sortOptions[0].directionOption = sortInformation[0].direction;
         this.sortAddingButton.disabled = false;
       } else if (sortInformation !== null && sortInformation.length > 1) {
-        this.sortOptions[0].fieldOption = sortInformation[0].id;
+        this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
         this.sortOptions[0].sortDirection.disabled = false;
         this.sortOptions[0].directionOption = sortInformation[0].direction;
         this.sortAddingButton.disabled = false;
         for (let i = 1; i < sortInformation.length; i++) {
           this.createNewSortLine();
-          this.sortOptions[i].fieldOption = sortInformation[i].id;
+          this.sortOptions[i].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[i].id);
           this.sortOptions[i].sortDirection.disabled = false;
           this.sortOptions[i].directionOption = sortInformation[i].direction;
         }

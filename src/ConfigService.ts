@@ -71,6 +71,14 @@ export class ConfigService {
       return void 0;
     }
   }
+  getColumnDisplayNameFromColumnId(columnName: string): string | undefined {
+    const column = this.columns.find((column) => column.id === columnName);
+    if (column) {
+      return column.displayName;
+    } else {
+      return void 0;
+    } 
+  }
 
   getSummaryFieldsFromColumnName(columnIndex: number): string[] {
     const summaryDetails: string | undefined = this.columns[columnIndex].summary;
