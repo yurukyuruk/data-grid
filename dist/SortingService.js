@@ -6,7 +6,7 @@ export class SortingService {
         const compareRows = (rowA, rowB) => {
             let result = 0;
             for (const sortRule of sortRules) {
-                const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.id);
+                const fieldType = config.getColumnTypeFromColumnId(sortRule.id);
                 let comparator = null;
                 if (fieldType === ColumnType.STRING) {
                     comparator = this.getStringComparator(sortRule.id, sortRule.direction);

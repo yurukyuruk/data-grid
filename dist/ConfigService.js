@@ -17,7 +17,7 @@ export class ConfigService {
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfAllColumns());
+            sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfColumnsWhichHaveNoChildren());
             createDataHeaders();
             return DATA_ROWS.fetchData(dataUrl);
         })
@@ -55,8 +55,8 @@ export class ConfigService {
         }
         throw new Error("Column doesn't exist.");
     }
-    getColumnTypeFromColumnDisplayName(columnName) {
-        const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
+    getColumnTypeFromColumnId(columnName) {
+        const column = this.columns.find((eachColumn) => eachColumn.id === columnName);
         if (column) {
             return column.type;
         }
@@ -71,9 +71,12 @@ export class ConfigService {
     getColumnsWhichHaveChilderenColumns() {
         return this.columns.filter((column) => column.children !== undefined);
     }
-    getDisplayNamesOfAllColumns() {
+    getColumnsWhichHaveNoChildrenColumns() {
+        return this.columns.filter((column) => column.children === undefined);
+    }
+    getDisplayNamesOfColumnsWhichHaveNoChildren() {
         const displayNamesOfColumns = [];
-        this.columns.forEach((column) => {
+        this.getColumnsWhichHaveNoChildrenColumns().forEach((column) => {
             displayNamesOfColumns.push(column.displayName);
         });
         return displayNamesOfColumns;
