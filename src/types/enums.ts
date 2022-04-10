@@ -7,3 +7,4 @@ export enum ColumnType {
   STRING = "STRING",
   DATE = "DATE"
 }
+//enum for customevents

@@ -1,5 +1,4 @@
 import { config } from "./configExport.js";
-import { sortModel } from "./index.js";
 const { template } = {
   template: `
     <style>  
@@ -210,7 +209,7 @@ export class ColumnHider extends HTMLElement {
     });
     this.columnHiderCloseButton.addEventListener("click", (): void => {
       this.table.classList.toggle("blured");
-      sortModel.sortDataButton.classList.toggle("blured");
+      dataGrid.sortModel.sortDataButton.classList.toggle("blured");
       config.saveColumnVisibilityStatus(this.allColumnCheckboxes);
       this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
       this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");

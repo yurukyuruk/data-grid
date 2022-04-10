@@ -1,8 +1,5 @@
 import { SortingRule } from "./SortingRule.js";
 import { ColumnHider } from "./ColumnHider.js";
-import { sortModel } from "./index.js";
-import { createDataHeaders } from "./index.js";
-import { createRows } from "./index.js";
 import { config, DATA_ROWS, sortingService } from "./configExport.js";
 export class ConfigService {
     data;
@@ -17,19 +14,35 @@ export class ConfigService {
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfColumnsWhichHaveNoChildren());
-            createDataHeaders();
+            const toSetSortFields = new CustomEvent("to-set-sort-fields", {
+                bubbles: true,
+                composed: true,
+            });
+            document.dispatchEvent(toSetSortFields);
+            const toCreateDataHeaders = new CustomEvent("to-create-data-headers", {
+                bubbles: true,
+                composed: true,
+            });
+            document.dispatchEvent(toCreateDataHeaders);
             return DATA_ROWS.fetchData(dataUrl);
         })
             .then(() => {
-            createRows(DATA_ROWS.rows);
+            const toCreateDataRows = new CustomEvent("to-create-data-rows", {
+                bubbles: true,
+                composed: true,
+            });
+            document.dispatchEvent(toCreateDataRows);
             if (localStorage.getItem("sortInformation") !== null) {
                 const dataRows = document.querySelector(".data-rows");
                 if (dataRows) {
                     dataRows.innerHTML = "";
                 }
                 sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-                createRows(DATA_ROWS.visibleRows);
+                const toRecreateDataRows = new CustomEvent("to-recreate-data-rows", {
+                    bubbles: true,
+                    composed: true,
+                });
+                document.dispatchEvent(toRecreateDataRows);
             }
             const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
             for (let i = 0; i < config.columns.length; i++) {
@@ -118,7 +131,11 @@ export class ConfigService {
         return columnsVisibilityStatus;
     }
     saveSortInformation(sortOptions) {
-        localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions)));
+        const toMapSortOptions = new CustomEvent("to-map-sort-options", {
+            bubbles: true,
+            composed: true,
+        });
+        document.dispatchEvent(toMapSortOptions);
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");

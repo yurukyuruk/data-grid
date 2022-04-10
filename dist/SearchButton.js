@@ -1,5 +1,4 @@
 import { config, DATA_ROWS, sortingService } from "./configExport.js";
-import { createRows } from "./index.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 const { template } = {
     template: `
@@ -63,12 +62,10 @@ export class SearchButton extends HTMLElement {
     }
     initilizeListeners() {
         const debounce = (func, delay) => {
-            let inDebounce;
-            return function () {
-                const context = this;
-                const args = arguments;
-                clearTimeout(inDebounce);
-                inDebounce = setTimeout(() => func.apply(context, args), delay);
+            let debounceId;
+            return () => {
+                clearTimeout(debounceId);
+                debounceId = setTimeout(func, delay);
             };
         };
         this.input.addEventListener("keyup", debounce(() => {
@@ -89,7 +86,12 @@ export class SearchButton extends HTMLElement {
                 });
             }
             DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
-            createRows(DATA_ROWS.visibleRows);
+            const toCreateDataRows = new CustomEvent("to-create-data-rows", {
+                bubbles: true,
+                composed: true,
+            });
+            this.shadowRoot.dispatchEvent(toCreateDataRows);
+            dataGrid.createRows(DATA_ROWS.visibleRows);
             const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
             for (let i = 0; i < config.columns.length; i++) {
                 const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id);

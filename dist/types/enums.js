@@ -9,4 +9,5 @@ export var ColumnType;
     ColumnType["STRING"] = "STRING";
     ColumnType["DATE"] = "DATE";
 })(ColumnType || (ColumnType = {}));
+//enum for customevents
 //# sourceMappingURL=enums.js.map
