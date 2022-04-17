@@ -1,4 +1,4 @@
-import { config, DATA_ROWS } from "./configExport.js";
+import { config } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
@@ -26,21 +26,16 @@ export class SortingService {
         }
         return result;
     }
-    return DATA_ROWS.visibleRows.sort(compareRows);
-}
-  /*sortData(sortConfigDatas: SortRule[]): RowRecord[] {
-    for (const sortRule of sortConfigDatas) {
-      const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.id);
-      if (fieldType === ColumnType.STRING) {
-        DATA_ROWS.visibleRows.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
-      } else if (fieldType === ColumnType.NUMBER) {
-        DATA_ROWS.visibleRows.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
-      } else {
-        DATA_ROWS.visibleRows.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
+    const toSortData: CustomEvent = new CustomEvent("to-sort-data", {
+      bubbles: true,
+      composed: true,
+      detail: {
+        compare: compareRows
       }
-    }
-    return DATA_ROWS.visibleRows;
-  }*/
+    });
+    document.dispatchEvent(toSortData);
+}
+ 
   getStringComparator(sortField: string, sortDirection: SortDirection) {
     return (a: RowRecord, b: RowRecord): number => {
       let result = 0;

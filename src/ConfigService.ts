@@ -3,7 +3,7 @@ import { ColumnHider } from "./ColumnHider.js";
 import { Column, GridConfig } from "./types/interfaces.js";
 import { Data } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
-import { config, DATA_ROWS, sortingService} from "./configExport.js";
+import { config, sortingService} from "./configExport.js";
 
 export class ConfigService {
   data!: Data;
@@ -32,8 +32,14 @@ export class ConfigService {
         });
         document.dispatchEvent(toCreateDataHeaders);
 
-        
-        return DATA_ROWS.fetchData(dataUrl);
+        const toFetchData: CustomEvent = new CustomEvent("to-fetch-data", {
+          bubbles: true,
+          composed: true,
+          detail: {
+            url: dataUrl
+          }
+        });
+        document.dispatchEvent(toFetchData);
       })
       .then(() => {
         const toCreateDataRows: CustomEvent = new CustomEvent("to-create-data-rows", {

@@ -1,4 +1,4 @@
-import { config, DATA_ROWS, sortingService } from "./configExport.js";
+import { config, sortingService } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 
@@ -90,14 +90,28 @@ export class SearchButton extends HTMLElement {
                       : value.toString().toLowerCase().includes(searchValue);
               })
           })
-      }      
-      DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
+      }
+      const toFilterRows: CustomEvent = new CustomEvent("to-filter-rows", {
+        bubbles: true,
+        composed: true,
+        detail: {
+          input: inputValue,
+          filterRow: filterRows
+        }
+      });
+      document.dispatchEvent(toFilterRows);      
+      
       const toCreateDataRows: CustomEvent = new CustomEvent("to-create-data-rows", {
         bubbles: true,
         composed: true,
       });
       this.shadowRoot.dispatchEvent(toCreateDataRows);
-      dataGrid.createRows(DATA_ROWS.visibleRows); 
+      const toCreateRows: CustomEvent = new CustomEvent("to-create-rows", {
+        bubbles: true,
+        composed: true,
+      });
+      document.dispatchEvent(toCreateRows);
+      
       const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
       for (let i = 0; i < config.columns.length; i++) {
         const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);

@@ -3,7 +3,7 @@ import { ColumnHider } from "./ColumnHider.js";
 import { MySortingSection } from "./MySortingSection.js";
 import { SearchButton } from "./SearchButton.js";
 import { isRowRecord } from "./types/typeGuards.js";
-import { DATA_ROWS } from "./configExport.js";
+import { DataRows } from "./DataRows.js";
 import { RowRecord } from "./types/interfaces.js";
 const { template } = {
   template: `
@@ -74,11 +74,12 @@ const { template } = {
   `
 };
 
-export class DataGrid extends HTMLElement {
+class DataGrid extends HTMLElement {
   static TAG = "data-grid";
   readonly shadowRoot: ShadowRoot;
   private dataRows!: HTMLTableSectionElement;
   private columnHeaderSection!: HTMLTableSectionElement;
+  private DATA_ROWS!: DataRows;
   sortModel!: MySortingSection;
   constructor() {
     super();
@@ -86,12 +87,14 @@ export class DataGrid extends HTMLElement {
     this.shadowRoot.innerHTML = template;
     this.getElementReferences();
     this.initializeListeners();
+    this.DATA_ROWS = new DataRows();
   }
  
+  
   initializeListeners(): void {
     this.sortModel.addEventListener("to-sort", () => {
       this.dataRows.innerHTML = "";
-      this.createRows(DATA_ROWS.visibleRows);
+      this.createRows(this.DATA_ROWS.visibleRows);
       const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
           for (let i = 0; i < config.columns.length; i++) {
             const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
@@ -105,19 +108,34 @@ export class DataGrid extends HTMLElement {
       this.sortModel.setSortFieldsInSortFieldButton(config.getDisplayNamesOfColumnsWhichHaveNoChildren());
     })
     this.addEventListener("to-create-rows", () => {
-      this.createRows(DATA_ROWS.visibleRows); 
+      this.createRows(this.DATA_ROWS.visibleRows); 
     })
     document.addEventListener("to-create-data-headers", () => {
       this.createDataHeaders();
     }, {capture: true})
     this.addEventListener("to-create-data-rows", () => {
-      this.createRows(DATA_ROWS.rows);
+      this.createRows(this.DATA_ROWS.rows);
     })
     this.addEventListener("to-recreate-data-rows", () => {
-      this.createRows(DATA_ROWS.visibleRows);
+      this.createRows(this.DATA_ROWS.visibleRows);
     })
     this.sortModel.addEventListener("to-map-sort-options", () => {
       localStorage.setItem("sortInformation", JSON.stringify(this.sortModel.mapSortOptions(sortOptions)));
+    })
+    this.addEventListener("to-fetch-data", (e) => {
+      return this.DATA_ROWS.fetchData((<CustomEvent>e).detail.url);
+    })
+    this.addEventListener("to-filter-rows", (e) => {
+      this.DATA_ROWS.visibleRows = (<CustomEvent>e).detail.filterRow(this.DATA_ROWS.rows, (<CustomEvent>e).detail.input);
+      //DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
+    })
+    this.addEventListener("to-create-rows", () => {
+      this.createRows(this.DATA_ROWS.visibleRows);
+      //dataGrid.createRows(DATA_ROWS.visibleRows); 
+    })
+    this.addEventListener("to-sort-data", (e) => {
+      return this.DATA_ROWS.visibleRows.sort((<CustomEvent>e).detail.compare);
+      //return DATA_ROWS.visibleRows.sort(compareRows);
     })
   }
   createDataHeaders(): void {//exportu vardı
