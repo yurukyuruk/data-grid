@@ -1,4 +1,3 @@
-import { config } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
@@ -10,7 +9,7 @@ export class SortingService {
     const compareRows = (rowA: RowRecord, rowB: RowRecord) => {
         let result = 0;
         for (const sortRule of sortRules) {
-            const fieldType = config.getColumnTypeFromColumnId(sortRule.id);
+            const fieldType = config.getColumnTypeFromColumnId(sortRule.id);//configden kurtul!
             let comparator = null;
             if (fieldType === ColumnType.STRING) {
                 comparator = this.getStringComparator(sortRule.id, sortRule.direction)

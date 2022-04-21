@@ -1,7 +1,4 @@
 import { SortingRule } from "./SortingRule.js";
-import { SortingService } from "./SortingService.js";
-import { sortingService } from "./configExport.js";
-import { config } from "./configExport.js";
 import { ConfigService } from "./ConfigService.js";
 import { SortDirection } from "./types/enums.js";
 const { template } = {
@@ -175,6 +172,7 @@ export class MySortingSection extends HTMLElement {
     closeButton;
     table;
     sortLines;
+    columnDisplayNameToColumnIdMapper;
     constructor() {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -184,6 +182,9 @@ export class MySortingSection extends HTMLElement {
         this.sortOptions = [this.shadowRoot.querySelector(SortingRule.TAG)];
         this.sortOptions[0].setSortByOptions(this.allFields);
         this.initializeListeners();
+    }
+    setColumnNameToColumnIdMapper(columnDisplayNameToColumnIdMapper) {
+        this.columnDisplayNameToColumnIdMapper = columnDisplayNameToColumnIdMapper;
     }
     setButtons() {
         this.submitButton.disabled = false;
@@ -205,19 +206,43 @@ export class MySortingSection extends HTMLElement {
             }
             const sortInformation = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
             if (sortInformation !== null && sortInformation.length === 1 && sortInformation[0].id !== "Sort by") {
-                this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
+                const toGetDisplayName = new CustomEvent("to-get-display-name", {
+                    bubbles: true,
+                    composed: true,
+                    detail: {
+                        fieldOption: this.sortOptions[0].fieldOption,
+                        id: sortInformation[0].id
+                    }
+                });
+                this.shadowRoot.dispatchEvent(toGetDisplayName);
                 this.sortOptions[0].sortDirection.disabled = false;
                 this.sortOptions[0].directionOption = sortInformation[0].direction;
                 this.sortAddingButton.disabled = false;
             }
             else if (sortInformation !== null && sortInformation.length > 1) {
-                this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
+                const toGetDisplayName2 = new CustomEvent("to-get-display-name-2", {
+                    bubbles: true,
+                    composed: true,
+                    detail: {
+                        fieldOption: this.sortOptions[0].fieldOption,
+                        id: sortInformation[0].id
+                    }
+                });
+                this.shadowRoot.dispatchEvent(toGetDisplayName2);
                 this.sortOptions[0].sortDirection.disabled = false;
                 this.sortOptions[0].directionOption = sortInformation[0].direction;
                 this.sortAddingButton.disabled = false;
                 for (let i = 1; i < sortInformation.length; i++) {
                     this.createNewSortLine();
-                    this.sortOptions[i].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[i].id);
+                    const toGetDisplayName3 = new CustomEvent("to-get-display-name-3", {
+                        bubbles: true,
+                        composed: true,
+                        detail: {
+                            fieldOption: this.sortOptions[i].fieldOption,
+                            id: sortInformation[i].id
+                        }
+                    });
+                    this.shadowRoot.dispatchEvent(toGetDisplayName3);
                     this.sortOptions[i].sortDirection.disabled = false;
                     this.sortOptions[i].directionOption = sortInformation[i].direction;
                 }
@@ -242,17 +267,35 @@ export class MySortingSection extends HTMLElement {
             this.sortOptions = [];
             this.createNewSortLine();
             this.sortOptions[0].sortDirection.disabled = true;
-            config.clearSortInformation();
+            const toClearSortInformation = new CustomEvent("to-clear-sort-information", {
+                bubbles: true,
+                composed: true,
+            });
+            this.shadowRoot.dispatchEvent(toClearSortInformation);
         });
         this.submitButton.addEventListener("click", () => {
             this.submitButton.disabled = true;
-            sortingService.sortData(this.mapSortOptions(this.sortOptions));
+            const toSortData3 = new CustomEvent("to-sort-data-3", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    mappedSortOptions: this.mapSortOptions(this.sortOptions)
+                }
+            });
+            this.shadowRoot.dispatchEvent(toSortData3);
             const toSort = new CustomEvent("to-sort", {
                 bubbles: true,
                 composed: true,
             });
-            config.saveSortInformation(this.sortOptions);
             this.shadowRoot.dispatchEvent(toSort);
+            const toSaveSortInformation = new CustomEvent("to-save-sort-information", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    sortOptions: this.sortOptions
+                }
+            });
+            this.shadowRoot.dispatchEvent(toSaveSortInformation);
         });
         this.sortOptions[0].sortLine.addEventListener("change", () => {
             if (this.sortOptions[0].fieldOption !== "Sort by" && (this.sortOptions[0].directionOption === SortDirection.ASC || this.sortOptions[0].directionOption === SortDirection.DESC)) {
@@ -282,6 +325,9 @@ export class MySortingSection extends HTMLElement {
         return this.getRemainingFields().length > 1;
     }
     createNewSortLine() {
+        if (this.columnDisplayNameToColumnIdMapper === undefined) {
+            throw new Error('Please set column name to column id callback function!');
+        }
         const newSortLine = new SortingRule(this.getRemainingFields());
         this.sortOptions.push(newSortLine);
         newSortLine.addEventListener("is-direction-set", () => {
@@ -299,7 +345,7 @@ export class MySortingSection extends HTMLElement {
     mapSortOptions(sortOptions) {
         return sortOptions.map((option) => {
             return {
-                id: config.getColumnIdFromColumnDisplayName(option.fieldOption),
+                id: this.columnDisplayNameToColumnIdMapper(option.fieldOption),
                 direction: option.directionOption
             };
         });
@@ -318,5 +364,4 @@ export class MySortingSection extends HTMLElement {
 }
 customElements.define(MySortingSection.TAG, MySortingSection);
 console.log(ConfigService);
-console.log(SortingService);
 //# sourceMappingURL=MySortingSection.js.map

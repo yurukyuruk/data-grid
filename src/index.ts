@@ -1,10 +1,12 @@
-import { config } from "./configExport.js";
+import { ConfigService } from "./ConfigService.js";
 import { ColumnHider } from "./ColumnHider.js";
 import { MySortingSection } from "./MySortingSection.js";
 import { SearchButton } from "./SearchButton.js";
 import { isRowRecord } from "./types/typeGuards.js";
 import { DataRows } from "./DataRows.js";
 import { RowRecord } from "./types/interfaces.js";
+import { SortingRule } from "./SortingRule.js";
+import { SortingService } from "./sortingService.js";
 const { template } = {
   template: `
   <style>  
@@ -80,7 +82,9 @@ class DataGrid extends HTMLElement {
   private dataRows!: HTMLTableSectionElement;
   private columnHeaderSection!: HTMLTableSectionElement;
   private DATA_ROWS!: DataRows;
-  sortModel!: MySortingSection;
+  private config!: ConfigService;
+  private sortModel!: MySortingSection;
+  private sortingService!: SortingService;
   constructor() {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -88,6 +92,17 @@ class DataGrid extends HTMLElement {
     this.getElementReferences();
     this.initializeListeners();
     this.DATA_ROWS = new DataRows();
+    this.config = new ConfigService();
+    this.sortingService = new SortingService();
+    this.initizaleApp();
+  }
+
+  // KK
+  private async initizaleApp(): Promise<void> {
+    const dataUrl = await this.config.fetchConfig();
+    this.createDataHeaders();
+    await this.DATA_ROWS.fetchData(dataUrl);
+    this.createRows(this.DATA_ROWS.visibleRows);
   }
  
   
@@ -96,23 +111,20 @@ class DataGrid extends HTMLElement {
       this.dataRows.innerHTML = "";
       this.createRows(this.DATA_ROWS.visibleRows);
       const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-          for (let i = 0; i < config.columns.length; i++) {
-            const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
-            const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-header");
+          for (let i = 0; i < this.config.columns.length; i++) {
+            const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + this.config.columns[i].id);
+            const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + this.config.columns[i].id + "-header");
             eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
             headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
           }
       
     });
     this.sortModel.addEventListener("to-set-sort-fields", () => {
-      this.sortModel.setSortFieldsInSortFieldButton(config.getDisplayNamesOfColumnsWhichHaveNoChildren());
+      this.sortModel.setSortFieldsInSortFieldButton(this.config.getDisplayNamesOfColumnsWhichHaveNoChildren());
     })
     this.addEventListener("to-create-rows", () => {
       this.createRows(this.DATA_ROWS.visibleRows); 
     })
-    document.addEventListener("to-create-data-headers", () => {
-      this.createDataHeaders();
-    }, {capture: true})
     this.addEventListener("to-create-data-rows", () => {
       this.createRows(this.DATA_ROWS.rows);
     })
@@ -137,14 +149,79 @@ class DataGrid extends HTMLElement {
       return this.DATA_ROWS.visibleRows.sort((<CustomEvent>e).detail.compare);
       //return DATA_ROWS.visibleRows.sort(compareRows);
     })
+    this.addEventListener("to-set-visibility-attribute", () => {
+      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+      for (let i = 0; i < this.config.columns.length; i++) {
+        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + this.config.columns[i].id);
+        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + this.config.columns[i].id + "-header");
+        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
+      }
+    })
+    this.addEventListener("to-set-text-content", (e) => {
+      (<CustomEvent>e).detail.label.textContent = this.config.columns[(<CustomEvent>e).detail.i].displayName;
+    })
+    this.addEventListener("to-set-checkboxes", (e) => {
+      (<CustomEvent>e).detail.setCheckboxes(this.config.getHtmlClassNamesOfColumns());
+    })
+    this.addEventListener("to-toggle", () => {
+      this.sortModel.sortDataButton.classList.toggle("blured");
+    })
+    this.addEventListener("to-save-visibility", (e) => {
+      this.config.saveColumnVisibilityStatus((<CustomEvent>e).detail.checkboxes);
+    })
+    this.addEventListener("to-create-checkboxes", (e) => {
+      (<CustomEvent>e).detail.checkboxes(this.config.getHtmlClassNamesOfColumns());
+    })
+    this.addEventListener("to-clear-column-visibility", () => {
+      this.config.clearColumnVisibilityInformation();
+    })
+    this.addEventListener("to-get-display-name", (e) => {
+      (<CustomEvent>e).detail.fieldOption = this.config.getColumnDisplayNameFromColumnId((<CustomEvent>e).detail.id);
+      //this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
+    })
+    this.addEventListener("to-get-display-name-2", (e) => {
+      (<CustomEvent>e).detail.fieldOption = this.config.getColumnDisplayNameFromColumnId((<CustomEvent>e).detail.id);
+      //this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
+    })
+    this.addEventListener("to-get-display-name-2", (e) => {
+      (<CustomEvent>e).detail.fieldOption = this.config.getColumnDisplayNameFromColumnId((<CustomEvent>e).detail.id);
+      //this.sortOptions[i].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[i].id);
+    })
+    this.addEventListener("to-clear-sort-information", () => {
+      this.config.clearSortInformation();
+    })
+    this.addEventListener("to-save-sort-information", () => {
+      this.config.clearSortInformation();
+    })
+    this.addEventListener("to-save-sort-information", (e) => {
+      this.config.saveSortInformation((<CustomEvent>e).detail.sortOptions);
+    })
+    this.addEventListener("to-set-visibility-attribute-2", (e) => {
+      for (let i = 0; i < this.config.columns.length; i++) {
+        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + this.config.columns[i].id);
+        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + this.config.columns[i].id + "-header");
+        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
+        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
+      }
+    })
+    this.addEventListener("to-sort-data", () => {
+      this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+    })
+    this.addEventListener("to-sort-data-2", () => {
+      this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+    })
+    this.addEventListener("to-sort-data-3", (e) => {
+      this.sortingService.sortData((<CustomEvent>e).detail.mappedSortOptions);
+    })
   }
   createDataHeaders(): void {//exportu vardı
     const rowOfMainHeaders = document.createElement("tr");
       const rowOfChildHeaders = document.createElement("tr");
-      const hasChildrens = config.hasAnyChildren();
+      const hasChildrens = this.config.hasAnyChildren();
       rowOfMainHeaders.classList.add("header-row");
       rowOfChildHeaders.classList.add("header-row");
-      for(const column of config.columns) {
+      for(const column of this.config.columns) {
           const columnHeader = document.createElement("th");
           columnHeader.rowSpan = hasChildrens ? 2 : 1;
           columnHeader.id = column.id;
@@ -188,7 +265,7 @@ class DataGrid extends HTMLElement {
         dataCell.setAttribute("data-column-checkbox-checked", "true");
         if (isRowRecord(recordValue)) {
           dataCell.setAttribute("data-header-expanded", "false");
-          dataCell.textContent = config
+          dataCell.textContent = this.config
             .getSummaryRule(recordId)
             .map((fieldId) => recordValue[fieldId])
             .join(", ");
@@ -216,7 +293,7 @@ class DataGrid extends HTMLElement {
         const newState = headerColumn.getAttribute("data-header-expanded") === "false" ? "true" : "false";
         if (newState === "true") {
             headerColumn.rowSpan = 1;
-            headerColumn.colSpan = config.getChildrens(headerColumn.id).length || 1;
+            headerColumn.colSpan = this.config.getChildrens(headerColumn.id).length || 1;
         } else {
             headerColumn.rowSpan = 2;
             headerColumn.colSpan = 1;
@@ -247,7 +324,8 @@ class DataGrid extends HTMLElement {
 customElements.define(DataGrid.TAG, DataGrid);
 
 
-
+console.log(ColumnHider);
+console.log(SearchButton);
 
 
 

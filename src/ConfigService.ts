@@ -1,18 +1,14 @@
-import { SortingRule } from "./SortingRule.js";
-import { ColumnHider } from "./ColumnHider.js";
 import { Column, GridConfig } from "./types/interfaces.js";
 import { Data } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
-import { config, sortingService} from "./configExport.js";
-
 export class ConfigService {
   data!: Data;
   columns!: Column[];
   sortingRules!: SortRule[];
   constructor() {
-    this.fetchConfig();
+    // this.fetchConfig();
   }
-  fetchConfig(): Promise<void> {
+  async fetchConfig(): Promise<string> {
     return fetch(
       "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json"
     )
@@ -25,23 +21,10 @@ export class ConfigService {
           composed: true,
         });
         document.dispatchEvent(toSetSortFields);
-        
-        const toCreateDataHeaders: CustomEvent = new CustomEvent("to-create-data-headers", {
-          bubbles: true,
-          composed: true,
-        });
-        document.dispatchEvent(toCreateDataHeaders);
-
-        const toFetchData: CustomEvent = new CustomEvent("to-fetch-data", {
-          bubbles: true,
-          composed: true,
-          detail: {
-            url: dataUrl
-          }
-        });
-        document.dispatchEvent(toFetchData);
+        // ONce you set all configuration you want to return url under wich you can find data
+        return dataUrl;
       })
-      .then(() => {
+      .then((dataUrl) => {
         const toCreateDataRows: CustomEvent = new CustomEvent("to-create-data-rows", {
           bubbles: true,
           composed: true,
@@ -54,7 +37,11 @@ export class ConfigService {
         if(dataRows) {
           dataRows.innerHTML = "";
         }
-        sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+        const toSortData: CustomEvent = new CustomEvent("to-sort-data", {
+          bubbles: true,
+          composed: true,
+        });
+        document.dispatchEvent(toSortData);
         const toRecreateDataRows: CustomEvent = new CustomEvent("to-recreate-data-rows", {
           bubbles: true,
           composed: true,
@@ -62,13 +49,12 @@ export class ConfigService {
         document.dispatchEvent(toRecreateDataRows);
         
       }
-      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-      for (let i = 0; i < config.columns.length; i++) {
-        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
-        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-header");
-        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-      }
+      const toSetVisibilityAttribute: CustomEvent = new CustomEvent("to-set-visibility-attribute", {
+        bubbles: true,
+        composed: true,
+      });
+      document.dispatchEvent(toSetVisibilityAttribute);
+      return dataUrl;
       });   
   }
   getHtmlClassNamesOfColumns(): string[] {
@@ -168,5 +154,4 @@ export class ConfigService {
   }
 }
 
-console.log(SortingRule);
-console.log(ColumnHider);
+

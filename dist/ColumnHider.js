@@ -1,4 +1,3 @@
-import { config } from "./configExport.js";
 const { template } = {
     template: `
     <style>  
@@ -177,7 +176,15 @@ export class ColumnHider extends HTMLElement {
                 checkboxHolder.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString());
             });
             const checkboxLabel = document.createElement("label");
-            checkboxLabel.textContent = config.columns[i].displayName;
+            const toSetTextContent = new CustomEvent("to-set-text-content", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    label: checkboxLabel,
+                    i: i
+                }
+            });
+            this.shadowRoot.dispatchEvent(toSetTextContent);
             checkboxHolder.appendChild(checkbox);
             checkboxHolder.appendChild(checkboxLabel);
             this.columnCheckboxes.appendChild(checkboxHolder);
@@ -185,7 +192,14 @@ export class ColumnHider extends HTMLElement {
     }
     initilizeListeners() {
         this.columnHiderButton.addEventListener("click", () => {
-            this.createAndSetCheckboxes(config.getHtmlClassNamesOfColumns());
+            const toSetCheckboxes = new CustomEvent("to-set-checkboxes", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    setCheckboxes: this.createAndSetCheckboxes
+                }
+            });
+            this.shadowRoot.dispatchEvent(toSetCheckboxes);
             this.getElementReferences();
             this.table.classList.toggle("blured");
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
@@ -203,8 +217,19 @@ export class ColumnHider extends HTMLElement {
         });
         this.columnHiderCloseButton.addEventListener("click", () => {
             this.table.classList.toggle("blured");
-            dataGrid.sortModel.sortDataButton.classList.toggle("blured");
-            config.saveColumnVisibilityStatus(this.allColumnCheckboxes);
+            const toToggle = new CustomEvent("to-toggle", {
+                bubbles: true,
+                composed: true,
+            });
+            this.shadowRoot.dispatchEvent(toToggle);
+            const toSaveVisibility = new CustomEvent("to-save-visibility", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    checkboxes: this.allColumnCheckboxes
+                }
+            });
+            this.shadowRoot.dispatchEvent(toSaveVisibility);
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
             this.columnCheckboxes.innerHTML = "";
@@ -214,11 +239,22 @@ export class ColumnHider extends HTMLElement {
                 return void 0;
             }
             this.columnCheckboxes.innerHTML = "";
-            this.createAndSetCheckboxes(config.getHtmlClassNamesOfColumns());
+            const toCreateCheckboxes = new CustomEvent("to-create-checkboxes", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    checkboxes: this.createAndSetCheckboxes
+                }
+            });
+            this.shadowRoot.dispatchEvent(toCreateCheckboxes);
             const wholeColumnData = document.querySelectorAll("[data-column-checkbox-checked]");
             wholeColumnData.forEach((data) => data.setAttribute("data-column-checkbox-checked", "true"));
             this.allColumnCheckboxes.forEach((data) => data.setAttribute("data-column-checkbox-checked", "true"));
-            config.clearColumnVisibilityInformation();
+            const toClearColumnVisibility = new CustomEvent("to-clear-column-visibility", {
+                bubbles: true,
+                composed: true,
+            });
+            this.shadowRoot.dispatchEvent(toClearColumnVisibility);
         });
     }
     getElementReferences() {

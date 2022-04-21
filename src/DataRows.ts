@@ -8,7 +8,7 @@ export class DataRows {
   
   constructor() {}
   
-  fetchData(dataUrl: string): Promise<void> {
+  public async fetchData(dataUrl: string): Promise<void> {
     return fetch(dataUrl)
       .then((response: Response) => response.json())
       .then((rows: RowRecord[]) => {

@@ -1,4 +1,3 @@
-import { config, DATA_ROWS, sortingService } from "./configExport.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 const { template } = {
     template: `
@@ -71,10 +70,14 @@ export class SearchButton extends HTMLElement {
         this.input.addEventListener("keyup", debounce(() => {
             const dataRows = document.querySelector(".data-rows");
             dataRows.innerHTML = "";
-            sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+            const toSortData2 = new CustomEvent("to-sort-data-2", {
+                bubbles: true,
+                composed: true,
+            });
+            this.shadowRoot.dispatchEvent(toSortData2);
             const inputValue = this.input.value.toLowerCase();
             function filterRows(rows, searchValue) {
-                const columnNames = config.getVisibleColumnIds();
+                const columnNames = config.getVisibleColumnIds(); //buralarin hepsi filter service e gidecek, configden o zaman kurtul.
                 return rows.filter(row => {
                     const visibleValues = extractValuesFromKeys(row, columnNames);
                     return visibleValues.some(value => {
@@ -85,20 +88,34 @@ export class SearchButton extends HTMLElement {
                     });
                 });
             }
-            DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
+            const toFilterRows = new CustomEvent("to-filter-rows", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    input: inputValue,
+                    filterRow: filterRows
+                }
+            });
+            document.dispatchEvent(toFilterRows);
             const toCreateDataRows = new CustomEvent("to-create-data-rows", {
                 bubbles: true,
                 composed: true,
             });
             this.shadowRoot.dispatchEvent(toCreateDataRows);
-            dataGrid.createRows(DATA_ROWS.visibleRows);
+            const toCreateRows = new CustomEvent("to-create-rows", {
+                bubbles: true,
+                composed: true,
+            });
+            document.dispatchEvent(toCreateRows);
             const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-            for (let i = 0; i < config.columns.length; i++) {
-                const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id);
-                const headersOfEachColumn = document.querySelectorAll("." + config.columns[i].id + "-header");
-                eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-                headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-            }
+            const toSetVisibilityAttribute2 = new CustomEvent("to-set-visibility-attribute-2", {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    visibility: columnsVisibility
+                }
+            });
+            document.dispatchEvent(toSetVisibilityAttribute2);
         }, 1000));
         this.searchButton.addEventListener("click", (e) => {
             e.preventDefault();

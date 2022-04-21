@@ -1,4 +1,3 @@
-import { config, sortingService } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 
@@ -77,10 +76,14 @@ export class SearchButton extends HTMLElement {
       debounce(() => { 
         const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
         dataRows.innerHTML = "";
-        sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+        const toSortData2: CustomEvent = new CustomEvent("to-sort-data-2", {
+          bubbles: true,
+          composed: true,
+        });
+        this.shadowRoot.dispatchEvent(toSortData2);
         const inputValue: string = this.input.value.toLowerCase();
         function filterRows(rows: RowRecord[], searchValue: string) {
-          const columnNames = config.getVisibleColumnIds();
+          const columnNames = config.getVisibleColumnIds();//buralarin hepsi filter service e gidecek, configden o zaman kurtul.
           return rows.filter(row => {
               const visibleValues = extractValuesFromKeys(row, columnNames);
               return visibleValues.some(value => {
@@ -113,12 +116,14 @@ export class SearchButton extends HTMLElement {
       document.dispatchEvent(toCreateRows);
       
       const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-      for (let i = 0; i < config.columns.length; i++) {
-        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
-        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-header");
-        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-      }    
+      const toSetVisibilityAttribute2: CustomEvent = new CustomEvent("to-set-visibility-attribute-2", {
+        bubbles: true,
+        composed: true,
+        detail: {
+          visibility: columnsVisibility
+        }
+      });
+      document.dispatchEvent(toSetVisibilityAttribute2);     
       }, 1000)
     );
     this.searchButton.addEventListener("click", (e) => {

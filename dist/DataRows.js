@@ -2,7 +2,7 @@ export class DataRows {
     rows = [];
     visibleRows = [];
     constructor() { }
-    fetchData(dataUrl) {
+    async fetchData(dataUrl) {
         return fetch(dataUrl)
             .then((response) => response.json())
             .then((rows) => {

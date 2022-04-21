@@ -1,14 +1,11 @@
-import { SortingRule } from "./SortingRule.js";
-import { ColumnHider } from "./ColumnHider.js";
-import { config, DATA_ROWS, sortingService } from "./configExport.js";
 export class ConfigService {
     data;
     columns;
     sortingRules;
     constructor() {
-        this.fetchConfig();
+        // this.fetchConfig();
     }
-    fetchConfig() {
+    async fetchConfig() {
         return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
             .then((response) => response.json())
             .then(({ columns, dataUrl, sortingRules }) => {
@@ -19,14 +16,10 @@ export class ConfigService {
                 composed: true,
             });
             document.dispatchEvent(toSetSortFields);
-            const toCreateDataHeaders = new CustomEvent("to-create-data-headers", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toCreateDataHeaders);
-            return DATA_ROWS.fetchData(dataUrl);
+            // ONce you set all configuration you want to return url under wich you can find data
+            return dataUrl;
         })
-            .then(() => {
+            .then((dataUrl) => {
             const toCreateDataRows = new CustomEvent("to-create-data-rows", {
                 bubbles: true,
                 composed: true,
@@ -37,20 +30,23 @@ export class ConfigService {
                 if (dataRows) {
                     dataRows.innerHTML = "";
                 }
-                sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+                const toSortData = new CustomEvent("to-sort-data", {
+                    bubbles: true,
+                    composed: true,
+                });
+                document.dispatchEvent(toSortData);
                 const toRecreateDataRows = new CustomEvent("to-recreate-data-rows", {
                     bubbles: true,
                     composed: true,
                 });
                 document.dispatchEvent(toRecreateDataRows);
             }
-            const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-            for (let i = 0; i < config.columns.length; i++) {
-                const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id);
-                const headersOfEachColumn = document.querySelectorAll("." + config.columns[i].id + "-header");
-                eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-                headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-            }
+            const toSetVisibilityAttribute = new CustomEvent("to-set-visibility-attribute", {
+                bubbles: true,
+                composed: true,
+            });
+            document.dispatchEvent(toSetVisibilityAttribute);
+            return dataUrl;
         });
     }
     getHtmlClassNamesOfColumns() {
@@ -144,6 +140,4 @@ export class ConfigService {
         localStorage.removeItem("columnVisibilityInformation");
     }
 }
-console.log(SortingRule);
-console.log(ColumnHider);
 //# sourceMappingURL=ConfigService.js.map
