@@ -39,13 +39,13 @@ export class ConfigService {
         });
         return htmlClassNamesOfColumns;
     }
-    getColumnIdFromColumnDisplayName(columnName) {
+    getColumnIdFromColumnDisplayName = (columnName) => {
         const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
         if (column) {
             return column.id;
         }
         throw new Error("Column doesn't exist.");
-    }
+    };
     getColumnTypeFromColumnId(columnName) {
         const column = this.columns.find((eachColumn) => eachColumn.id === columnName);
         if (column) {
@@ -107,13 +107,6 @@ export class ConfigService {
         });
         localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
         return columnsVisibilityStatus;
-    }
-    saveSortInformation(sortOptions) {
-        const toMapSortOptions = new CustomEvent("to-map-sort-options", {
-            bubbles: true,
-            composed: true,
-        });
-        document.dispatchEvent(toMapSortOptions);
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");

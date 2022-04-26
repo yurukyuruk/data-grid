@@ -296,7 +296,7 @@ export class MySortingSection extends HTMLElement {
                 bubbles: true,
                 composed: true,
                 detail: {
-                    sortOptions: this.sortOptions
+                    sortOptions: this.mapSortOptions(this.sortOptions)
                 }
             });
             this.shadowRoot.dispatchEvent(toSaveSortInformation);

@@ -100,11 +100,11 @@ class DataGrid extends HTMLElement {
     // KK
     async initizaleApp() {
         const dataUrl = await this.config.fetchConfig();
+        this.sortModel.setColumnNameToColumnIdMapper(this.config.getColumnIdFromColumnDisplayName);
         this.sortModel.setSortFieldsInSortFieldButton(this.config.getDisplayNamesOfColumnsWhichHaveNoChildren());
         this.createDataHeaders();
         await this.DATA_ROWS.fetchData(dataUrl);
         this.createRows(this.DATA_ROWS.visibleRows);
-        this.sortModel.setColumnNameToColumnIdMapper(this.config.getColumnIdFromColumnDisplayName);
     }
     initializeListeners() {
         this.sortModel.addEventListener("to-sort", () => {
@@ -123,9 +123,6 @@ class DataGrid extends HTMLElement {
         });
         this.addEventListener("to-create-data-rows", () => {
             this.createRows(this.DATA_ROWS.visibleRows);
-        });
-        this.sortModel.addEventListener("to-map-sort-options", () => {
-            localStorage.setItem("sortInformation", JSON.stringify(this.sortModel.mapSortOptions(sortOptions)));
         });
         this.addEventListener("to-fetch-data", (e) => {
             return this.DATA_ROWS.fetchData(e.detail.url);
@@ -184,11 +181,8 @@ class DataGrid extends HTMLElement {
         this.addEventListener("to-clear-sort-information", () => {
             this.config.clearSortInformation();
         });
-        this.addEventListener("to-save-sort-information", () => {
-            this.config.clearSortInformation();
-        });
         this.addEventListener("to-save-sort-information", (e) => {
-            this.config.saveSortInformation(e.detail.sortOptions);
+            localStorage.setItem("sortInformation", JSON.stringify(this.sortModel.mapSortOptions(this.sortModel.sortOptions)));
         });
         this.addEventListener("to-set-visibility-attribute-2", (e) => {
             for (let i = 0; i < this.config.columns.length; i++) {

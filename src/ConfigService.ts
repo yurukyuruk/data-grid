@@ -48,7 +48,7 @@ export class ConfigService {
     return htmlClassNamesOfColumns;
   }
 
-  getColumnIdFromColumnDisplayName(columnName: string): string {
+  getColumnIdFromColumnDisplayName = (columnName: string): string => {
     const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
     if (column) {
       return column.id;
@@ -118,14 +118,6 @@ export class ConfigService {
     });
     localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
     return columnsVisibilityStatus;
-  }
-  saveSortInformation(sortOptions: SortingRule[]): void {
-    const toMapSortOptions: CustomEvent = new CustomEvent("to-map-sort-options", {
-      bubbles: true,
-      composed: true,
-    });
-    document.dispatchEvent(toMapSortOptions);
-    
   }
   
   clearSortInformation(): void {

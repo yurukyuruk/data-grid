@@ -165,7 +165,7 @@ export class MySortingSection extends HTMLElement {
   static TAG = "my-sorting-section";
   readonly shadowRoot: ShadowRoot;
   private allFields!: string[];
-  private sortOptions: SortingRule[];
+  public sortOptions: SortingRule[];
   private sortingArea!: HTMLElement;
   private sortDataButtonArea!: HTMLDivElement;
   sortDataButton!: HTMLInputElement;
@@ -304,7 +304,7 @@ export class MySortingSection extends HTMLElement {
         bubbles: true,
         composed: true,
         detail: {
-          sortOptions: this.sortOptions
+          sortOptions: this.mapSortOptions(this.sortOptions)
         }
       });
       this.shadowRoot.dispatchEvent(toSaveSortInformation);
