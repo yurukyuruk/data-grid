@@ -201,7 +201,11 @@ export class MySortingSection extends HTMLElement {
       this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "false");
       this.sortDataButton.setAttribute("data-sort-button-visible", "false");
       this.sortingArea.setAttribute("data-sort-fields-visible", "true");
-      this.table.classList.toggle("blured");
+      const toBlurPage3: CustomEvent = new CustomEvent("to-blur-page-3", {
+        bubbles: true,
+        composed: true,
+      });
+      this.shadowRoot.dispatchEvent(toBlurPage3);
       for (let i = 0; i < this.allFields.length; i++) {
         const sortFieldOption = document.createElement("option");
         sortFieldOption.textContent = this.allFields[i];
@@ -368,7 +372,6 @@ export class MySortingSection extends HTMLElement {
     this.submitButton = this.shadowRoot.querySelector(".submit-button") as HTMLInputElement;
     this.resetButton = this.shadowRoot.querySelector(".reset-button") as HTMLInputElement;
     this.closeButton = this.shadowRoot.querySelector(".close-button") as HTMLInputElement;
-    this.table = document.querySelector("#data-table") as HTMLTableElement;
     this.sortLines = this.shadowRoot.querySelector(".sort-lines") as HTMLDivElement;
   }
 }

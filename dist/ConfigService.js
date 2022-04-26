@@ -11,35 +11,17 @@ export class ConfigService {
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            const toSetSortFields = new CustomEvent("to-set-sort-fields", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toSetSortFields);
-            // ONce you set all configuration you want to return url under wich you can find data
             return dataUrl;
         })
             .then((dataUrl) => {
-            const toCreateDataRows = new CustomEvent("to-create-data-rows", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toCreateDataRows);
+            //this.createRows(this.DATA_ROWS.visibleRows);
             if (localStorage.getItem("sortInformation") !== null) {
                 const dataRows = document.querySelector(".data-rows");
                 if (dataRows) {
                     dataRows.innerHTML = "";
                 }
-                const toSortData = new CustomEvent("to-sort-data", {
-                    bubbles: true,
-                    composed: true,
-                });
-                document.dispatchEvent(toSortData);
-                const toRecreateDataRows = new CustomEvent("to-recreate-data-rows", {
-                    bubbles: true,
-                    composed: true,
-                });
-                document.dispatchEvent(toRecreateDataRows);
+                //this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+                //this.createRows(this.DATA_ROWS.visibleRows);
             }
             const toSetVisibilityAttribute = new CustomEvent("to-set-visibility-attribute", {
                 bubbles: true,

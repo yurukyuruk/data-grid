@@ -1,6 +1,3 @@
-import { RowRecord } from "./types/interfaces.js";
-import { extractValuesFromKeys, isObject } from "./utils.js";
-
 const { template } = {
   template: `
       <style>  
@@ -82,24 +79,11 @@ export class SearchButton extends HTMLElement {
         });
         this.shadowRoot.dispatchEvent(toSortData2);
         const inputValue: string = this.input.value.toLowerCase();
-        function filterRows(rows: RowRecord[], searchValue: string) {
-          const columnNames = config.getVisibleColumnIds();//buralarin hepsi filter service e gidecek, configden o zaman kurtul.
-          return rows.filter(row => {
-              const visibleValues = extractValuesFromKeys(row, columnNames);
-              return visibleValues.some(value => {
-                  return isObject(value)
-                      ? Object.values(value)
-                              .some(cellValue => cellValue.toString().toLowerCase().includes(searchValue))
-                      : value.toString().toLowerCase().includes(searchValue);
-              })
-          })
-      }
       const toFilterRows: CustomEvent = new CustomEvent("to-filter-rows", {
         bubbles: true,
         composed: true,
         detail: {
-          input: inputValue,
-          filterRow: filterRows
+          input: inputValue
         }
       });
       document.dispatchEvent(toFilterRows);      

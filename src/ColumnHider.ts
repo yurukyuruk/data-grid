@@ -146,7 +146,6 @@ export class ColumnHider extends HTMLElement {
   private columnCheckboxes: HTMLDivElement;
   private readonly resetButton: HTMLInputElement;
   private allColumnCheckboxes!: NodeListOf<HTMLDivElement>;
-  private table!: HTMLTableElement;
 
   constructor() {
     super();
@@ -160,7 +159,7 @@ export class ColumnHider extends HTMLElement {
     this.resetButton = this.shadowRoot.querySelector(".reset-button") as HTMLInputElement;
     this.initilizeListeners();
   }
-  createAndSetCheckboxes(columnNames: string[]): void {
+  createAndSetCheckboxes = (columnNames: string[]): void => {
     for (let i = 0; i < columnNames.length; i++) {
       const checkboxHolder: HTMLDivElement = document.createElement("div");
       checkboxHolder.classList.add("column-checkbox");
@@ -207,7 +206,12 @@ export class ColumnHider extends HTMLElement {
       });
       this.shadowRoot.dispatchEvent(toSetCheckboxes);
       this.getElementReferences();
-      this.table.classList.toggle("blured");
+      const toBlurPage1: CustomEvent = new CustomEvent("to-blur-page-1", {
+        bubbles: true,
+        composed: true,
+      });
+      this.shadowRoot.dispatchEvent(toBlurPage1);
+      
       this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
       this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
       const columnVisibilityInformation: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]") as string[];
@@ -222,7 +226,11 @@ export class ColumnHider extends HTMLElement {
       }
     });
     this.columnHiderCloseButton.addEventListener("click", (): void => {
-      this.table.classList.toggle("blured");
+      const toBlurPage2: CustomEvent = new CustomEvent("to-blur-page-2", {
+        bubbles: true,
+        composed: true,
+      });
+      this.shadowRoot.dispatchEvent(toBlurPage2);
       const toToggle: CustomEvent = new CustomEvent("to-toggle", {
         bubbles: true,
         composed: true,
@@ -267,7 +275,6 @@ export class ColumnHider extends HTMLElement {
 
   getElementReferences() {
     this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes") as HTMLDivElement;
-    this.table = document.querySelector("#data-table") as HTMLTableElement;
   }
 }
 customElements.define(ColumnHider.TAG, ColumnHider);

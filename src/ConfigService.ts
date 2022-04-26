@@ -16,20 +16,10 @@ export class ConfigService {
       .then(({ columns, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
         this.sortingRules = sortingRules;
-        const toSetSortFields: CustomEvent = new CustomEvent("to-set-sort-fields", {
-          bubbles: true,
-          composed: true,
-        });
-        document.dispatchEvent(toSetSortFields);
-        // ONce you set all configuration you want to return url under wich you can find data
         return dataUrl;
       })
       .then((dataUrl) => {
-        const toCreateDataRows: CustomEvent = new CustomEvent("to-create-data-rows", {
-          bubbles: true,
-          composed: true,
-        });
-        document.dispatchEvent(toCreateDataRows);
+        //this.createRows(this.DATA_ROWS.visibleRows);
 
         
         if (localStorage.getItem("sortInformation") !== null) {
@@ -37,16 +27,8 @@ export class ConfigService {
         if(dataRows) {
           dataRows.innerHTML = "";
         }
-        const toSortData: CustomEvent = new CustomEvent("to-sort-data", {
-          bubbles: true,
-          composed: true,
-        });
-        document.dispatchEvent(toSortData);
-        const toRecreateDataRows: CustomEvent = new CustomEvent("to-recreate-data-rows", {
-          bubbles: true,
-          composed: true,
-        });
-        document.dispatchEvent(toRecreateDataRows);
+        //this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+        //this.createRows(this.DATA_ROWS.visibleRows);
         
       }
       const toSetVisibilityAttribute: CustomEvent = new CustomEvent("to-set-visibility-attribute", {

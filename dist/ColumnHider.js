@@ -145,7 +145,6 @@ export class ColumnHider extends HTMLElement {
     columnCheckboxes;
     resetButton;
     allColumnCheckboxes;
-    table;
     constructor() {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -158,7 +157,7 @@ export class ColumnHider extends HTMLElement {
         this.resetButton = this.shadowRoot.querySelector(".reset-button");
         this.initilizeListeners();
     }
-    createAndSetCheckboxes(columnNames) {
+    createAndSetCheckboxes = (columnNames) => {
         for (let i = 0; i < columnNames.length; i++) {
             const checkboxHolder = document.createElement("div");
             checkboxHolder.classList.add("column-checkbox");
@@ -189,7 +188,7 @@ export class ColumnHider extends HTMLElement {
             checkboxHolder.appendChild(checkboxLabel);
             this.columnCheckboxes.appendChild(checkboxHolder);
         }
-    }
+    };
     initilizeListeners() {
         this.columnHiderButton.addEventListener("click", () => {
             const toSetCheckboxes = new CustomEvent("to-set-checkboxes", {
@@ -201,7 +200,11 @@ export class ColumnHider extends HTMLElement {
             });
             this.shadowRoot.dispatchEvent(toSetCheckboxes);
             this.getElementReferences();
-            this.table.classList.toggle("blured");
+            const toBlurPage1 = new CustomEvent("to-blur-page-1", {
+                bubbles: true,
+                composed: true,
+            });
+            this.shadowRoot.dispatchEvent(toBlurPage1);
             this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
             this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
             const columnVisibilityInformation = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
@@ -216,7 +219,11 @@ export class ColumnHider extends HTMLElement {
             }
         });
         this.columnHiderCloseButton.addEventListener("click", () => {
-            this.table.classList.toggle("blured");
+            const toBlurPage2 = new CustomEvent("to-blur-page-2", {
+                bubbles: true,
+                composed: true,
+            });
+            this.shadowRoot.dispatchEvent(toBlurPage2);
             const toToggle = new CustomEvent("to-toggle", {
                 bubbles: true,
                 composed: true,
@@ -259,7 +266,6 @@ export class ColumnHider extends HTMLElement {
     }
     getElementReferences() {
         this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes");
-        this.table = document.querySelector("#data-table");
     }
 }
 customElements.define(ColumnHider.TAG, ColumnHider);
