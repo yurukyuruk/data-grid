@@ -19,7 +19,9 @@ export class DataRows {
         throw new Error("Couldnt' fetch data rows");
       });
   }
-  getVisibleRows(): RowRecord[] {
+  
+  getVisibleRows = (): RowRecord[] => {
     return this.visibleRows
   }
+  
 }

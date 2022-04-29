@@ -4,10 +4,8 @@ import { ColumnType, SortDirection } from "./types/enums.js";
 
 export class SortingService {
   getColumnTypeFromColumnId!: (columnName: string) => string | undefined;
-  visibleRows: RowRecord[];
-  constructor(visibleRows: RowRecord[]) {
-    this.visibleRows = visibleRows;
-  }
+  getVisibleRows!: () => RowRecord[];
+  constructor() {}
 
   sortData(sortRules: SortRule[]) {
     const compareRows = (rowA: RowRecord, rowB: RowRecord) => {
@@ -29,7 +27,11 @@ export class SortingService {
         }
         return result;
     }
-    return this.visibleRows.sort(compareRows);
+    //return this.DATA_ROWS.getVisibleRows().sort(compareRows);
+    return this.getVisibleRows().sort(compareRows);
+}
+public setVisibleRows(getVisibleRows: () => RowRecord[]): void {
+  this.getVisibleRows = getVisibleRows;
 }
 public setColumnTypeFromColumnId(getColumnTypeFromColumnId: (columnName: string) => string | undefined): void {
   this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;

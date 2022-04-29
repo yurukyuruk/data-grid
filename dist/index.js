@@ -103,8 +103,9 @@ class DataGrid extends HTMLElement {
         this.sortModel.setSortFieldsInSortFieldButton(this.config.getDisplayNamesOfColumnsWhichHaveNoChildren());
         this.createDataHeaders();
         await this.DATA_ROWS.fetchData(dataUrl);
-        this.sortingService = new SortingService(this.DATA_ROWS.getVisibleRows());
+        this.sortingService = new SortingService();
         this.sortingService.setColumnTypeFromColumnId(this.config.getColumnTypeFromColumnId);
+        await this.sortingService.setVisibleRows(this.DATA_ROWS.getVisibleRows);
         this.createRows();
     }
     initializeListeners() {

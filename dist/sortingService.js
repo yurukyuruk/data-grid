@@ -1,10 +1,8 @@
 import { ColumnType, SortDirection } from "./types/enums.js";
 export class SortingService {
     getColumnTypeFromColumnId;
-    visibleRows;
-    constructor(visibleRows) {
-        this.visibleRows = visibleRows;
-    }
+    getVisibleRows;
+    constructor() { }
     sortData(sortRules) {
         const compareRows = (rowA, rowB) => {
             let result = 0;
@@ -27,7 +25,11 @@ export class SortingService {
             }
             return result;
         };
-        return this.visibleRows.sort(compareRows);
+        //return this.DATA_ROWS.getVisibleRows().sort(compareRows);
+        return this.getVisibleRows().sort(compareRows);
+    }
+    setVisibleRows(getVisibleRows) {
+        this.getVisibleRows = getVisibleRows;
     }
     setColumnTypeFromColumnId(getColumnTypeFromColumnId) {
         this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
