@@ -1,6 +1,9 @@
 import { extractValuesFromKeys, isObject } from "./utils.js";
 export class FilteringService {
-    constructor() { }
+    getRows;
+    constructor(getRows) {
+        this.getRows = getRows;
+    }
     filterRows(rows, searchValue) {
         const columnNames = config.getVisibleColumnIds(); //buralarin hepsi filter service e gidecek, configden o zaman kurtul.
         return rows.filter(row => {

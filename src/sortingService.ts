@@ -3,9 +3,12 @@ import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 
 export class SortingService {
-  getColumnTypeFromColumnId!: (columnName: string) => string | undefined;
-  getVisibleRows!: () => RowRecord[];
-  constructor() {}
+  getColumnTypeFromColumnId: (columnName: string) => string | undefined;
+  getVisibleRows: () => RowRecord[];
+  constructor(getVisibleRows: () => RowRecord[], getColumnTypeFromColumnId: (columnName: string) => string | undefined) {
+    this.getVisibleRows = getVisibleRows;
+    this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
+  }
 
   sortData(sortRules: SortRule[]) {
     const compareRows = (rowA: RowRecord, rowB: RowRecord) => {
@@ -30,12 +33,7 @@ export class SortingService {
     //return this.DATA_ROWS.getVisibleRows().sort(compareRows);
     return this.getVisibleRows().sort(compareRows);
 }
-public setVisibleRows(getVisibleRows: () => RowRecord[]): void {
-  this.getVisibleRows = getVisibleRows;
-}
-public setColumnTypeFromColumnId(getColumnTypeFromColumnId: (columnName: string) => string | undefined): void {
-  this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
-}
+
   getStringComparator(sortField: string, sortDirection: SortDirection) {
     return (a: RowRecord, b: RowRecord): number => {
       let result = 0;

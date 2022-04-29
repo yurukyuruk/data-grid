@@ -108,6 +108,9 @@ export class ConfigService {
         localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
         return columnsVisibilityStatus;
     }
+    saveSortInformation(mappedSortOptions) {
+        localStorage.setItem("sortInformation", JSON.stringify(mappedSortOptions));
+    }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");
     }

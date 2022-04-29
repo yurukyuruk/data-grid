@@ -93,7 +93,7 @@ class DataGrid extends HTMLElement {
         this.initializeListeners();
         this.DATA_ROWS = new DataRows();
         this.config = new ConfigService();
-        this.filteringService = new FilteringService();
+        this.filteringService = new FilteringService(this.DATA_ROWS.getRows);
         this.initizaleApp();
     }
     // KK
@@ -103,9 +103,7 @@ class DataGrid extends HTMLElement {
         this.sortModel.setSortFieldsInSortFieldButton(this.config.getDisplayNamesOfColumnsWhichHaveNoChildren());
         this.createDataHeaders();
         await this.DATA_ROWS.fetchData(dataUrl);
-        this.sortingService = new SortingService();
-        this.sortingService.setColumnTypeFromColumnId(this.config.getColumnTypeFromColumnId);
-        await this.sortingService.setVisibleRows(this.DATA_ROWS.getVisibleRows);
+        this.sortingService = new SortingService(this.DATA_ROWS.getVisibleRows, this.config.getColumnTypeFromColumnId);
         this.createRows();
     }
     initializeListeners() {
@@ -179,8 +177,8 @@ class DataGrid extends HTMLElement {
         this.addEventListener("to-clear-sort-information", () => {
             this.config.clearSortInformation();
         });
-        this.addEventListener("to-save-sort-information", (e) => {
-            localStorage.setItem("sortInformation", JSON.stringify(this.sortModel.mapSortOptions(this.sortModel.sortOptions)));
+        this.addEventListener("to-save-sort-information", () => {
+            this.config.saveSortInformation(this.sortModel.mapSortOptions(this.sortModel.sortOptions));
         });
         this.addEventListener("to-set-visibility-attribute-2", (e) => {
             for (let i = 0; i < this.config.columns.length; i++) {
@@ -246,8 +244,9 @@ class DataGrid extends HTMLElement {
         this.columnHeaderSection.appendChild(rowOfChildHeaders);
     }
     createRows() {
-        const x = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
-        this.sortingService.sortData(x);
+        if (localStorage.getItem("sortInformation") !== null) {
+            this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation")));
+        }
         for (const record of this.DATA_ROWS.visibleRows) {
             const dataRow = document.createElement("tr");
             dataRow.classList.add("data-row");

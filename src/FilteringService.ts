@@ -1,7 +1,10 @@
 import { RowRecord } from "./types/interfaces.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 export class FilteringService {
-    constructor() {}
+    getRows: () => RowRecord[];
+    constructor(getRows: () => RowRecord[]) {
+        this.getRows = getRows;
+    }
     filterRows(rows: RowRecord[], searchValue: string) {
         const columnNames = config.getVisibleColumnIds();//buralarin hepsi filter service e gidecek, configden o zaman kurtul.
         return rows.filter(row => {

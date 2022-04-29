@@ -2,7 +2,10 @@ import { ColumnType, SortDirection } from "./types/enums.js";
 export class SortingService {
     getColumnTypeFromColumnId;
     getVisibleRows;
-    constructor() { }
+    constructor(getVisibleRows, getColumnTypeFromColumnId) {
+        this.getVisibleRows = getVisibleRows;
+        this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
+    }
     sortData(sortRules) {
         const compareRows = (rowA, rowB) => {
             let result = 0;
@@ -27,12 +30,6 @@ export class SortingService {
         };
         //return this.DATA_ROWS.getVisibleRows().sort(compareRows);
         return this.getVisibleRows().sort(compareRows);
-    }
-    setVisibleRows(getVisibleRows) {
-        this.getVisibleRows = getVisibleRows;
-    }
-    setColumnTypeFromColumnId(getColumnTypeFromColumnId) {
-        this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
     }
     getStringComparator(sortField, sortDirection) {
         return (a, b) => {
