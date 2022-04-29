@@ -56,7 +56,7 @@ export class ConfigService {
     throw new Error("Column doesn't exist.");
   }
 
-  getColumnTypeFromColumnId(columnName: string): string | undefined {
+  public getColumnTypeFromColumnId: (columnName: string) => string | undefined = (columnName: string) => {
     const column = this.columns.find((eachColumn) => eachColumn.id === columnName);
     if (column) {
       return column.type;

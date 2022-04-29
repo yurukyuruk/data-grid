@@ -13,5 +13,8 @@ export class DataRows {
             throw new Error("Couldnt' fetch data rows");
         });
     }
+    getVisibleRows() {
+        return this.visibleRows;
+    }
 }
 //# sourceMappingURL=DataRows.js.map

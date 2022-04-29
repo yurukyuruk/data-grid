@@ -3,13 +3,17 @@ import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 
 export class SortingService {
-  constructor() {}
+  getColumnTypeFromColumnId!: (columnName: string) => string | undefined;
+  visibleRows: RowRecord[];
+  constructor(visibleRows: RowRecord[]) {
+    this.visibleRows = visibleRows;
+  }
 
   sortData(sortRules: SortRule[]) {
     const compareRows = (rowA: RowRecord, rowB: RowRecord) => {
         let result = 0;
         for (const sortRule of sortRules) {
-            const fieldType = config.getColumnTypeFromColumnId(sortRule.id);//configden kurtul!
+            const fieldType = this.getColumnTypeFromColumnId(sortRule.id);
             let comparator = null;
             if (fieldType === ColumnType.STRING) {
                 comparator = this.getStringComparator(sortRule.id, sortRule.direction)
@@ -25,16 +29,11 @@ export class SortingService {
         }
         return result;
     }
-    const toSortData: CustomEvent = new CustomEvent("to-sort-data", {
-      bubbles: true,
-      composed: true,
-      detail: {
-        compare: compareRows
-      }
-    });
-    document.dispatchEvent(toSortData);
+    return this.visibleRows.sort(compareRows);
 }
- 
+public setColumnTypeFromColumnId(getColumnTypeFromColumnId: (columnName: string) => string | undefined): void {
+  this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
+}
   getStringComparator(sortField: string, sortDirection: SortDirection) {
     return (a: RowRecord, b: RowRecord): number => {
       let result = 0;

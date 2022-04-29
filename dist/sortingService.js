@@ -1,11 +1,15 @@
 import { ColumnType, SortDirection } from "./types/enums.js";
 export class SortingService {
-    constructor() { }
+    getColumnTypeFromColumnId;
+    visibleRows;
+    constructor(visibleRows) {
+        this.visibleRows = visibleRows;
+    }
     sortData(sortRules) {
         const compareRows = (rowA, rowB) => {
             let result = 0;
             for (const sortRule of sortRules) {
-                const fieldType = config.getColumnTypeFromColumnId(sortRule.id); //configden kurtul!
+                const fieldType = this.getColumnTypeFromColumnId(sortRule.id);
                 let comparator = null;
                 if (fieldType === ColumnType.STRING) {
                     comparator = this.getStringComparator(sortRule.id, sortRule.direction);
@@ -23,14 +27,10 @@ export class SortingService {
             }
             return result;
         };
-        const toSortData = new CustomEvent("to-sort-data", {
-            bubbles: true,
-            composed: true,
-            detail: {
-                compare: compareRows
-            }
-        });
-        document.dispatchEvent(toSortData);
+        return this.visibleRows.sort(compareRows);
+    }
+    setColumnTypeFromColumnId(getColumnTypeFromColumnId) {
+        this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
     }
     getStringComparator(sortField, sortDirection) {
         return (a, b) => {

@@ -46,7 +46,7 @@ export class ConfigService {
         }
         throw new Error("Column doesn't exist.");
     };
-    getColumnTypeFromColumnId(columnName) {
+    getColumnTypeFromColumnId = (columnName) => {
         const column = this.columns.find((eachColumn) => eachColumn.id === columnName);
         if (column) {
             return column.type;
@@ -54,7 +54,7 @@ export class ConfigService {
         else {
             return void 0;
         }
-    }
+    };
     getColumnDisplayNameFromColumnId(columnName) {
         const column = this.columns.find((column) => column.id === columnName);
         if (column) {

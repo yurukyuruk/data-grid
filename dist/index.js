@@ -93,7 +93,6 @@ class DataGrid extends HTMLElement {
         this.initializeListeners();
         this.DATA_ROWS = new DataRows();
         this.config = new ConfigService();
-        this.sortingService = new SortingService();
         this.filteringService = new FilteringService();
         this.initizaleApp();
     }
@@ -104,12 +103,14 @@ class DataGrid extends HTMLElement {
         this.sortModel.setSortFieldsInSortFieldButton(this.config.getDisplayNamesOfColumnsWhichHaveNoChildren());
         this.createDataHeaders();
         await this.DATA_ROWS.fetchData(dataUrl);
-        this.createRows(this.DATA_ROWS.visibleRows);
+        this.sortingService = new SortingService(this.DATA_ROWS.getVisibleRows());
+        this.sortingService.setColumnTypeFromColumnId(this.config.getColumnTypeFromColumnId);
+        this.createRows();
     }
     initializeListeners() {
         this.sortModel.addEventListener("to-sort", () => {
             this.dataRows.innerHTML = "";
-            this.createRows(this.DATA_ROWS.visibleRows);
+            this.createRows();
             const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
             for (let i = 0; i < this.config.columns.length; i++) {
                 const eachDataColumnGroup = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id);
@@ -119,10 +120,10 @@ class DataGrid extends HTMLElement {
             }
         });
         this.addEventListener("to-create-rows", () => {
-            this.createRows(this.DATA_ROWS.visibleRows);
+            this.createRows();
         });
         this.addEventListener("to-create-data-rows", () => {
-            this.createRows(this.DATA_ROWS.visibleRows);
+            this.createRows();
         });
         this.addEventListener("to-fetch-data", (e) => {
             return this.DATA_ROWS.fetchData(e.detail.url);
@@ -132,12 +133,8 @@ class DataGrid extends HTMLElement {
             //DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
         });
         this.addEventListener("to-create-rows", () => {
-            this.createRows(this.DATA_ROWS.visibleRows);
+            this.createRows();
             //dataGrid.createRows(DATA_ROWS.visibleRows); 
-        });
-        this.addEventListener("to-sort-data", (e) => {
-            return this.DATA_ROWS.visibleRows.sort(e.detail.compare);
-            //return DATA_ROWS.visibleRows.sort(compareRows);
         });
         this.addEventListener("to-set-visibility-attribute", () => {
             const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
@@ -247,8 +244,10 @@ class DataGrid extends HTMLElement {
         this.columnHeaderSection.appendChild(rowOfMainHeaders);
         this.columnHeaderSection.appendChild(rowOfChildHeaders);
     }
-    createRows(dataList) {
-        for (const record of dataList) {
+    createRows() {
+        const x = JSON.parse(localStorage.getItem("sortInformation") ?? "[]");
+        this.sortingService.sortData(x);
+        for (const record of this.DATA_ROWS.visibleRows) {
             const dataRow = document.createElement("tr");
             dataRow.classList.add("data-row");
             for (const [recordId, recordValue] of Object.entries(record)) {
@@ -276,7 +275,6 @@ class DataGrid extends HTMLElement {
                 dataRow.append(dataCell);
             }
             this.dataRows.append(dataRow);
-            this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
         }
     }
     addToogleChildrensVisiblityListener(headerColumn) {
