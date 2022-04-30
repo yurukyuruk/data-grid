@@ -16,8 +16,5 @@ export class DataRows {
     getVisibleRows = () => {
         return this.visibleRows;
     };
-    getRows = () => {
-        return this.rows;
-    };
 }
 //# sourceMappingURL=DataRows.js.map

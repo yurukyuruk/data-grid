@@ -85,6 +85,7 @@ class DataGrid extends HTMLElement {
     sortingService;
     table;
     filteringService;
+    searchButton;
     constructor() {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -93,7 +94,6 @@ class DataGrid extends HTMLElement {
         this.initializeListeners();
         this.DATA_ROWS = new DataRows();
         this.config = new ConfigService();
-        this.filteringService = new FilteringService(this.DATA_ROWS.getRows);
         this.initizaleApp();
     }
     // KK
@@ -102,8 +102,11 @@ class DataGrid extends HTMLElement {
         this.sortModel.setColumnNameToColumnIdMapper(this.config.getColumnIdFromColumnDisplayName);
         this.sortModel.setSortFieldsInSortFieldButton(this.config.getDisplayNamesOfColumnsWhichHaveNoChildren());
         this.createDataHeaders();
+        this.dataRows = this.shadowRoot?.querySelector(".data-rows");
         await this.DATA_ROWS.fetchData(dataUrl);
         this.sortingService = new SortingService(this.DATA_ROWS.getVisibleRows, this.config.getColumnTypeFromColumnId);
+        this.filteringService = new FilteringService(this.DATA_ROWS.rows, this.config.getVisibleColumnIds());
+        this.searchButton = new SearchButton(this.dataRows);
         this.createRows();
     }
     initializeListeners() {
@@ -304,7 +307,6 @@ class DataGrid extends HTMLElement {
         });
     }
     getElementReferences() {
-        this.dataRows = this.shadowRoot?.querySelector(".data-rows");
         this.columnHeaderSection = this.shadowRoot?.querySelector("thead");
         this.sortModel = this.shadowRoot?.querySelector(MySortingSection.TAG); //export edilmiş
         this.table = this.shadowRoot.querySelector("#data-table");
@@ -313,4 +315,5 @@ class DataGrid extends HTMLElement {
 customElements.define(DataGrid.TAG, DataGrid);
 console.log(ColumnHider);
 console.log(SearchButton);
+console.log(this.searchButton);
 //# sourceMappingURL=index.js.map

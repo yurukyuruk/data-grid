@@ -52,12 +52,15 @@ export class SearchButton extends HTMLElement {
   private input!: HTMLInputElement;
   private searchButton!: HTMLButtonElement;
   readonly shadowRoot: ShadowRoot;
-  constructor() {
+  dataRows: HTMLTableSectionElement;
+  constructor(dataRows: HTMLTableSectionElement) {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = template;
     this.getElementReferences();
+    this.dataRows = dataRows;
     this.initilizeListeners();
+    
   }
   
   initilizeListeners() {
@@ -71,8 +74,7 @@ export class SearchButton extends HTMLElement {
     this.input.addEventListener(
       "keyup",
       debounce(() => { 
-        const dataRows = document.querySelector(".data-rows") as HTMLTableSectionElement;
-        dataRows.innerHTML = "";
+        this.dataRows.innerHTML = "";
         const toSortData2: CustomEvent = new CustomEvent("to-sort-data-2", {
           bubbles: true,
           composed: true,

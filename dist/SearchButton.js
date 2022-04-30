@@ -51,11 +51,13 @@ export class SearchButton extends HTMLElement {
     input;
     searchButton;
     shadowRoot;
-    constructor() {
+    dataRows;
+    constructor(dataRows) {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
         this.shadowRoot.innerHTML = template;
         this.getElementReferences();
+        this.dataRows = dataRows;
         this.initilizeListeners();
     }
     initilizeListeners() {
@@ -67,8 +69,7 @@ export class SearchButton extends HTMLElement {
             };
         };
         this.input.addEventListener("keyup", debounce(() => {
-            const dataRows = document.querySelector(".data-rows");
-            dataRows.innerHTML = "";
+            this.dataRows.innerHTML = "";
             const toSortData2 = new CustomEvent("to-sort-data-2", {
                 bubbles: true,
                 composed: true,

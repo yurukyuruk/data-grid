@@ -23,8 +23,4 @@ export class DataRows {
   getVisibleRows = (): RowRecord[] => {
     return this.visibleRows
   }
-  getRows = (): RowRecord[] => {
-    return this.rows;
-  }
-  
 }

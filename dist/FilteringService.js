@@ -1,13 +1,14 @@
 import { extractValuesFromKeys, isObject } from "./utils.js";
 export class FilteringService {
-    getRows;
-    constructor(getRows) {
-        this.getRows = getRows;
+    rows;
+    columnNames;
+    constructor(rows, columnNames) {
+        this.rows = rows;
+        this.columnNames = columnNames;
     }
     filterRows(rows, searchValue) {
-        const columnNames = config.getVisibleColumnIds(); //buralarin hepsi filter service e gidecek, configden o zaman kurtul.
         return rows.filter(row => {
-            const visibleValues = extractValuesFromKeys(row, columnNames);
+            const visibleValues = extractValuesFromKeys(row, this.columnNames);
             return visibleValues.some(value => {
                 return isObject(value)
                     ? Object.values(value)
