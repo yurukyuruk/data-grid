@@ -81,23 +81,15 @@ export class SearchButton extends HTMLElement {
             inputValue: inputValue
           }
         });
-        this.shadowRoot.dispatchEvent(toFilterData);
-        
-      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-      /*for (let i = 0; i < this.config.columns.length; i++) {
-        const eachDataColumnGroup: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id);
-        const headersOfEachColumn: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id + "-header");
-        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
-        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
-      } */    
+        this.shadowRoot.dispatchEvent(toFilterData);   
       }, 1000)
     );
     this.searchButton.addEventListener("click", (e) => {
       e.preventDefault();
     });
   }
-  setDefaultSearchValue = (userInput: string) => {
-    this.input.setAttribute("value", userInput);
+  setDefaultSearchValue(userInput: string) {
+    this.input.value = userInput;
   }
   getElementReferences() {
     this.input = this.shadowRoot.querySelector(".input") as HTMLInputElement;

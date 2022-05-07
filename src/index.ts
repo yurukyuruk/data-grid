@@ -82,13 +82,13 @@ class DataGrid extends HTMLElement {
   readonly shadowRoot: ShadowRoot;
   private dataRows!: HTMLTableSectionElement;
   private columnHeaderSection!: HTMLTableSectionElement;
-  private DATA_ROWS!: DataRows;
-  private config!: ConfigService;
+  private DATA_ROWS: DataRows;
+  private config: ConfigService;
   private sortModel!: MySortingSection;
   private sortingService!: SortingService;
   private table!: HTMLTableElement;
   private filteringService!: FilteringService;
-  private searchButton!: SearchButton;
+  private searchButton: SearchButton;
   constructor() {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -97,7 +97,7 @@ class DataGrid extends HTMLElement {
     this.initializeListeners();
     this.DATA_ROWS = new DataRows();
     this.config = new ConfigService();
-    this.searchButton = new SearchButton();
+    this.searchButton = this.shadowRoot.querySelector(SearchButton.TAG) as SearchButton;
     this.initizaleApp();
   }
 
@@ -119,32 +119,13 @@ class DataGrid extends HTMLElement {
  
   initializeListeners(): void {
     this.sortModel.addEventListener("to-sort", () => {
-      this.dataRows.innerHTML = "";
       this.createRows();
-      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-          for (let i = 0; i < this.config.columns.length; i++) {
-            const eachDataColumnGroup: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id);
-            const headersOfEachColumn: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id + "-header");
-            eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-            headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-          }
-      
     });
     this.addEventListener("to-fetch-data", (e) => {
       return this.DATA_ROWS.fetchData((<CustomEvent>e).detail.url);
     })
     this.addEventListener("to-create-rows", () => {
-      this.createRows();
-      //dataGrid.createRows(DATA_ROWS.visibleRows); 
-    })
-    this.addEventListener("to-set-visibility-attribute", () => {
-      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-      for (let i = 0; i < this.config.columns.length; i++) {
-        const eachDataColumnGroup: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id);
-        const headersOfEachColumn: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id + "-header");
-        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-      }
+      this.createRows(); 
     })
     this.addEventListener("to-set-text-content", (e) => {
       (<CustomEvent>e).detail.label.textContent = this.config.columns[(<CustomEvent>e).detail.i].displayName;
@@ -248,13 +229,16 @@ class DataGrid extends HTMLElement {
    if(localStorage.getItem("sortInformation") !== null) {
     this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation"));
    }
+  
     for (const record of this.DATA_ROWS.visibleRows) {
+      let i = -1;
       const dataRow = document.createElement("tr");
       dataRow.classList.add("data-row");
       for (const [recordId, recordValue] of Object.entries(record)) {
+        i += 1;
         const dataCell = document.createElement("td");
         dataCell.className = recordId;
-        dataCell.setAttribute("data-column-checkbox-checked", "true");
+        dataCell.setAttribute("data-column-checkbox-checked", JSON.stringify(this.config.columnVisibilityRules[i]));
         if (isRowRecord(recordValue)) {
           dataCell.setAttribute("data-header-expanded", "false");
           dataCell.textContent = this.config
@@ -264,7 +248,7 @@ class DataGrid extends HTMLElement {
           for (const [childrenId, childrenValue] of Object.entries(recordValue)) {
             const childrenCell = document.createElement("td");
             childrenCell.className = `${recordId} ${childrenId}`;
-            childrenCell.setAttribute("data-column-checkbox-checked", "true");
+            childrenCell.setAttribute("data-column-checkbox-checked", JSON.stringify(this.config.columnVisibilityRules[i]));
             childrenCell.textContent = childrenValue.toString();
             childrenCell.setAttribute("data-section-expanded", "false");
             dataRow.append(childrenCell);
@@ -275,10 +259,7 @@ class DataGrid extends HTMLElement {
         dataRow.append(dataCell);
       }
       this.dataRows.append(dataRow);
-      
-      
     }
-    
   }
   addToogleChildrensVisiblityListener(headerColumn: HTMLTableCellElement) {
     headerColumn.addEventListener("click", () => {

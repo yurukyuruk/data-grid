@@ -4,6 +4,7 @@ export class ConfigService {
     sortingRules;
     filteringRule;
     userFilterInput;
+    columnVisibilityRules;
     constructor() {
         this.filteringRule = localStorage.getItem("filterInformation");
         this.userFilterInput = localStorage.getItem("userFilterInput");
@@ -14,23 +15,7 @@ export class ConfigService {
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            return dataUrl;
-        })
-            .then((dataUrl) => {
-            //this.createRows(this.DATA_ROWS.visibleRows);
-            if (localStorage.getItem("sortInformation") !== null) {
-                const dataRows = document.querySelector(".data-rows");
-                if (dataRows) {
-                    dataRows.innerHTML = "";
-                }
-                //this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-                //this.createRows(this.DATA_ROWS.visibleRows);
-            }
-            const toSetVisibilityAttribute = new CustomEvent("to-set-visibility-attribute", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toSetVisibilityAttribute);
+            this.columnVisibilityRules = this.setColumnVisibilityStatus();
             return dataUrl;
         });
     }
@@ -102,6 +87,19 @@ export class ConfigService {
             }
         }
         return visibleColumnIds;
+    }
+    setColumnVisibilityStatus() {
+        const columnsVisibilityStatus = [];
+        this.columns.forEach(column => {
+            if (column.visible !== undefined) {
+                columnsVisibilityStatus.push(column.visible);
+            }
+            else {
+                columnsVisibilityStatus.push(true);
+            }
+        });
+        localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+        return columnsVisibilityStatus;
     }
     saveColumnVisibilityStatus(allColumnCheckboxes) {
         const columnsVisibilityStatus = [];

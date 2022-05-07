@@ -7,6 +7,7 @@ export class ConfigService {
   sortingRules!: SortRule[];
   filteringRule: string | null;
   userFilterInput: string | null;
+  columnVisibilityRules!: boolean[];
   constructor() {
     this.filteringRule = localStorage.getItem("filterInformation");
     this.userFilterInput = localStorage.getItem("userFilterInput");
@@ -19,29 +20,9 @@ export class ConfigService {
       .then(({ columns, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
         this.sortingRules = sortingRules;
+        this.columnVisibilityRules = this.setColumnVisibilityStatus();
         return dataUrl;
       })
-      .then((dataUrl) => {
-        //this.createRows(this.DATA_ROWS.visibleRows);
-
-        
-        if (localStorage.getItem("sortInformation") !== null) {
-        const dataRows = document.querySelector(".data-rows");
-        if(dataRows) {
-          dataRows.innerHTML = "";
-        }
-        //this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-        //this.createRows(this.DATA_ROWS.visibleRows);
-        
-      }
-      
-      const toSetVisibilityAttribute: CustomEvent = new CustomEvent("to-set-visibility-attribute", {
-        bubbles: true,
-        composed: true,
-      });
-      document.dispatchEvent(toSetVisibilityAttribute);
-      return dataUrl;
-      });   
   }
   getHtmlClassNamesOfColumns(): string[] {
     const htmlClassNamesOfColumns: string[] = [];
@@ -114,6 +95,18 @@ export class ConfigService {
       }
     }
     return visibleColumnIds;
+  }
+  setColumnVisibilityStatus(): boolean[] {
+    const columnsVisibilityStatus: boolean[] = [];
+    this.columns.forEach(column => {
+      if(column.visible !== undefined) {
+        columnsVisibilityStatus.push(column.visible);
+      } else {
+        columnsVisibilityStatus.push(true);
+      }
+    })
+    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+    return columnsVisibilityStatus;
   }
   saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<HTMLDivElement>): string[] {
     const columnsVisibilityStatus: string[] = [];
