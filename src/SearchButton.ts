@@ -52,13 +52,11 @@ export class SearchButton extends HTMLElement {
   private input!: HTMLInputElement;
   private searchButton!: HTMLButtonElement;
   readonly shadowRoot: ShadowRoot;
-  dataRows: HTMLTableSectionElement;
-  constructor(dataRows: HTMLTableSectionElement) {
+  constructor() {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = template;
     this.getElementReferences();
-    this.dataRows = dataRows;
     this.initilizeListeners();
     
   }
@@ -74,49 +72,33 @@ export class SearchButton extends HTMLElement {
     this.input.addEventListener(
       "keyup",
       debounce(() => { 
-        this.dataRows.innerHTML = "";
-        const toSortData2: CustomEvent = new CustomEvent("to-sort-data-2", {
+        const inputValue: string = this.input.value.toLowerCase();
+        const toFilterData: CustomEvent = new CustomEvent("to-filter-data", {
           bubbles: true,
           composed: true,
+          detail: {
+            userInput: this.input.value,
+            inputValue: inputValue
+          }
         });
-        this.shadowRoot.dispatchEvent(toSortData2);
-        const inputValue: string = this.input.value.toLowerCase();
-      const toFilterRows: CustomEvent = new CustomEvent("to-filter-rows", {
-        bubbles: true,
-        composed: true,
-        detail: {
-          input: inputValue
-        }
-      });
-      document.dispatchEvent(toFilterRows);      
-      
-      const toCreateDataRows: CustomEvent = new CustomEvent("to-create-data-rows", {
-        bubbles: true,
-        composed: true,
-      });
-      this.shadowRoot.dispatchEvent(toCreateDataRows);
-      const toCreateRows: CustomEvent = new CustomEvent("to-create-rows", {
-        bubbles: true,
-        composed: true,
-      });
-      document.dispatchEvent(toCreateRows);
-      
+        this.shadowRoot.dispatchEvent(toFilterData);
+        
       const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-      const toSetVisibilityAttribute2: CustomEvent = new CustomEvent("to-set-visibility-attribute-2", {
-        bubbles: true,
-        composed: true,
-        detail: {
-          visibility: columnsVisibility
-        }
-      });
-      document.dispatchEvent(toSetVisibilityAttribute2);     
+      /*for (let i = 0; i < this.config.columns.length; i++) {
+        const eachDataColumnGroup: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id);
+        const headersOfEachColumn: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id + "-header");
+        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
+        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
+      } */    
       }, 1000)
     );
     this.searchButton.addEventListener("click", (e) => {
       e.preventDefault();
     });
   }
-
+  setDefaultSearchValue = (userInput: string) => {
+    this.input.setAttribute("value", userInput);
+  }
   getElementReferences() {
     this.input = this.shadowRoot.querySelector(".input") as HTMLInputElement;
     this.searchButton = this.shadowRoot.querySelector(".search-button") as HTMLButtonElement; 

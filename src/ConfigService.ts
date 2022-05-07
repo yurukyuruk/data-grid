@@ -5,8 +5,11 @@ export class ConfigService {
   data!: Data;
   columns!: Column[];
   sortingRules!: SortRule[];
+  filteringRule: string | null;
+  userFilterInput: string | null;
   constructor() {
-    // this.fetchConfig();
+    this.filteringRule = localStorage.getItem("filterInformation");
+    this.userFilterInput = localStorage.getItem("userFilterInput");
   }
   async fetchConfig(): Promise<string> {
     return fetch(
@@ -31,6 +34,7 @@ export class ConfigService {
         //this.createRows(this.DATA_ROWS.visibleRows);
         
       }
+      
       const toSetVisibilityAttribute: CustomEvent = new CustomEvent("to-set-visibility-attribute", {
         bubbles: true,
         composed: true,
@@ -119,7 +123,7 @@ export class ConfigService {
     localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
     return columnsVisibilityStatus;
   }
-  saveSortInformation(mappedSortOptions: SortRule[]) {
+  saveSortInformation(mappedSortOptions: SortRule[]): void {
     localStorage.setItem("sortInformation", JSON.stringify(mappedSortOptions));
   }
   
@@ -128,6 +132,10 @@ export class ConfigService {
   }
   clearColumnVisibilityInformation(): void {
     localStorage.removeItem("columnVisibilityInformation");
+  }
+  saveUserFilterInput(inputValue: string, userInput: string): void {
+    localStorage.setItem("filterInformation", inputValue);
+    localStorage.setItem("userFilterInput", userInput);
   }
 }
 

@@ -1,56 +1,37 @@
-import { SortingRule } from "./SortingRule.js";
-import { ColumnHider } from "./ColumnHider.js";
-import { config, DATA_ROWS, sortingService } from "./configExport.js";
 export class ConfigService {
     data;
     columns;
     sortingRules;
+    filteringRule;
+    userFilterInput;
     constructor() {
-        this.fetchConfig();
+        this.filteringRule = localStorage.getItem("filterInformation");
+        this.userFilterInput = localStorage.getItem("userFilterInput");
     }
-    fetchConfig() {
+    async fetchConfig() {
         return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
             .then((response) => response.json())
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            const toSetSortFields = new CustomEvent("to-set-sort-fields", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toSetSortFields);
-            const toCreateDataHeaders = new CustomEvent("to-create-data-headers", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toCreateDataHeaders);
-            return DATA_ROWS.fetchData(dataUrl);
+            return dataUrl;
         })
-            .then(() => {
-            const toCreateDataRows = new CustomEvent("to-create-data-rows", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toCreateDataRows);
+            .then((dataUrl) => {
+            //this.createRows(this.DATA_ROWS.visibleRows);
             if (localStorage.getItem("sortInformation") !== null) {
                 const dataRows = document.querySelector(".data-rows");
                 if (dataRows) {
                     dataRows.innerHTML = "";
                 }
-                sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-                const toRecreateDataRows = new CustomEvent("to-recreate-data-rows", {
-                    bubbles: true,
-                    composed: true,
-                });
-                document.dispatchEvent(toRecreateDataRows);
+                //this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
+                //this.createRows(this.DATA_ROWS.visibleRows);
             }
-            const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-            for (let i = 0; i < config.columns.length; i++) {
-                const eachDataColumnGroup = document.querySelectorAll("." + config.columns[i].id);
-                const headersOfEachColumn = document.querySelectorAll("." + config.columns[i].id + "-header");
-                eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-                headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-            }
+            const toSetVisibilityAttribute = new CustomEvent("to-set-visibility-attribute", {
+                bubbles: true,
+                composed: true,
+            });
+            document.dispatchEvent(toSetVisibilityAttribute);
+            return dataUrl;
         });
     }
     getHtmlClassNamesOfColumns() {
@@ -61,14 +42,14 @@ export class ConfigService {
         });
         return htmlClassNamesOfColumns;
     }
-    getColumnIdFromColumnDisplayName(columnName) {
+    getColumnIdFromColumnDisplayName = (columnName) => {
         const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
         if (column) {
             return column.id;
         }
         throw new Error("Column doesn't exist.");
-    }
-    getColumnTypeFromColumnId(columnName) {
+    };
+    getColumnTypeFromColumnId = (columnName) => {
         const column = this.columns.find((eachColumn) => eachColumn.id === columnName);
         if (column) {
             return column.type;
@@ -76,7 +57,7 @@ export class ConfigService {
         else {
             return void 0;
         }
-    }
+    };
     getColumnDisplayNameFromColumnId(columnName) {
         const column = this.columns.find((column) => column.id === columnName);
         if (column) {
@@ -130,12 +111,8 @@ export class ConfigService {
         localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
         return columnsVisibilityStatus;
     }
-    saveSortInformation(sortOptions) {
-        const toMapSortOptions = new CustomEvent("to-map-sort-options", {
-            bubbles: true,
-            composed: true,
-        });
-        document.dispatchEvent(toMapSortOptions);
+    saveSortInformation(mappedSortOptions) {
+        localStorage.setItem("sortInformation", JSON.stringify(mappedSortOptions));
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");
@@ -143,7 +120,9 @@ export class ConfigService {
     clearColumnVisibilityInformation() {
         localStorage.removeItem("columnVisibilityInformation");
     }
+    saveUserFilterInput(inputValue, userInput) {
+        localStorage.setItem("filterInformation", inputValue);
+        localStorage.setItem("userFilterInput", userInput);
+    }
 }
-console.log(SortingRule);
-console.log(ColumnHider);
 //# sourceMappingURL=ConfigService.js.map

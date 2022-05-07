@@ -94,6 +94,7 @@ class DataGrid extends HTMLElement {
         this.initializeListeners();
         this.DATA_ROWS = new DataRows();
         this.config = new ConfigService();
+        this.searchButton = new SearchButton();
         this.initizaleApp();
     }
     // KK
@@ -106,7 +107,9 @@ class DataGrid extends HTMLElement {
         await this.DATA_ROWS.fetchData(dataUrl);
         this.sortingService = new SortingService(this.DATA_ROWS.getVisibleRows, this.config.getColumnTypeFromColumnId);
         this.filteringService = new FilteringService(this.DATA_ROWS.rows, this.config.getVisibleColumnIds());
-        this.searchButton = new SearchButton(this.dataRows);
+        if (localStorage.getItem("filterInformation") !== null) {
+            this.searchButton.setDefaultSearchValue(this.config.userFilterInput);
+        }
         this.createRows();
     }
     initializeListeners() {
@@ -121,18 +124,8 @@ class DataGrid extends HTMLElement {
                 headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
             }
         });
-        this.addEventListener("to-create-rows", () => {
-            this.createRows();
-        });
-        this.addEventListener("to-create-data-rows", () => {
-            this.createRows();
-        });
         this.addEventListener("to-fetch-data", (e) => {
             return this.DATA_ROWS.fetchData(e.detail.url);
-        });
-        this.addEventListener("to-filter-rows", (e) => {
-            this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, e.detail.input);
-            //DATA_ROWS.visibleRows = filterRows(DATA_ROWS.rows, inputValue);
         });
         this.addEventListener("to-create-rows", () => {
             this.createRows();
@@ -183,17 +176,6 @@ class DataGrid extends HTMLElement {
         this.addEventListener("to-save-sort-information", () => {
             this.config.saveSortInformation(this.sortModel.mapSortOptions(this.sortModel.sortOptions));
         });
-        this.addEventListener("to-set-visibility-attribute-2", (e) => {
-            for (let i = 0; i < this.config.columns.length; i++) {
-                const eachDataColumnGroup = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id);
-                const headersOfEachColumn = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id + "-header");
-                eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", e.detail.visibility[i]));
-                headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", e.detail.visibility[i]));
-            }
-        });
-        this.addEventListener("to-sort-data-2", () => {
-            this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-        });
         this.addEventListener("to-sort-data-3", (e) => {
             this.sortingService.sortData(e.detail.mappedSortOptions);
         });
@@ -205,6 +187,11 @@ class DataGrid extends HTMLElement {
         });
         this.addEventListener("to-blur-page-3", () => {
             this.table.classList.toggle("blured");
+        });
+        this.addEventListener("to-filter-data", (e) => {
+            this.config.saveUserFilterInput(e.detail.inputValue, e.detail.userInput);
+            this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, e.detail.inputValue);
+            this.createRows();
         });
     }
     createDataHeaders() {
@@ -247,6 +234,10 @@ class DataGrid extends HTMLElement {
         this.columnHeaderSection.appendChild(rowOfChildHeaders);
     }
     createRows() {
+        this.dataRows.innerHTML = "";
+        if (localStorage.getItem("filterInformation") !== null) {
+            this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, localStorage.getItem("filterInformation"));
+        }
         if (localStorage.getItem("sortInformation") !== null) {
             this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation")));
         }
@@ -315,5 +306,4 @@ class DataGrid extends HTMLElement {
 customElements.define(DataGrid.TAG, DataGrid);
 console.log(ColumnHider);
 console.log(SearchButton);
-console.log(this.searchButton);
 //# sourceMappingURL=index.js.map

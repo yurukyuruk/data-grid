@@ -2,8 +2,11 @@ export class ConfigService {
     data;
     columns;
     sortingRules;
+    filteringRule;
+    userFilterInput;
     constructor() {
-        // this.fetchConfig();
+        this.filteringRule = localStorage.getItem("filterInformation");
+        this.userFilterInput = localStorage.getItem("userFilterInput");
     }
     async fetchConfig() {
         return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
@@ -116,6 +119,10 @@ export class ConfigService {
     }
     clearColumnVisibilityInformation() {
         localStorage.removeItem("columnVisibilityInformation");
+    }
+    saveUserFilterInput(inputValue, userInput) {
+        localStorage.setItem("filterInformation", inputValue);
+        localStorage.setItem("userFilterInput", userInput);
     }
 }
 //# sourceMappingURL=ConfigService.js.map

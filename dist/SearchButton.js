@@ -51,13 +51,11 @@ export class SearchButton extends HTMLElement {
     input;
     searchButton;
     shadowRoot;
-    dataRows;
-    constructor(dataRows) {
+    constructor() {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
         this.shadowRoot.innerHTML = template;
         this.getElementReferences();
-        this.dataRows = dataRows;
         this.initilizeListeners();
     }
     initilizeListeners() {
@@ -69,45 +67,31 @@ export class SearchButton extends HTMLElement {
             };
         };
         this.input.addEventListener("keyup", debounce(() => {
-            this.dataRows.innerHTML = "";
-            const toSortData2 = new CustomEvent("to-sort-data-2", {
-                bubbles: true,
-                composed: true,
-            });
-            this.shadowRoot.dispatchEvent(toSortData2);
             const inputValue = this.input.value.toLowerCase();
-            const toFilterRows = new CustomEvent("to-filter-rows", {
+            const toFilterData = new CustomEvent("to-filter-data", {
                 bubbles: true,
                 composed: true,
                 detail: {
-                    input: inputValue
+                    userInput: this.input.value,
+                    inputValue: inputValue
                 }
             });
-            document.dispatchEvent(toFilterRows);
-            const toCreateDataRows = new CustomEvent("to-create-data-rows", {
-                bubbles: true,
-                composed: true,
-            });
-            this.shadowRoot.dispatchEvent(toCreateDataRows);
-            const toCreateRows = new CustomEvent("to-create-rows", {
-                bubbles: true,
-                composed: true,
-            });
-            document.dispatchEvent(toCreateRows);
+            this.shadowRoot.dispatchEvent(toFilterData);
             const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-            const toSetVisibilityAttribute2 = new CustomEvent("to-set-visibility-attribute-2", {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    visibility: columnsVisibility
-                }
-            });
-            document.dispatchEvent(toSetVisibilityAttribute2);
+            /*for (let i = 0; i < this.config.columns.length; i++) {
+              const eachDataColumnGroup: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id);
+              const headersOfEachColumn: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.columns[i].id + "-header");
+              eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
+              headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", (<CustomEvent>e).detail.visibility[i]));
+            } */
         }, 1000));
         this.searchButton.addEventListener("click", (e) => {
             e.preventDefault();
         });
     }
+    setDefaultSearchValue = (userInput) => {
+        this.input.setAttribute("value", userInput);
+    };
     getElementReferences() {
         this.input = this.shadowRoot.querySelector(".input");
         this.searchButton = this.shadowRoot.querySelector(".search-button");
