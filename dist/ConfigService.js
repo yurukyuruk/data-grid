@@ -100,6 +100,7 @@ export class ConfigService {
         });
         if (reset === "reset") {
             localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+            this.columnVisibilityRules = columnsVisibilityStatus;
         }
         return columnsVisibilityStatus;
     }

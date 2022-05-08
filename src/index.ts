@@ -153,7 +153,7 @@ class DataGrid extends HTMLElement {
     this.addEventListener("to-reset-column-hider", (e) => {
       this.config.getColumnVisibilityStatus("reset");
         for(let i = 0; i < (<CustomEvent>e).detail.allColumnCheckboxes.length; i++) {
-          (<CustomEvent>e).detail.checkboxHolders[i].setAttribute("data-column-checkbox-checked", JSON.stringify(this.config.columnVisibilityRules[i]));
+          (<CustomEvent>e).detail.checkboxHolders[i].setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
           if ((<CustomEvent>e).detail.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked") === "false") {
             (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.removeAttribute("checked");
           } else {
@@ -208,7 +208,7 @@ class DataGrid extends HTMLElement {
           columnHeader.rowSpan = hasChildrens ? 2 : 1;
           columnHeader.id = column.id;
           columnHeader.className = `${column.id}-header`;
-          columnHeader.setAttribute("data-column-checkbox-checked", JSON.parse(localStorage.getItem("columnVisibilityInformation"))[i].toString());
+          columnHeader.setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
           columnHeader.textContent = column.displayName.toUpperCase();
           rowOfMainHeaders.append(columnHeader);
           if (column.children !== undefined) {
@@ -226,7 +226,7 @@ class DataGrid extends HTMLElement {
               const childColumnHeader = document.createElement("th");
               childColumnHeader.id = childColumn.id;
               childColumnHeader.className = `${childColumn.id}-header ${column.id}`;
-              childColumnHeader.setAttribute("data-column-checkbox-checked", JSON.parse(localStorage.getItem("columnVisibilityInformation"))[i].toString());
+              childColumnHeader.setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
               childColumnHeader.setAttribute("data-section-expanded", "false");
               childColumnHeader.textContent = childColumn.displayName.toUpperCase();
               rowOfChildHeaders.append(childColumnHeader);
@@ -254,7 +254,7 @@ class DataGrid extends HTMLElement {
         i += 1;
         const dataCell = document.createElement("td");
         dataCell.className = recordId;
-        dataCell.setAttribute("data-column-checkbox-checked", JSON.parse(localStorage.getItem("columnVisibilityInformation"))[i].toString());
+        dataCell.setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
         if (isRowRecord(recordValue)) {
           dataCell.setAttribute("data-header-expanded", "false");
           dataCell.textContent = this.config
@@ -264,7 +264,7 @@ class DataGrid extends HTMLElement {
           for (const [childrenId, childrenValue] of Object.entries(recordValue)) {
             const childrenCell = document.createElement("td");
             childrenCell.className = `${recordId} ${childrenId}`;
-            childrenCell.setAttribute("data-column-checkbox-checked", JSON.parse(localStorage.getItem("columnVisibilityInformation"))[i].toString());
+            childrenCell.setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
             childrenCell.textContent = childrenValue.toString();
             childrenCell.setAttribute("data-section-expanded", "false");
             dataRow.append(childrenCell);
