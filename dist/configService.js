@@ -15,7 +15,12 @@ export class ConfigService {
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            this.columnVisibilityRules = this.getColumnVisibilityStatus();
+            if (localStorage.getItem("columnVisibilityInformation") === null) {
+                this.columnVisibilityRules = this.getColumnVisibilityStatus();
+            }
+            else {
+                this.columnVisibilityRules = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+            }
             return dataUrl;
         });
     }

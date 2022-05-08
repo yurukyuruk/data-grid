@@ -138,6 +138,16 @@ class DataGrid extends HTMLElement {
       this.sortModel.sortDataButton.classList.toggle("blured");
       this.searchButton.classList.toggle("blured");
     })
+    this.addEventListener("to-set-checkboxes", (e) => {
+      for (let i = 0; i < (<CustomEvent>e).detail.allColumnCheckboxes.length; i++) {
+        (<CustomEvent>e).detail.allColumnCheckboxes[i].setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
+        if ((<CustomEvent>e).detail.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked") === "false") {
+          (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.removeAttribute("checked");
+        } else {
+          (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.setAttribute("checked", "checked");
+        }
+      }
+    })
     this.addEventListener("to-click-checkbox", (e) => {
       const wholeColumnData: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i]);
         const wholeColumnHeaders = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i] + "-header");
@@ -156,7 +166,7 @@ class DataGrid extends HTMLElement {
     this.addEventListener("to-reset-column-hider", (e) => {
       this.config.getColumnVisibilityStatus("reset");
         for(let i = 0; i < (<CustomEvent>e).detail.allColumnCheckboxes.length; i++) {
-          (<CustomEvent>e).detail.checkboxHolders[i].setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
+          (<CustomEvent>e).detail.allColumnCheckboxes[i].setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
           if ((<CustomEvent>e).detail.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked") === "false") {
             (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.removeAttribute("checked");
           } else {
