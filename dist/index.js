@@ -87,6 +87,7 @@ class DataGrid extends HTMLElement {
     filteringService;
     searchButton;
     dataHeaders;
+    classOfColumnHeaderElements;
     constructor() {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -113,6 +114,7 @@ class DataGrid extends HTMLElement {
             this.searchButton.setDefaultSearchValue(this.config.userFilterInput);
         }
         this.createRows();
+        this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
     }
     initializeListeners() {
         this.sortModel.addEventListener("to-sort", () => {
@@ -171,6 +173,7 @@ class DataGrid extends HTMLElement {
             }
             this.createDataHeaders();
             this.createRows();
+            this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
         this.addEventListener("to-get-display-name", (e) => {
             e.detail.fieldOption = this.config.getColumnDisplayNameFromColumnId(e.detail.id);
@@ -210,18 +213,20 @@ class DataGrid extends HTMLElement {
         rowOfMainHeaders.classList.add("header-row");
         rowOfChildHeaders.classList.add("header-row");
         let i = -1;
+        this.classOfColumnHeaderElements = [];
         for (const column of this.config.columns) {
             i += 1;
             const columnHeader = document.createElement("th");
             columnHeader.rowSpan = hasChildrens ? 2 : 1;
             columnHeader.id = column.id;
             columnHeader.className = `${column.id}-header`;
+            columnHeader.setAttribute("data-header-expanded", "false");
             columnHeader.setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
             columnHeader.textContent = column.displayName.toUpperCase();
             rowOfMainHeaders.append(columnHeader);
             if (column.children !== undefined) {
-                columnHeader.setAttribute("data-header-expanded", "false");
-                this.addToogleChildrensVisiblityListener(columnHeader);
+                this.classOfColumnHeaderElements.push(columnHeader.className);
+                this.addToogleChildrensVisiblityListener(columnHeader, columnHeader.className);
                 columnHeader.addEventListener("mouseover", () => {
                     columnHeader.style.color = "white";
                     columnHeader.style.cursor = "pointer";
@@ -284,7 +289,7 @@ class DataGrid extends HTMLElement {
             this.dataRows.append(dataRow);
         }
     }
-    addToogleChildrensVisiblityListener(headerColumn) {
+    addToogleChildrensVisiblityListener(headerColumn, columnClassName) {
         headerColumn.addEventListener("click", () => {
             const newState = headerColumn.getAttribute("data-header-expanded") === "false" ? "true" : "false";
             if (newState === "true") {
@@ -308,7 +313,41 @@ class DataGrid extends HTMLElement {
                     children.setAttribute("data-section-expanded", newState);
                 }
             }
+            localStorage.setItem(columnClassName, newState);
         });
+    }
+    setChildrensVisibilityStatus(columnClassNames) {
+        for (let i = 0; i < columnClassNames.length; i++) {
+            let state;
+            if (localStorage.getItem(columnClassNames[i]) === null) {
+                state = "false";
+            }
+            else {
+                state = localStorage.getItem(columnClassNames[i]);
+            }
+            const headerColumn = this.shadowRoot.querySelector(`.${columnClassNames[i]}`);
+            if (state === "true") {
+                headerColumn.rowSpan = 1;
+                headerColumn.colSpan = this.config.getChildrens(headerColumn.id).length || 1;
+            }
+            else {
+                headerColumn.rowSpan = 2;
+                headerColumn.colSpan = 1;
+            }
+            headerColumn.setAttribute("data-header-expanded", state);
+            const childrens = [
+                ...Array.from(this.columnHeaderSection.querySelectorAll(`.${headerColumn.id}`)),
+                ...Array.from(this.dataRows.querySelectorAll(`.${headerColumn.id}`))
+            ];
+            for (const children of childrens) {
+                if (children.getAttribute("data-header-expanded")) {
+                    children.setAttribute("data-header-expanded", state);
+                }
+                else {
+                    children.setAttribute("data-section-expanded", state);
+                }
+            }
+        }
     }
     getElementReferences() {
         this.columnHeaderSection = this.shadowRoot?.querySelector("thead");
