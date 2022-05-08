@@ -36,7 +36,9 @@ const { template } = {
             transform: scale(1.2);
             cursor: pointer;
         }
-        
+        .blured {
+          filter: blur(2px);
+        }
     </style>
       <form class="search-button-area">
          <input type="text" placeholder="Search" name="search" class="input">  

@@ -131,6 +131,9 @@ const { template } = {
     color: #0000009c;
     cursor: auto;
   }
+  .blured {
+    filter: blur(2px);
+  }
   input[data-sort-button-visible="false"] {
     display: none;
   }

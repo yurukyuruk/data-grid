@@ -130,6 +130,8 @@ class DataGrid extends HTMLElement {
         this.addEventListener("to-click-column-hider-button", (e) => {
             e.detail.createAndSetCheckboxes(this.config.getHtmlClassNamesOfColumns());
             this.table.classList.toggle("blured");
+            this.sortModel.sortDataButton.classList.toggle("blured");
+            this.searchButton.classList.toggle("blured");
         });
         this.addEventListener("to-click-checkbox", (e) => {
             const wholeColumnData = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[e.detail.i]);
@@ -141,6 +143,7 @@ class DataGrid extends HTMLElement {
         });
         this.addEventListener("to-close-column-hider-button", (e) => {
             this.table.classList.toggle("blured");
+            this.searchButton.classList.toggle("blured");
             this.sortModel.sortDataButton.classList.toggle("blured");
             this.config.saveColumnVisibilityStatus(e.detail.allColumnCheckboxes);
         });
