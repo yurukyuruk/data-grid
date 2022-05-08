@@ -257,9 +257,9 @@ class DataGrid extends HTMLElement {
   
  createRows(): void {
   this.dataRows.innerHTML = "";
-  /*if(localStorage.getItem("filterInformation") !== null) {
+  if(localStorage.getItem("filterInformation") !== null) {
     this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, localStorage.getItem("filterInformation"));
-   }*/
+   }
    if(localStorage.getItem("sortInformation") !== null) {
     this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation"));
    }
