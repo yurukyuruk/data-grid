@@ -20,7 +20,7 @@ export class ConfigService {
       .then(({ columns, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
         this.sortingRules = sortingRules;
-        this.columnVisibilityRules = this.setColumnVisibilityStatus();
+        this.columnVisibilityRules = this.getColumnVisibilityStatus();
         return dataUrl;
       })
   }
@@ -96,7 +96,7 @@ export class ConfigService {
     }
     return visibleColumnIds;
   }
-  setColumnVisibilityStatus(): boolean[] {
+  getColumnVisibilityStatus(reset?: string): boolean[] {
     const columnsVisibilityStatus: boolean[] = [];
     this.columns.forEach(column => {
       if(column.visible !== undefined) {
@@ -105,15 +105,18 @@ export class ConfigService {
         columnsVisibilityStatus.push(true);
       }
     })
-    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+    if(reset === "reset") {
+      localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+    }
     return columnsVisibilityStatus;
   }
-  saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<HTMLDivElement>): string[] {
-    const columnsVisibilityStatus: string[] = [];
+  saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<HTMLDivElement>): boolean[] {
+    const columnsVisibilityStatus: boolean[] = [];
     allColumnCheckboxes.forEach((columnCheckbox) => {
-      columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");
+      columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") === "true");
     });
     localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+    this.columnVisibilityRules = columnsVisibilityStatus;
     return columnsVisibilityStatus;
   }
   saveSortInformation(mappedSortOptions: SortRule[]): void {
@@ -122,9 +125,6 @@ export class ConfigService {
   
   clearSortInformation(): void {
     localStorage.removeItem("sortInformation");
-  }
-  clearColumnVisibilityInformation(): void {
-    localStorage.removeItem("columnVisibilityInformation");
   }
   saveUserFilterInput(inputValue: string, userInput: string): void {
     localStorage.setItem("filterInformation", inputValue);

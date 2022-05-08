@@ -15,7 +15,7 @@ export class ConfigService {
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
             this.sortingRules = sortingRules;
-            this.columnVisibilityRules = this.setColumnVisibilityStatus();
+            this.columnVisibilityRules = this.getColumnVisibilityStatus();
             return dataUrl;
         });
     }
@@ -88,7 +88,7 @@ export class ConfigService {
         }
         return visibleColumnIds;
     }
-    setColumnVisibilityStatus() {
+    getColumnVisibilityStatus(reset) {
         const columnsVisibilityStatus = [];
         this.columns.forEach(column => {
             if (column.visible !== undefined) {
@@ -98,15 +98,18 @@ export class ConfigService {
                 columnsVisibilityStatus.push(true);
             }
         });
-        localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+        if (reset === "reset") {
+            localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+        }
         return columnsVisibilityStatus;
     }
     saveColumnVisibilityStatus(allColumnCheckboxes) {
         const columnsVisibilityStatus = [];
         allColumnCheckboxes.forEach((columnCheckbox) => {
-            columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");
+            columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") === "true");
         });
         localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+        this.columnVisibilityRules = columnsVisibilityStatus;
         return columnsVisibilityStatus;
     }
     saveSortInformation(mappedSortOptions) {
@@ -114,9 +117,6 @@ export class ConfigService {
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");
-    }
-    clearColumnVisibilityInformation() {
-        localStorage.removeItem("columnVisibilityInformation");
     }
     saveUserFilterInput(inputValue, userInput) {
         localStorage.setItem("filterInformation", inputValue);
