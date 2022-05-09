@@ -148,8 +148,6 @@ export class ColumnHider extends HTMLElement {
   private columnCheckboxes: HTMLDivElement;
   private readonly resetButton: HTMLInputElement;
   private allColumnCheckboxes!: NodeListOf<HTMLDivElement>;
-  private checkboxHolders!: HTMLDivElement[];
-
   constructor() {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });

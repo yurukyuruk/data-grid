@@ -111,7 +111,8 @@ class DataGrid extends HTMLElement {
         this.dataRows = this.shadowRoot?.querySelector(".data-rows");
         await this.DATA_ROWS.fetchData(dataUrl);
         this.sortingService = new SortingService(this.DATA_ROWS.getVisibleRows, this.config.getColumnTypeFromColumnId);
-        this.filteringService = new FilteringService(this.DATA_ROWS.rows, this.config.getVisibleColumnIds());
+        this.filteringService = new FilteringService(this.DATA_ROWS.rows);
+        this.filteringService.setVisibleColumnNames(this.config.getVisibleColumnIds());
         if (localStorage.getItem("filterInformation") !== null) {
             this.searchButton.setDefaultSearchValue(this.config.userFilterInput);
         }
@@ -121,6 +122,7 @@ class DataGrid extends HTMLElement {
     initializeListeners() {
         this.sortModel.addEventListener("to-sort", () => {
             this.createRows();
+            this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
         this.addEventListener("to-fetch-data", (e) => {
             return this.DATA_ROWS.fetchData(e.detail.url);
@@ -161,6 +163,10 @@ class DataGrid extends HTMLElement {
             this.searchButton.classList.toggle("blured");
             this.sortModel.sortDataButton.classList.toggle("blured");
             this.config.saveColumnVisibilityStatus(e.detail.allColumnCheckboxes);
+            this.filteringService.setVisibleColumnNames(this.config.getVisibleColumnIds());
+            this.createDataHeaders();
+            this.createRows();
+            this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
         this.addEventListener("to-reset-column-hider", (e) => {
             this.config.getColumnVisibilityStatus("reset");
@@ -201,6 +207,7 @@ class DataGrid extends HTMLElement {
             this.config.saveUserFilterInput(e.detail.inputValue, e.detail.userInput);
             this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, e.detail.inputValue);
             this.createRows();
+            this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
     }
     createDataHeaders() {

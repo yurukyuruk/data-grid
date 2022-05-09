@@ -2,14 +2,16 @@ import { RowRecord } from "./types/interfaces.js";
 import { extractValuesFromKeys, isObject } from "./utils.js";
 export class FilteringService {
     rows: RowRecord[];
-    columnNames: string[];
-    constructor(rows: RowRecord[], columnNames: string[]) {
+    visibleColumnNames!: string[];
+    constructor(rows: RowRecord[]) {
         this.rows = rows;
-        this.columnNames = columnNames;
+    }
+    setVisibleColumnNames(visibleColumnNames) {
+        this.visibleColumnNames = visibleColumnNames;
     }
     filterRows(rows: RowRecord[], searchValue: string) {
         return rows.filter(row => {
-            const visibleValues = extractValuesFromKeys(row, this.columnNames);
+            const visibleValues = extractValuesFromKeys(row, this.visibleColumnNames);
             return visibleValues.some(value => {
                 return isObject(value)
                     ? Object.values(value)

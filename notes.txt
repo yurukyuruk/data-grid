@@ -5,3 +5,10 @@ You need to pass in this event information about filter phrase(user input) and t
 to save the input in local storage and in config service(like this.sortingrules you will have this.filteringrules).
 then you should call createRows(at the beginning of createrows clear innderhtml of datarows).
 Do the same for hide columns and sorting.
+Add enum for custom events.
+const x = localStorage.getitem("lol");
+if(x !== null) {
+    const a = x;
+}
+Change the name of mySortingSection!
+Check the order of your functions clicking the sort apply button.
