@@ -119,7 +119,9 @@ const { template } = {
     td[data-column-checkbox-checked="false"] {
       display: none;
     }
-    
+    .blured {
+      filter: blur(2px);
+    }
   </style>
 <div class="column-hider-button-area" data-column-hider-button-area-visible="true">
   <input class="column-hider-button" type="button" value="HIDE COLUMN">
@@ -140,7 +142,7 @@ export class ColumnHider extends HTMLElement {
   static TAG = "column-hider";
   public readonly shadowRoot: ShadowRoot;
   private readonly columnHiderButtonArea: HTMLDivElement;
-  private readonly columnHiderButton: HTMLInputElement;
+  columnHiderButton: HTMLInputElement;
   private readonly columnCheckboxesArea: HTMLDivElement;
   private readonly columnHiderCloseButton: HTMLInputElement;
   private columnCheckboxes: HTMLDivElement;

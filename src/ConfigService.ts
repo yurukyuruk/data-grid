@@ -90,7 +90,7 @@ export class ConfigService {
   getSummaryRule(columnId: string): string[] {
     return this.columns.find((colum) => colum.id === columnId)?.summary?.split("+") ?? [];
   }
-  getVisibleColumnIds = () => {
+  getVisibleColumnIds() {
     const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
     let visibleColumnIds = [];
     for(let i = 0; i < columnsVisibility.length; i++) {

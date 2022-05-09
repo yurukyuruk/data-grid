@@ -91,6 +91,7 @@ class DataGrid extends HTMLElement {
   private searchButton: SearchButton;
   private dataHeaders!: HTMLTableSectionElement;
   private classOfColumnHeaderElements!: string[];
+  private columnHider: ColumnHider;
   constructor() {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -100,6 +101,7 @@ class DataGrid extends HTMLElement {
     this.DATA_ROWS = new DataRows();
     this.config = new ConfigService();
     this.searchButton = this.shadowRoot.querySelector(SearchButton.TAG) as SearchButton;
+    this.columnHider = this.shadowRoot.querySelector(ColumnHider.TAG) as ColumnHider;
     this.initizaleApp();
   }
 
@@ -180,15 +182,9 @@ class DataGrid extends HTMLElement {
         this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
     })
     this.addEventListener("to-get-display-name", (e) => {
-      (<CustomEvent>e).detail.fieldOption = this.config.getColumnDisplayNameFromColumnId((<CustomEvent>e).detail.id);
-      //this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
-    })
-    this.addEventListener("to-get-display-name-2", (e) => {
-      (<CustomEvent>e).detail.fieldOption = this.config.getColumnDisplayNameFromColumnId((<CustomEvent>e).detail.id);
-      //this.sortOptions[0].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[0].id);
-    })
-    this.addEventListener("to-get-display-name-2", (e) => {
-      (<CustomEvent>e).detail.fieldOption = this.config.getColumnDisplayNameFromColumnId((<CustomEvent>e).detail.id);
+      for (let i = 0; i < (<CustomEvent>e).detail.sortInformation.length; i++) {
+        (<CustomEvent>e).detail.sortOptions[i].fieldOption = this.config.getColumnDisplayNameFromColumnId((<CustomEvent>e).detail.sortInformation[i].id);
+      }
       //this.sortOptions[i].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[i].id);
     })
     this.addEventListener("to-clear-sort-information", () => {
@@ -200,9 +196,10 @@ class DataGrid extends HTMLElement {
     this.addEventListener("to-sort-data-3", (e) => {
       this.sortingService.sortData((<CustomEvent>e).detail.mappedSortOptions);
     })
-  
-    this.addEventListener("to-blur-page-3", () => {
+    this.addEventListener("to-blur", () => {
       this.table.classList.toggle("blured");
+      this.searchButton.classList.toggle("blured");
+      this.columnHider.columnHiderButton.classList.toggle("blured");
     })
     this.addEventListener("to-filter-data", (e) => {
       this.config.saveUserFilterInput((<CustomEvent>e).detail.inputValue, (<CustomEvent>e).detail.userInput);
