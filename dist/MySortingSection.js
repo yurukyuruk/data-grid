@@ -289,14 +289,14 @@ export class MySortingSection extends HTMLElement {
             this.shadowRoot.dispatchEvent(toClearSortInformation);
         });
         this.submitButton.addEventListener("click", () => {
-            const toSortData3 = new CustomEvent("to-sort-data-3", {
+            const toSortData = new CustomEvent("to-sort-data", {
                 bubbles: true,
                 composed: true,
                 detail: {
                     mappedSortOptions: this.mapSortOptions(this.sortOptions)
                 }
             });
-            this.shadowRoot.dispatchEvent(toSortData3);
+            this.shadowRoot.dispatchEvent(toSortData);
             //this.sortingService.sortData(this.mapSortOptions(this.sortOptions));
             const toSort = new CustomEvent("to-sort", {
                 bubbles: true,

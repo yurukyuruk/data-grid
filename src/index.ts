@@ -132,9 +132,6 @@ class DataGrid extends HTMLElement {
     this.addEventListener("to-fetch-data", (e) => {
       return this.DATA_ROWS.fetchData((<CustomEvent>e).detail.url);
     })
-    this.addEventListener("to-create-rows", () => {
-      this.createRows(); 
-    })
     this.addEventListener("to-set-checkbox-textcontent", (e) => {
       (<CustomEvent>e).detail.checkboxLabel.textContent = this.config.columns[(<CustomEvent>e).detail.i].displayName;
     })
@@ -144,16 +141,6 @@ class DataGrid extends HTMLElement {
       this.sortModel.sortDataButton.classList.toggle("blured");
       this.searchButton.classList.toggle("blured");
     })
-    this.addEventListener("to-set-checkboxes", (e) => {
-      for (let i = 0; i < (<CustomEvent>e).detail.allColumnCheckboxes.length; i++) {
-        (<CustomEvent>e).detail.allColumnCheckboxes[i].setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
-        if ((<CustomEvent>e).detail.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked") === "false") {
-          (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.removeAttribute("checked");
-        } else {
-          (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.setAttribute("checked", "checked");
-        }
-      }
-    })
     this.addEventListener("to-click-checkbox", (e) => {
       const wholeColumnData: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i]);
         const wholeColumnHeaders = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i] + "-header");
@@ -162,12 +149,24 @@ class DataGrid extends HTMLElement {
         wholeColumnData.forEach((data) => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
         wholeColumnHeaders.forEach((header) => header.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
         (<CustomEvent>e).detail.checkboxHolder.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()); 
+        this.config.saveColumnVisibilityStatus((<CustomEvent>e).detail.checkboxHolders);
+        if ((<CustomEvent>e).detail.checkboxHolder.getAttribute("data-column-checkbox-checked") === "false") {
+          (<CustomEvent>e).detail.checkbox.removeAttribute("checked");
+        } else {
+          (<CustomEvent>e).detail.checkbox.setAttribute("checked", "checked");
+        }
     })
-    this.addEventListener("to-close-column-hider-button", (e) => {
+    this.addEventListener("to-set-checkboxholder-attribute", (e) => {
+      const wholeColumnData: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i]);
+      (<CustomEvent>e).detail.checkboxHolder.setAttribute("data-column-checkbox-checked",  wholeColumnData[0].getAttribute("data-column-checkbox-checked"));    
+    })
+    this.addEventListener("to-reset-checkboxholder-attribute", (e) => {
+      (<CustomEvent>e).detail.checkboxHolder.setAttribute("data-column-checkbox-checked",   this.config.getColumnVisibilityStatus("reset")[(<CustomEvent>e).detail.i].toString());    
+    })
+    this.addEventListener("to-close-column-hider-button", () => {
       this.table.classList.toggle("blured");
       this.searchButton.classList.toggle("blured");
-      this.sortModel.sortDataButton.classList.toggle("blured");
-      this.config.saveColumnVisibilityStatus((<CustomEvent>e).detail.allColumnCheckboxes); 
+      this.sortModel.sortDataButton.classList.toggle("blured"); 
       this.filteringService.setVisibleColumnNames(this.config.getVisibleColumnIds());
       this.createDataHeaders();   
       this.createRows();
@@ -175,14 +174,7 @@ class DataGrid extends HTMLElement {
     })
     this.addEventListener("to-reset-column-hider", (e) => {
       this.config.getColumnVisibilityStatus("reset");
-        for(let i = 0; i < (<CustomEvent>e).detail.allColumnCheckboxes.length; i++) {
-          (<CustomEvent>e).detail.allColumnCheckboxes[i].setAttribute("data-column-checkbox-checked", this.config.columnVisibilityRules[i].toString());
-          if ((<CustomEvent>e).detail.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked") === "false") {
-            (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.removeAttribute("checked");
-          } else {
-            (<CustomEvent>e).detail.allColumnCheckboxes[i].firstElementChild?.setAttribute("checked", "checked");
-          }
-        }
+      (<CustomEvent>e).detail.createAndSetCheckboxes(this.config.getHtmlClassNamesOfColumns(), "reset");
         this.createDataHeaders();
         this.createRows(); 
         this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
@@ -199,7 +191,7 @@ class DataGrid extends HTMLElement {
     this.addEventListener("to-save-sort-information", () => {
       this.config.saveSortInformation(this.sortModel.mapSortOptions(this.sortModel.sortOptions));
     })
-    this.addEventListener("to-sort-data-3", (e) => {
+    this.addEventListener("to-sort-data", (e) => {
       this.sortingService.sortData((<CustomEvent>e).detail.mappedSortOptions);
     })
     this.addEventListener("to-blur", () => {
