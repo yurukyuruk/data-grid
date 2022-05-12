@@ -6,15 +6,20 @@ export class ConfigService {
     userFilterInput;
     columnVisibilityRules;
     constructor() {
-        this.filteringRule = localStorage.getItem("filterInformation");
-        this.userFilterInput = localStorage.getItem("userFilterInput");
+        this.filteringRule = localStorage.getItem("filterInformation") ?? "";
+        this.userFilterInput = localStorage.getItem("userFilterInput" ?? "");
     }
     async fetchConfig() {
         return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
             .then((response) => response.json())
             .then(({ columns, dataUrl, sortingRules }) => {
             this.columns = columns;
-            this.sortingRules = sortingRules;
+            if (localStorage.getItem("sortInformation") === null) {
+                this.sortingRules = sortingRules;
+            }
+            else {
+                this.sortingRules = JSON.parse(localStorage.getItem("sortInformation"));
+            }
             if (localStorage.getItem("columnVisibilityInformation") === null) {
                 this.columnVisibilityRules = this.getColumnVisibilityStatus();
             }
@@ -84,7 +89,13 @@ export class ConfigService {
         return this.columns.find((colum) => colum.id === columnId)?.summary?.split("+") ?? [];
     }
     getVisibleColumnIds() {
-        const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+        let columnsVisibility;
+        if (localStorage.getItem("columnVisibilityInformation") === null) {
+            columnsVisibility = this.getColumnVisibilityStatus();
+        }
+        else {
+            columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+        }
         let visibleColumnIds = [];
         for (let i = 0; i < columnsVisibility.length; i++) {
             if (columnsVisibility[i] === true) {
@@ -95,17 +106,22 @@ export class ConfigService {
     }
     getColumnVisibilityStatus(reset) {
         const columnsVisibilityStatus = [];
-        this.columns.forEach(column => {
-            if (column.visible !== undefined) {
-                columnsVisibilityStatus.push(column.visible);
-            }
-            else {
-                columnsVisibilityStatus.push(true);
-            }
-        });
         if (reset === "reset") {
+            this.columns.forEach(column => {
+                columnsVisibilityStatus.push(true);
+            });
             localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
             this.columnVisibilityRules = columnsVisibilityStatus;
+        }
+        else {
+            this.columns.forEach(column => {
+                if (column.visible !== undefined) {
+                    columnsVisibilityStatus.push(column.visible);
+                }
+                else {
+                    columnsVisibilityStatus.push(true);
+                }
+            });
         }
         return columnsVisibilityStatus;
     }
@@ -120,6 +136,7 @@ export class ConfigService {
     }
     saveSortInformation(mappedSortOptions) {
         localStorage.setItem("sortInformation", JSON.stringify(mappedSortOptions));
+        this.sortingRules = mappedSortOptions;
     }
     clearSortInformation() {
         localStorage.removeItem("sortInformation");
@@ -127,6 +144,7 @@ export class ConfigService {
     saveUserFilterInput(inputValue, userInput) {
         localStorage.setItem("filterInformation", inputValue);
         localStorage.setItem("userFilterInput", userInput);
+        this.filteringRule = inputValue;
     }
 }
 //# sourceMappingURL=ConfigService.js.map

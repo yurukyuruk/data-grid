@@ -6,7 +6,7 @@ export class FilteringService {
     constructor(rows: RowRecord[]) {
         this.rows = rows;
     }
-    setVisibleColumnNames(visibleColumnNames) {
+    setVisibleColumnNames(visibleColumnNames: string[]) {
         this.visibleColumnNames = visibleColumnNames;
     }
     filterRows(rows: RowRecord[], searchValue: string) {

@@ -5,12 +5,12 @@ export class ConfigService {
   data!: Data;
   columns!: Column[];
   sortingRules!: SortRule[];
-  filteringRule: string | null;
-  userFilterInput: string | null;
+  filteringRule: string;
+  userFilterInput: string;
   columnVisibilityRules!: boolean[];
   constructor() {
-    this.filteringRule = localStorage.getItem("filterInformation");
-    this.userFilterInput = localStorage.getItem("userFilterInput");
+    this.filteringRule = localStorage.getItem("filterInformation") ?? "";
+    this.userFilterInput = localStorage.getItem("userFilterInput" ?? "");
   }
   async fetchConfig(): Promise<string> {
     return fetch(
@@ -19,7 +19,11 @@ export class ConfigService {
       .then((response) => response.json())
       .then(({ columns, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
-        this.sortingRules = sortingRules;
+        if(localStorage.getItem("sortInformation") === null) {
+          this.sortingRules = sortingRules;
+        } else {
+          this.sortingRules = JSON.parse(localStorage.getItem("sortInformation"));
+        } 
         if(localStorage.getItem("columnVisibilityInformation") === null) {
           this.columnVisibilityRules = this.getColumnVisibilityStatus();
         } else {
@@ -91,7 +95,12 @@ export class ConfigService {
     return this.columns.find((colum) => colum.id === columnId)?.summary?.split("+") ?? [];
   }
   getVisibleColumnIds() {
-    const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+    let columnsVisibility;
+    if(localStorage.getItem("columnVisibilityInformation") === null) {
+      columnsVisibility = this.getColumnVisibilityStatus();
+    } else {
+      columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+    }
     let visibleColumnIds = [];
     for(let i = 0; i < columnsVisibility.length; i++) {
       if(columnsVisibility[i] === true) {
@@ -102,16 +111,20 @@ export class ConfigService {
   }
   getColumnVisibilityStatus(reset?: string): boolean[] {
     const columnsVisibilityStatus: boolean[] = [];
-    this.columns.forEach(column => {
-      if(column.visible !== undefined) {
-        columnsVisibilityStatus.push(column.visible);
-      } else {
-        columnsVisibilityStatus.push(true);
-      }
-    })
     if(reset === "reset") {
+      this.columns.forEach(column => {
+          columnsVisibilityStatus.push(true);  
+      })
       localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
       this.columnVisibilityRules = columnsVisibilityStatus;
+    } else {
+      this.columns.forEach(column => {
+        if(column.visible !== undefined) {
+          columnsVisibilityStatus.push(column.visible);
+        } else {
+          columnsVisibilityStatus.push(true);
+        }
+      })
     }
     return columnsVisibilityStatus;
   }
@@ -126,6 +139,7 @@ export class ConfigService {
   }
   saveSortInformation(mappedSortOptions: SortRule[]): void {
     localStorage.setItem("sortInformation", JSON.stringify(mappedSortOptions));
+    this.sortingRules = mappedSortOptions;
   }
   
   clearSortInformation(): void {
@@ -134,6 +148,7 @@ export class ConfigService {
   saveUserFilterInput(inputValue: string, userInput: string): void {
     localStorage.setItem("filterInformation", inputValue);
     localStorage.setItem("userFilterInput", userInput);
+    this.filteringRule = inputValue;
   }
 }
 

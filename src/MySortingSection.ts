@@ -218,6 +218,19 @@ export class MySortingSection extends HTMLElement {
         this.sortOptions[0].sortField.append(sortFieldOption);
       }
       const sortInformation: SortRule[] = JSON.parse(localStorage.getItem("sortInformation")) as SortRule[];
+      if(sortInformation === null) {
+        const toSetSortingSection: CustomEvent = new CustomEvent("to-set-sorting-section", {
+          bubbles: true,
+          composed: true,
+          detail: {
+            sortOptions: this.sortOptions,
+          }
+        });
+        this.shadowRoot.dispatchEvent(toSetSortingSection);
+        this.sortAddingButton.disabled = false;
+        this.submitButton.disabled = false;
+        this.resetButton.disabled = false;
+      }
       if(sortInformation !== null) {
         this.resetButton.disabled = false;
       }
@@ -231,8 +244,6 @@ export class MySortingSection extends HTMLElement {
           }
         });
         this.shadowRoot.dispatchEvent(toGetDisplayName);
-        this.sortOptions[0].sortDirection.disabled = false;
-        this.sortOptions[0].directionOption = sortInformation[0].direction;
         this.sortAddingButton.disabled = false;
         this.submitButton.disabled = false;
         this.resetButton.disabled = false;
@@ -246,8 +257,6 @@ export class MySortingSection extends HTMLElement {
           }
         });
         this.shadowRoot.dispatchEvent(toGetDisplayName);
-        this.sortOptions[0].sortDirection.disabled = false;
-        this.sortOptions[0].directionOption = sortInformation[0].direction;
         this.sortAddingButton.disabled = false;
         this.submitButton.disabled = false;
         for (let i = 1; i < sortInformation.length; i++) {
@@ -261,8 +270,6 @@ export class MySortingSection extends HTMLElement {
             }
           });
           this.shadowRoot.dispatchEvent(toGetDisplayName);
-          this.sortOptions[i].sortDirection.disabled = false;
-          this.sortOptions[i].directionOption = sortInformation[i].direction;
         }
       }
     });
@@ -289,11 +296,14 @@ export class MySortingSection extends HTMLElement {
       this.sortOptions = [];
       this.createNewSortLine();
       this.sortOptions[0].sortDirection.disabled = true;
-      const toClearSortInformation: CustomEvent = new CustomEvent("to-clear-sort-information", {
+      const toResetSorting: CustomEvent = new CustomEvent("to-reset-sorting", {
         bubbles: true,
         composed: true,
       });
-      this.shadowRoot.dispatchEvent(toClearSortInformation);
+      this.shadowRoot.dispatchEvent(toResetSorting);
+      this.sortAddingButton.disabled = true;
+      this.submitButton.disabled = true;
+      this.resetButton.disabled = true;
     });
 
     this.submitButton.addEventListener("click", (): void => {
@@ -305,20 +315,11 @@ export class MySortingSection extends HTMLElement {
         }
       });
       this.shadowRoot.dispatchEvent(toSortData);
+      for(let i = 0; i < this.sortOptions.length; i++) {
+        this.sortOptions[i].sortField.disabled = true;
+        this.sortOptions[i].sortDirection.disabled = true;
+      }
       //this.sortingService.sortData(this.mapSortOptions(this.sortOptions));
-      const toSort: CustomEvent = new CustomEvent("to-sort", {
-        bubbles: true,
-        composed: true,
-      });
-      this.shadowRoot.dispatchEvent(toSort);
-      const toSaveSortInformation: CustomEvent = new CustomEvent("to-save-sort-information", {
-        bubbles: true,
-        composed: true,
-        detail: {
-          sortOptions: this.mapSortOptions(this.sortOptions)
-        }
-      });
-      this.shadowRoot.dispatchEvent(toSaveSortInformation);
     });
 
     this.sortOptions[0].sortLine.addEventListener("change", (): void => {

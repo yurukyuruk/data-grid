@@ -120,10 +120,6 @@ class DataGrid extends HTMLElement {
         this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
     }
     initializeListeners() {
-        this.sortModel.addEventListener("to-sort", () => {
-            this.createRows();
-            this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
-        });
         this.addEventListener("to-fetch-data", (e) => {
             return this.DATA_ROWS.fetchData(e.detail.url);
         });
@@ -175,19 +171,43 @@ class DataGrid extends HTMLElement {
             this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
         this.addEventListener("to-get-display-name", (e) => {
-            for (let i = 0; i < e.detail.sortInformation.length; i++) {
-                e.detail.sortOptions[i].fieldOption = this.config.getColumnDisplayNameFromColumnId(e.detail.sortInformation[i].id);
+            for (let i = 0; i < this.config.sortingRules.length; i++) {
+                e.detail.sortOptions[i].fieldOption = this.config.getColumnDisplayNameFromColumnId(this.config.sortingRules[i].id);
+                e.detail.sortOptions[i].directionOption = this.config.sortingRules[i].direction;
+                e.detail.sortOptions[i].sortField.disabled = true;
+                e.detail.sortOptions[i].sortDirection.disabled = true;
             }
             //this.sortOptions[i].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[i].id);
         });
-        this.addEventListener("to-clear-sort-information", () => {
-            this.config.clearSortInformation();
+        this.addEventListener("to-set-sorting-section", (e) => {
+            if (this.config.sortingRules.length === 0) {
+                e.detail.sortAddingButton.disabled = true;
+                e.detail.submitButton.disabled = true;
+                e.detail.resetButton.disabled = true;
+            }
+            else {
+                for (let i = 0; i < this.config.sortingRules.length; i++) {
+                    e.detail.sortOptions[i].fieldOption = this.config.getColumnDisplayNameFromColumnId(this.config.sortingRules[i].id);
+                    e.detail.sortOptions[i].directionOption = this.config.sortingRules[i].direction;
+                    e.detail.sortOptions[i].sortField.disabled = true;
+                    e.detail.sortOptions[i].sortDirection.disabled = true;
+                    e.detail.sortAddingButton.disabled = false;
+                    e.detail.submitButton.disabled = false;
+                    e.detail.resetButton.disabled = false;
+                }
+            }
         });
-        this.addEventListener("to-save-sort-information", () => {
-            this.config.saveSortInformation(this.sortModel.mapSortOptions(this.sortModel.sortOptions));
+        this.addEventListener("to-reset-sorting", () => {
+            this.config.sortingRules = [];
+            this.config.clearSortInformation();
+            this.createDataHeaders();
+            this.createRows("reset");
+            this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
         this.addEventListener("to-sort-data", (e) => {
-            this.sortingService.sortData(e.detail.mappedSortOptions);
+            this.config.saveSortInformation(e.detail.mappedSortOptions);
+            this.createRows();
+            this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
         this.addEventListener("to-blur", () => {
             this.table.classList.toggle("blured");
@@ -245,13 +265,14 @@ class DataGrid extends HTMLElement {
         this.columnHeaderSection.appendChild(rowOfMainHeaders);
         this.columnHeaderSection.appendChild(rowOfChildHeaders);
     }
-    createRows() {
+    createRows(reset) {
         this.dataRows.innerHTML = "";
-        if (localStorage.getItem("filterInformation") !== null) {
-            this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, localStorage.getItem("filterInformation"));
+        this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, this.config.filteringRule);
+        if (reset === "reset") {
+            this.sortingService.sortData([]);
         }
-        if (localStorage.getItem("sortInformation") !== null) {
-            this.sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation")));
+        else {
+            this.sortingService.sortData(this.config.sortingRules);
         }
         for (const record of this.DATA_ROWS.visibleRows) {
             let i = -1;
@@ -352,6 +373,4 @@ class DataGrid extends HTMLElement {
     }
 }
 customElements.define(DataGrid.TAG, DataGrid);
-console.log(ColumnHider);
-console.log(SearchButton);
 //# sourceMappingURL=index.js.map
