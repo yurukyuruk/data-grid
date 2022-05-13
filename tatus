@@ -1,0 +1,560 @@
+[33mcommit 33667b9b63ce14cac5e57d1671fcf13bf65fb9e0[m[33m ([m[1;36mHEAD -> [m[1;32mallinone[m[33m, [m[1;31morigin/allinone[m[33m)[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Thu May 12 15:01:51 2022 +0300
+
+    sorting edited
+
+[33mcommit 879fc904082bd397f7d3b9b7d1d6b14f7de2897b[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Wed May 11 00:06:57 2022 +0300
+
+    column hider reset button fixed
+
+[33mcommit 969c300aaa65d26f0e47aec0391829f60c2a37ec[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Mon May 9 21:29:39 2022 +0300
+
+    app mostly works
+
+[33mcommit 7b00b60fd3b764daeeb3105a2e2ef644a009f19c[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Mon May 9 18:07:40 2022 +0300
+
+    sorting section improved
+
+[33mcommit aa5a304f3817e9923a9699b953f4c759e2e5fe2b[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun May 8 23:31:39 2022 +0300
+
+    filtering service fixed
+
+[33mcommit 5040d0b4ad594c5eca08e5749c92654bc489dd38[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun May 8 22:37:52 2022 +0300
+
+    column expand visibility status added
+
+[33mcommit 0723218648e99b5fcd4a321c74376ceaf04c2fa1[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun May 8 18:53:08 2022 +0300
+
+    last update before adding expanded column history
+
+[33mcommit 4dd023d8d71cd9eeb5fffb6c62f3f1726b5f3f72[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun May 8 03:27:39 2022 +0300
+
+    blur effect added to buttons
+
+[33mcommit 55930d6e56e6bad9bb2ccb6d223f7dce3b05d104[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun May 8 03:18:24 2022 +0300
+
+    hide column improved
+
+[33mcommit 06840c542d47e943389125426f8cc5eae9bb4ef0[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun May 8 03:08:28 2022 +0300
+
+    column hider works as wanted
+
+[33mcommit f1801227469aa7ac315a41d0b1668ee30d6b4938[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat May 7 21:42:57 2022 +0300
+
+    for comparison
+
+[33mcommit d3de63b647dd516aed70fec7d9afa0ae46bfad35[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat May 7 14:17:21 2022 +0300
+
+    memory added for filter service
+
+[33mcommit b7235282d2b23f549e12c87e83071667cb711e83[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Sat Apr 30 21:51:04 2022 +0200
+
+    before leaving poland
+
+[33mcommit eaa7fc83ac0ac67e9722bdf14379ff834ee4314b[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Fri Apr 29 17:54:30 2022 +0200
+
+    more impprovements
+
+[33mcommit 722fe292b69e375ebb9a00cf4f666466cccc22d6[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Fri Apr 29 16:26:15 2022 +0200
+
+    sorting improved
+
+[33mcommit d8a1642f24b2d3b0734447f45319658e23113201[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Fri Apr 29 12:10:05 2022 +0200
+
+    sorting works
+
+[33mcommit ee091215a5087de6c9c2e5c90b0b46e7e0bfecca[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Tue Apr 26 20:50:52 2022 +0200
+
+    sort options works
+
+[33mcommit ddaa248c34ed97de8100cfa083e444f7116b2e0c[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Tue Apr 26 10:28:54 2022 +0200
+
+    sort fields displays
+
+[33mcommit 174806ced99365c2b8fa37a960a7acfab952a14d[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Thu Apr 21 14:40:42 2022 +0200
+
+    data can be rendered
+
+[33mcommit 68a086f0c26878e25e36d817ebeaf6e1c32fd190[m
+Author: Asli Yuruk <yurukyuruk@gmail.com>
+Date:   Sun Apr 17 22:40:39 2022 +0200
+
+    data rows changed
+
+[33mcommit 7642d88f9d0b1ecfd5bb7659acdc6ef2fc6aeb70[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Apr 10 20:14:54 2022 +0300
+
+    a
+
+[33mcommit 89bcc18f951babdf806319b51398972eade622e5[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Jan 25 21:59:29 2022 +0300
+
+    sort button history fixed
+
+[33mcommit 859c3dde5a3136ad59a3cba4dabb40272549896a[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Jan 25 14:33:00 2022 +0300
+
+    sorting section works again
+
+[33mcommit 902ebb6333b4e9158dfb7f9fa6790bf60d566fc3[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Jan 25 01:00:44 2022 +0300
+
+    hope will work
+
+[33mcommit 450f1a4dc9beec948a2ee78d7188979d8ca858c4[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Jan 25 00:22:12 2022 +0300
+
+    daily save
+
+[33mcommit 8d8e9c01bcc215575595f4b5cb17173a0e6bdcbc[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Jan 25 00:15:16 2022 +0300
+
+    daily save
+
+[33mcommit 8b7573c23c68a0b8aa0753c1d06e4f4615380f7c[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 19:22:44 2022 +0300
+
+    sorting history uploading the page works
+
+[33mcommit c4400d8be3e2d21cefe2c6a00fd1060ab6b4289d[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 18:59:38 2022 +0300
+
+    typescript fixed
+
+[33mcommit 9aacc73614b4e1f38769b447b8d17f9dd9c2a276[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 16:58:32 2022 +0300
+
+    combination of column hider sorting and quich search works
+
+[33mcommit be07cfb170f32454ed77058ceaf3c6adcfff9d4b[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 16:25:56 2022 +0300
+
+    column header applies on reload
+
+[33mcommit 8578ff58159508ff93bb09265a2efc83669e1bd0[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 13:28:36 2022 +0300
+
+    css improved
+
+[33mcommit f11ae3bcd31eed31a181d158152437ffc30e9ac8[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 03:26:24 2022 +0300
+
+    css improved
+
+[33mcommit 22a69db3740d7e7ea9b804cfe4ab513eac4b3e5e[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 02:33:27 2022 +0300
+
+    css improved
+
+[33mcommit fcc6f091d15595b753e94d02bb4f3c78b5743f4c[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 02:06:10 2022 +0300
+
+    css improved
+
+[33mcommit 1c027b9d6ea028a07b1c3158845d6d39d899d443[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 23 01:45:37 2022 +0300
+
+    quicsearch and sortmodal works again
+
+[33mcommit a0e1446ebe0021b94bf07e05226a27a9974ea3fc[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Jan 22 16:55:52 2022 +0300
+
+    css transition added
+
+[33mcommit 65c6ed45488ffd28b63e0e144d6812d92e44f8ba[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Fri Jan 21 23:09:52 2022 +0300
+
+    daily save
+
+[33mcommit 6981881cf843fcc44aaba11f18a6bd1c5eecb1e4[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Fri Jan 21 20:20:59 2022 +0300
+
+    css improved
+
+[33mcommit 00b2884604319ebb870839e35575e954900bf4ec[m
+Merge: 816adcf d332b27
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Thu Jan 20 23:04:35 2022 +0300
+
+    Merge branch 'master' of https://github.com/yurukyuruk/data-grid
+
+[33mcommit 816adcfc77e0b617ff9104f66da51bd88d9c3910[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Thu Jan 20 23:04:22 2022 +0300
+
+    daily save
+
+[33mcommit d332b278acd95d56ddb739953d5fb25d07ae8378[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Thu Jan 20 21:18:46 2022 +0300
+
+    Update README.md
+
+[33mcommit 87878832b7db64225adcdf0d4b3817080c804165[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Wed Jan 19 18:34:40 2022 +0300
+
+    little fixes completed
+
+[33mcommit 1e9a3bd65cfdc57d4e10cecf169a3ebb0ef6c06b[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Wed Jan 19 17:59:16 2022 +0300
+
+    quick searck works as wanted
+
+[33mcommit 6e153ac620b64d870c80deab3b50ff784e7ad58e[m
+Merge: 8b0053d 0e3e791
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Wed Jan 19 15:30:33 2022 +0300
+
+    Merge branch 'master' of https://github.com/yurukyuruk/data-grid
+
+[33mcommit 8b0053df90736eb0a56465ee9d7c4bc1635d1931[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Wed Jan 19 15:30:15 2022 +0300
+
+    quick search rerenders
+
+[33mcommit 0e3e7911ae639cc8c958436b9a0ee068ebb02e7e[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Wed Jan 19 13:36:40 2022 +0300
+
+    Update README.md
+
+[33mcommit db00d91db0897b263e9cef46c93a359045711185[m
+Merge: 42c71d6 39dd3f2
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Jan 18 23:27:31 2022 +0300
+
+    Merge branch 'master' of https://github.com/yurukyuruk/data-grid
+
+[33mcommit 42c71d67f20c4b4927b057358b6c3cf9e919705e[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Jan 18 23:25:40 2022 +0300
+
+    sorting works again
+
+[33mcommit 39dd3f256e3e9005c634d785b2b93b268cdc6cb3[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Tue Jan 18 22:04:08 2022 +0300
+
+    Update README.md
+
+[33mcommit 896556c15887e1b49650f7b12c8e5adac295fb1d[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Tue Jan 18 21:54:09 2022 +0300
+
+    Update README.md
+
+[33mcommit defc80b8ac6cd9ad5380b41d6ab6ec7e4340bb63[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Tue Jan 18 21:29:26 2022 +0300
+
+    Update README.md
+
+[33mcommit e010de60d1ecfd40e65cd87fda4825182748ddba[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Tue Jan 18 20:23:53 2022 +0300
+
+    Update README.md
+
+[33mcommit e861479f559c55d38ba58695a6830974455c09b8[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Tue Jan 18 19:49:16 2022 +0300
+
+    Update README.md
+
+[33mcommit a678f556c5b963c3bb1fdc42af92790ed3d04705[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Tue Jan 18 19:11:03 2022 +0300
+
+    Update README.md
+
+[33mcommit 5082f0f5957fe0adf7ad5da5a9d82f7532b3c5e5[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Mon Jan 17 22:08:10 2022 +0300
+
+    Update README.md
+
+[33mcommit c507cbfe02f2ac0913e2d3430380aa362531f53b[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Mon Jan 17 21:28:55 2022 +0300
+
+    Update README.md
+
+[33mcommit f11d487d69f98426c6719c3818e32bff6b64d836[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Mon Jan 17 21:28:02 2022 +0300
+
+    Update README.md
+
+[33mcommit 6057b8215f410c6eb46125266daf6605d395c839[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Mon Jan 17 21:27:05 2022 +0300
+
+    Update README.md
+
+[33mcommit d2974d65fc799dc8636b4ca676f58114544c0bbb[m
+Author: Asli Yuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Mon Jan 17 21:26:33 2022 +0300
+
+    Update README.md
+
+[33mcommit c40ddae39b5d280e4653010b704715263fc4c6a6[m
+Author: yurukyuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Mon Jan 17 18:01:17 2022 +0300
+
+    Update README.md
+
+[33mcommit e6b649c8bc22352b98a4653f8b6d4ca821ad2265[m
+Author: yurukyuruk <64555726+yurukyuruk@users.noreply.github.com>
+Date:   Mon Jan 17 17:52:37 2022 +0300
+
+    Create README.md
+
+[33mcommit a415ea2ae6df15a68cab54199c2de6f923367426[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Jan 16 21:38:13 2022 +0300
+
+    search button works in new version
+
+[33mcommit 497e248d3f3403b5cc5e57e1e57cbc235db17cf3[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Fri Jan 14 19:45:03 2022 +0300
+
+    structure of datas changed
+
+[33mcommit 3352500ea7716c26e2d77234d5b0728ed009eb69[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Fri Jan 14 14:07:17 2022 +0300
+
+    before applying new index.js
+
+[33mcommit 32b248c4b9cb86e59d791371904d8afd515ad856[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Dec 19 13:41:50 2021 +0300
+
+    typescript is improved
+
+[33mcommit f29ef9d04afb05d0f2d182bb948cc373484d9449[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Dec 18 13:08:15 2021 +0300
+
+    typescript improved
+
+[33mcommit eb6d09e15975c2c8715436bb1df1b2f25e17fc7d[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Thu Dec 16 21:38:02 2021 +0300
+
+    typescript modified
+
+[33mcommit 8a41e246ca6cec4dcf8724d7e29c593acd020fec[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Dec 14 22:59:58 2021 +0300
+
+    got rid of html methods
+
+[33mcommit 18f609c1e20e85a1d3db2dadfa8906a13f6b3226[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Dec 14 21:09:50 2021 +0300
+
+    indexjs typesctipt builded
+
+[33mcommit 7b6c3cdcb32bdb0377d87e024b48cdbc16b9895a[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Dec 14 16:24:34 2021 +0300
+
+    search event works with delay as wished
+
+[33mcommit 17877def5c87c241fe2fca4b56b3a2d4ad8faf98[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Dec 14 15:13:40 2021 +0300
+
+    search event listener changed to keyup
+
+[33mcommit bff419bf079d3fd872b047147b2ced1cd518c9d2[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Mon Dec 13 18:00:59 2021 +0300
+
+    last changes before typescript
+
+[33mcommit 2a068d41b9021544ada7d248b24a7364e425870b[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Mon Dec 13 17:44:08 2021 +0300
+
+    search button works
+
+[33mcommit 43bbc1062a076836aaa09b4306a8fb046d46a174[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Mon Dec 13 01:32:54 2021 +0300
+
+    search button html and css added
+
+[33mcommit 2a2631e9f799ffadc8a44fa8cbf13ea7c829847f[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Dec 12 23:17:15 2021 +0300
+
+    before adding search button
+
+[33mcommit 03bdfc244122e3af8bd12703f7850f10a8276f0b[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Dec 12 17:56:21 2021 +0300
+
+    both header and data subtables works correctly
+
+[33mcommit 8c2b319383a46f4ca2ee7013f834aff170870f9f[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Dec 12 14:43:18 2021 +0300
+
+    subtable hidden dunction works
+
+[33mcommit 30560950d921dea89129d7cee17f8894be4b3cb7[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Dec 11 17:45:10 2021 +0300
+
+    header and data subtables works
+
+[33mcommit e2e46cbd80736c0c8efdd482978edd4bdd2594e0[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Dec 11 15:42:28 2021 +0300
+
+    header mouse-hover event listeners added
+
+[33mcommit 00079ea0cc5ad17b0520ef631e64b241949e137e[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Dec 11 15:23:27 2021 +0300
+
+    header subtables and data subtables added. data subtable is not visible yet
+
+[33mcommit a265b3a2b56597619230ad8ce20b05470e5e5bc9[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Dec 7 19:20:57 2021 +0300
+
+    before restructuring reference element
+
+[33mcommit 00d5530b9df2a22b54a12cb8bcd8f8a369aa2625[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Dec 4 10:49:29 2021 +0300
+
+    first version of children column data added
+
+[33mcommit f6a087a80c77b9f0f1885ca5a76433e229732310[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Nov 30 21:55:04 2021 +0300
+
+    config service improved
+
+[33mcommit 77a46d9f2e5893b8bcf8f6d505a2eb0d760e32d5[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Nov 14 18:20:08 2021 +0300
+
+    before address improvment
+
+[33mcommit 8fd5fb9178c8387f4c025a491d872b3eb3ea31eb[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Nov 13 21:20:54 2021 +0300
+
+    config improvment added to other components
+
+[33mcommit 07741615792538f7b2eecf5cfdbee5c3914a7a6c[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sat Nov 13 17:39:03 2021 +0300
+
+    config service improved
+
+[33mcommit bc97e1c71809d4081d71376d15a702bc857795ed[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Fri Nov 12 16:32:22 2021 +0300
+
+    typescript added
+
+[33mcommit 8bf138604c08086b7b919d10cf7f60a7710ced48[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Oct 24 21:07:53 2021 +0300
+
+     local storage methods have been created in config
+
+[33mcommit 6de27c5c08b4cdc5cf535935946ea683bef997ad[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Sun Oct 24 19:23:19 2021 +0300
+
+    date sorting problem fixed
+
+[33mcommit e19aaba5ff93f1ee30446dc8eb6eadd15bca845b[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Wed Oct 20 22:38:34 2021 +0300
+
+    code improved
+
+[33mcommit ddc51938f941eeb7e9e9284026029ee33b159ad2[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Tue Oct 19 20:31:24 2021 +0300
+
+    before improvment
+
+[33mcommit 789089e945f85f53e608e4799a84c43546a2edbc[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Mon Oct 18 22:18:03 2021 +0300
+
+    l
+
+[33mcommit 23cc04e8ca9b93650ca3fa3b21c5fdf614211954[m
+Author: yurukyuruk <yurukyuruk@gmail.com>
+Date:   Mon Oct 18 13:43:55 2021 +0300
+
+    local storage added

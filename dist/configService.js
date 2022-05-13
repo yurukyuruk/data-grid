@@ -139,7 +139,7 @@ export class ConfigService {
         this.sortingRules = mappedSortOptions;
     }
     clearSortInformation() {
-        localStorage.removeItem("sortInformation");
+        localStorage.setItem("sortInformation", JSON.stringify([]));
     }
     saveUserFilterInput(inputValue, userInput) {
         localStorage.setItem("filterInformation", inputValue);

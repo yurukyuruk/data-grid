@@ -143,7 +143,7 @@ export class ConfigService {
   }
   
   clearSortInformation(): void {
-    localStorage.removeItem("sortInformation");
+    localStorage.setItem("sortInformation", JSON.stringify([]));
   }
   saveUserFilterInput(inputValue: string, userInput: string): void {
     localStorage.setItem("filterInformation", inputValue);
