@@ -89,6 +89,7 @@ class DataGrid extends HTMLElement {
     dataHeaders;
     classOfColumnHeaderElements;
     columnHider;
+    dataSorter;
     constructor() {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -99,6 +100,7 @@ class DataGrid extends HTMLElement {
         this.config = new ConfigService();
         this.searchButton = this.shadowRoot.querySelector(SearchButton.TAG);
         this.columnHider = this.shadowRoot.querySelector(ColumnHider.TAG);
+        this.dataSorter = this.shadowRoot.querySelector(MySortingSection.TAG);
         this.initizaleApp();
     }
     // KK
@@ -170,30 +172,27 @@ class DataGrid extends HTMLElement {
             this.createRows();
             this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
         });
-        this.addEventListener("to-get-display-name", (e) => {
-            for (let i = 0; i < this.config.sortingRules.length; i++) {
-                e.detail.sortOptions[i].fieldOption = this.config.getColumnDisplayNameFromColumnId(this.config.sortingRules[i].id);
-                e.detail.sortOptions[i].directionOption = this.config.sortingRules[i].direction;
-                e.detail.sortOptions[i].sortField.disabled = true;
-                e.detail.sortOptions[i].sortDirection.disabled = true;
-            }
-            //this.sortOptions[i].fieldOption = config.getColumnDisplayNameFromColumnId(sortInformation[i].id);
-        });
-        this.addEventListener("to-set-sorting-section", (e) => {
+        this.addEventListener("to-click-sort-data-button", (e) => {
             if (this.config.sortingRules.length === 0) {
                 e.detail.sortAddingButton.disabled = true;
                 e.detail.submitButton.disabled = true;
                 e.detail.resetButton.disabled = true;
             }
-            else {
+            else if (this.config.sortingRules.length !== 0) {
+                e.detail.resetButton.disabled = false;
+            }
+            if (this.config.sortingRules.length > 0) {
+                e.detail.sortAddingButton.disabled = false;
+                e.detail.submitButton.disabled = false;
+                e.detail.resetButton.disabled = false;
                 for (let i = 0; i < this.config.sortingRules.length; i++) {
+                    if (i > 0) {
+                        this.dataSorter.createNewSortLine();
+                    }
                     e.detail.sortOptions[i].fieldOption = this.config.getColumnDisplayNameFromColumnId(this.config.sortingRules[i].id);
                     e.detail.sortOptions[i].directionOption = this.config.sortingRules[i].direction;
                     e.detail.sortOptions[i].sortField.disabled = true;
                     e.detail.sortOptions[i].sortDirection.disabled = true;
-                    e.detail.sortAddingButton.disabled = false;
-                    e.detail.submitButton.disabled = false;
-                    e.detail.resetButton.disabled = false;
                 }
             }
         });

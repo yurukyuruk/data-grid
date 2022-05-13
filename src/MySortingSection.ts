@@ -217,61 +217,17 @@ export class MySortingSection extends HTMLElement {
         }
         this.sortOptions[0].sortField.append(sortFieldOption);
       }
-      const sortInformation: SortRule[] = JSON.parse(localStorage.getItem("sortInformation")) as SortRule[];
-      if(sortInformation === null) {
-        const toSetSortingSection: CustomEvent = new CustomEvent("to-set-sorting-section", {
-          bubbles: true,
-          composed: true,
-          detail: {
-            sortOptions: this.sortOptions,
-          }
-        });
-        this.shadowRoot.dispatchEvent(toSetSortingSection);
-        this.sortAddingButton.disabled = false;
-        this.submitButton.disabled = false;
-        this.resetButton.disabled = false;
-      }
-      if(sortInformation !== null) {
-        this.resetButton.disabled = false;
-      }
-      if (sortInformation !== null && sortInformation.length === 1 && sortInformation[0].id !== "Sort by") {
-        const toGetDisplayName: CustomEvent = new CustomEvent("to-get-display-name", {
-          bubbles: true,
-          composed: true,
-          detail: {
-            sortOptions: this.sortOptions,
-            sortInformation: sortInformation
-          }
-        });
-        this.shadowRoot.dispatchEvent(toGetDisplayName);
-        this.sortAddingButton.disabled = false;
-        this.submitButton.disabled = false;
-        this.resetButton.disabled = false;
-      } else if (sortInformation !== null && sortInformation.length > 1) {
-        const toGetDisplayName: CustomEvent = new CustomEvent("to-get-display-name", {
-          bubbles: true,
-          composed: true,
-          detail: {
-            sortOptions: this.sortOptions,
-            sortInformation: sortInformation
-          }
-        });
-        this.shadowRoot.dispatchEvent(toGetDisplayName);
-        this.sortAddingButton.disabled = false;
-        this.submitButton.disabled = false;
-        for (let i = 1; i < sortInformation.length; i++) {
-          this.createNewSortLine();
-          const toGetDisplayName: CustomEvent = new CustomEvent("to-get-display-name", {
-            bubbles: true,
-            composed: true,
-            detail: {
-              sortOptions: this.sortOptions,
-              sortInformation: sortInformation
-            }
-          });
-          this.shadowRoot.dispatchEvent(toGetDisplayName);
+      const toClickSortDataButton: CustomEvent = new CustomEvent("to-click-sort-data-button", {
+        bubbles: true,
+        composed: true,
+        detail: {
+          sortOptions: this.sortOptions,
+          sortAddingButton: this.sortAddingButton,
+          submitButton: this.submitButton,
+          resetButton: this.resetButton
         }
-      }
+      });
+      this.shadowRoot.dispatchEvent(toClickSortDataButton);
     });
 
     this.closeButton.addEventListener("click", (): void => {
@@ -319,7 +275,6 @@ export class MySortingSection extends HTMLElement {
         this.sortOptions[i].sortField.disabled = true;
         this.sortOptions[i].sortDirection.disabled = true;
       }
-      //this.sortingService.sortData(this.mapSortOptions(this.sortOptions));
     });
 
     this.sortOptions[0].sortLine.addEventListener("change", (): void => {
