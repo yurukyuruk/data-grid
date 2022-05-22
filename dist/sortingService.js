@@ -28,7 +28,6 @@ export class SortingService {
             }
             return result;
         };
-        //return this.DATA_ROWS.getVisibleRows().sort(compareRows);
         return this.getVisibleRows().sort(compareRows);
     }
     getStringComparator(sortField, sortDirection) {

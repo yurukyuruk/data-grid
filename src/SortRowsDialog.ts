@@ -1,5 +1,4 @@
 import { SortingRule } from "./SortingRule.js";
-import { ConfigService } from "./ConfigService.js";
 import { SortRule } from "./types/interfaces.js";
 import { SortDirection } from "./types/enums.js";
 
@@ -164,8 +163,8 @@ const { template } = {
   `
 };
 
-export class MySortingSection extends HTMLElement {
-  static TAG = "my-sorting-section";
+export class SortRowsDialog extends HTMLElement {
+  static TAG = "sort-rows-dialog";
   readonly shadowRoot: ShadowRoot;
   private allFields!: string[];
   public sortOptions: SortingRule[];
@@ -346,7 +345,7 @@ export class MySortingSection extends HTMLElement {
   }
 }
 
-customElements.define(MySortingSection.TAG, MySortingSection);
+customElements.define(SortRowsDialog.TAG, SortRowsDialog);
 
-console.log(ConfigService);
+
 

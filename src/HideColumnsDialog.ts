@@ -138,8 +138,8 @@ const { template } = {
     `
 };
 
-export class ColumnHider extends HTMLElement {
-  static TAG = "column-hider";
+export class HideColumnsDialog extends HTMLElement {
+  static TAG = "hide-columns-dialog";
   public readonly shadowRoot: ShadowRoot;
   private readonly columnHiderButtonArea: HTMLDivElement;
   columnHiderButton: HTMLInputElement;
@@ -272,4 +272,4 @@ export class ColumnHider extends HTMLElement {
     this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes") as HTMLDivElement;
   }
 }
-customElements.define(ColumnHider.TAG, ColumnHider);
+customElements.define(HideColumnsDialog.TAG, HideColumnsDialog);

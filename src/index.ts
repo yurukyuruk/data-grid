@@ -1,7 +1,7 @@
 import { ConfigService } from "./ConfigService.js";
-import { ColumnHider } from "./ColumnHider.js";
-import { MySortingSection } from "./MySortingSection.js";
-import { SearchButton } from "./SearchButton.js";
+import { HideColumnsDialog } from "./HideColumnsDialog.js";
+import { SortRowsDialog } from "./SortRowsDialog.js";
+import { QuickSearch } from "./QuickSearch.js";
 import { isRowRecord } from "./types/typeGuards.js";
 import { DataRows } from "./DataRows.js";
 import { SortingService } from "./sortingService.js";
@@ -60,9 +60,9 @@ const { template } = {
   }
 </style>
 <div class="whole-sort-area">
-  <my-sorting-section></my-sorting-section>
-  <search-button></search-button>
-  <column-hider></column-hider>  
+  <sort-rows-dialog></sort-rows-dialog>
+  <quick-search></quick-search>
+  <hide-columns-dialog></hide-columns-dialog>  
 </div>
 <div class="scroll-bar">
   <table id="data-table">
@@ -82,15 +82,15 @@ class DataGrid extends HTMLElement {
   private columnHeaderSection!: HTMLTableSectionElement;
   private DATA_ROWS: DataRows;
   private config: ConfigService;
-  private sortModel!: MySortingSection;
+  private sortModel!: SortRowsDialog;
   private sortingService!: SortingService;
   private table!: HTMLTableElement;
   private filteringService!: FilteringService;
-  private searchButton: SearchButton;
+  private quickSearch: QuickSearch;
   private dataHeaders!: HTMLTableSectionElement;
   private classOfColumnHeaderElements!: string[];
-  private columnHider: ColumnHider;
-  private dataSorter: MySortingSection;
+  private hideColumnsDialog: HideColumnsDialog;
+  private sortRowsDialog: SortRowsDialog;
   constructor() {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -99,9 +99,9 @@ class DataGrid extends HTMLElement {
     this.initializeListeners();
     this.DATA_ROWS = new DataRows();
     this.config = new ConfigService();
-    this.searchButton = this.shadowRoot.querySelector(SearchButton.TAG) as SearchButton;
-    this.columnHider = this.shadowRoot.querySelector(ColumnHider.TAG) as ColumnHider;
-    this.dataSorter = this.shadowRoot.querySelector(MySortingSection.TAG) as MySortingSection;
+    this.quickSearch = this.shadowRoot.querySelector(QuickSearch.TAG) as QuickSearch;
+    this.hideColumnsDialog = this.shadowRoot.querySelector(HideColumnsDialog.TAG) as HideColumnsDialog;
+    this.sortRowsDialog = this.shadowRoot.querySelector(SortRowsDialog.TAG) as SortRowsDialog;
     this.initizaleApp();
   }
 
@@ -118,7 +118,7 @@ class DataGrid extends HTMLElement {
     this.filteringService = new FilteringService(this.DATA_ROWS.rows); 
     this.filteringService.setVisibleColumnNames(this.config.getVisibleColumnIds());
     if(localStorage.getItem("filterInformation") !== null) {
-      this.searchButton.setDefaultSearchValue(this.config.userFilterInput);
+      this.quickSearch.setDefaultSearchValue(this.config.userFilterInput);
      }
     this.createRows();
     this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements); 
@@ -135,7 +135,7 @@ class DataGrid extends HTMLElement {
       (<CustomEvent>e).detail.createAndSetCheckboxes(this.config.getHtmlClassNamesOfColumns());
       this.table.classList.toggle("blured");
       this.sortModel.sortDataButton.classList.toggle("blured");
-      this.searchButton.classList.toggle("blured");
+      this.quickSearch.classList.toggle("blured");
     })
     this.addEventListener("to-click-checkbox", (e) => {
       const wholeColumnData: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i]);
@@ -161,7 +161,7 @@ class DataGrid extends HTMLElement {
     })
     this.addEventListener("to-close-column-hider-button", () => {
       this.table.classList.toggle("blured");
-      this.searchButton.classList.toggle("blured");
+      this.quickSearch.classList.toggle("blured");
       this.sortModel.sortDataButton.classList.toggle("blured"); 
       this.filteringService.setVisibleColumnNames(this.config.getVisibleColumnIds());
       this.createDataHeaders();   
@@ -189,7 +189,7 @@ class DataGrid extends HTMLElement {
         (<CustomEvent>e).detail.resetButton.disabled = false;
         for (let i = 0; i < this.config.sortingRules.length; i++) {
           if(i > 0) {
-            this.dataSorter.createNewSortLine();
+            this.sortRowsDialog.createNewSortLine();
           }
           (<CustomEvent>e).detail.sortOptions[i].fieldOption = this.config.getColumnDisplayNameFromColumnId(this.config.sortingRules[i].id);
           (<CustomEvent>e).detail.sortOptions[i].directionOption = this.config.sortingRules[i].direction;
@@ -212,8 +212,8 @@ class DataGrid extends HTMLElement {
     })
     this.addEventListener("to-blur", () => {
       this.table.classList.toggle("blured");
-      this.searchButton.classList.toggle("blured");
-      this.columnHider.columnHiderButton.classList.toggle("blured");
+      this.quickSearch.classList.toggle("blured");
+      this.hideColumnsDialog.columnHiderButton.classList.toggle("blured");
     })
     this.addEventListener("to-filter-data", (e) => {
       this.config.saveUserFilterInput((<CustomEvent>e).detail.inputValue, (<CustomEvent>e).detail.userInput);
@@ -366,7 +366,7 @@ class DataGrid extends HTMLElement {
   getElementReferences() {
     
     this.columnHeaderSection = this.shadowRoot?.querySelector("thead") as HTMLTableSectionElement;
-    this.sortModel = this.shadowRoot?.querySelector(MySortingSection.TAG) as unknown as MySortingSection;//export edilmiş
+    this.sortModel = this.shadowRoot?.querySelector(SortRowsDialog.TAG) as unknown as SortRowsDialog;//export edilmiş
     this.table = this.shadowRoot.querySelector("#data-table") as HTMLTableElement;
   }
 }

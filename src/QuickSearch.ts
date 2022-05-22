@@ -49,8 +49,8 @@ const { template } = {
       `
 };
 
-export class SearchButton extends HTMLElement {
-  static TAG = "search-button";
+export class QuickSearch extends HTMLElement {
+  static TAG = "quick-search";
   private input!: HTMLInputElement;
   private searchButton!: HTMLButtonElement;
   readonly shadowRoot: ShadowRoot;
@@ -98,4 +98,4 @@ export class SearchButton extends HTMLElement {
     this.searchButton = this.shadowRoot.querySelector(".search-button") as HTMLButtonElement; 
   }
 }
-customElements.define(SearchButton.TAG, SearchButton);
+customElements.define(QuickSearch.TAG, QuickSearch);
