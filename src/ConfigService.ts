@@ -1,50 +1,36 @@
-import { SortingRule } from "./SortingRule.js";
-import { ColumnHider } from "./ColumnHider.js";
-import { sortModel } from "./index.js";
-import { createDataHeaders } from "./index.js";
-import { createRows } from "./index.js";
 import { Column, GridConfig } from "./types/interfaces.js";
 import { Data } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
-import { config, DATA_ROWS, sortingService} from "./configExport.js";
-
 export class ConfigService {
   data!: Data;
   columns!: Column[];
   sortingRules!: SortRule[];
+  filteringRule: string;
+  userFilterInput: string;
+  columnVisibilityRules!: boolean[];
   constructor() {
-    this.fetchConfig();
+    this.filteringRule = localStorage.getItem("filterInformation") ?? "";
+    this.userFilterInput = localStorage.getItem("userFilterInput" ?? "");
   }
-  fetchConfig(): Promise<void> {
+  async fetchConfig(): Promise<string> {
     return fetch(
       "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json"
     )
       .then((response) => response.json())
       .then(({ columns, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
-        this.sortingRules = sortingRules;
-        sortModel.setSortFieldsInSortFieldButton(this.getDisplayNamesOfColumnsWhichHaveNoChildren());
-        createDataHeaders();
-        return DATA_ROWS.fetchData(dataUrl);
-      })
-      .then(() => {
-        createRows(DATA_ROWS.rows);
-        if (localStorage.getItem("sortInformation") !== null) {
-        const dataRows = document.querySelector(".data-rows");
-        if(dataRows) {
-          dataRows.innerHTML = "";
+        if(localStorage.getItem("sortInformation") === null) {
+          this.sortingRules = sortingRules;
+        } else {
+          this.sortingRules = JSON.parse(localStorage.getItem("sortInformation"));
+        } 
+        if(localStorage.getItem("columnVisibilityInformation") === null) {
+          this.columnVisibilityRules = this.getColumnVisibilityStatus();
+        } else {
+          this.columnVisibilityRules = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
         }
-        sortingService.sortData(JSON.parse(localStorage.getItem("sortInformation") ?? "[]"));
-        createRows(DATA_ROWS.visibleRows);
-      }
-      const columnsVisibility: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
-      for (let i = 0; i < config.columns.length; i++) {
-        const eachDataColumnGroup: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id);
-        const headersOfEachColumn: NodeListOf<Element> = document.querySelectorAll("." + config.columns[i].id + "-header");
-        eachDataColumnGroup.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-        headersOfEachColumn.forEach((element) => element.setAttribute("data-column-checkbox-checked", columnsVisibility[i]));
-      }
-      });   
+        return dataUrl;
+      })
   }
   getHtmlClassNamesOfColumns(): string[] {
     const htmlClassNamesOfColumns: string[] = [];
@@ -55,7 +41,7 @@ export class ConfigService {
     return htmlClassNamesOfColumns;
   }
 
-  getColumnIdFromColumnDisplayName(columnName: string): string {
+  getColumnIdFromColumnDisplayName = (columnName: string): string => {
     const column = this.columns.find((eachColumn) => eachColumn.displayName === columnName);
     if (column) {
       return column.id;
@@ -63,7 +49,7 @@ export class ConfigService {
     throw new Error("Column doesn't exist.");
   }
 
-  getColumnTypeFromColumnId(columnName: string): string | undefined {
+  public getColumnTypeFromColumnId: (columnName: string) => string | undefined = (columnName: string) => {
     const column = this.columns.find((eachColumn) => eachColumn.id === columnName);
     if (column) {
       return column.type;
@@ -109,34 +95,61 @@ export class ConfigService {
     return this.columns.find((colum) => colum.id === columnId)?.summary?.split("+") ?? [];
   }
   getVisibleColumnIds() {
-    const columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]");
+    let columnsVisibility;
+    if(localStorage.getItem("columnVisibilityInformation") === null) {
+      columnsVisibility = this.getColumnVisibilityStatus();
+    } else {
+      columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+    }
     let visibleColumnIds = [];
     for(let i = 0; i < columnsVisibility.length; i++) {
-      if(columnsVisibility[i] === "true") {
+      if(columnsVisibility[i] === true) {
         visibleColumnIds.push(this.columns[i].id);
       }
     }
     return visibleColumnIds;
   }
-  saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<HTMLDivElement>): string[] {
-    const columnsVisibilityStatus: string[] = [];
-    allColumnCheckboxes.forEach((columnCheckbox) => {
-      columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") ?? "");
-    });
-    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+  getColumnVisibilityStatus(reset?: string): boolean[] {
+    const columnsVisibilityStatus: boolean[] = [];
+    if(reset === "reset") {
+      this.columns.forEach(column => {
+          columnsVisibilityStatus.push(true);  
+      })
+      localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+      this.columnVisibilityRules = columnsVisibilityStatus;
+    } else {
+      this.columns.forEach(column => {
+        if(column.visible !== undefined) {
+          columnsVisibilityStatus.push(column.visible);
+        } else {
+          columnsVisibilityStatus.push(true);
+        }
+      })
+    }
     return columnsVisibilityStatus;
   }
-  saveSortInformation(sortOptions: SortingRule[]): void {
-    localStorage.setItem("sortInformation", JSON.stringify(sortModel.mapSortOptions(sortOptions)));
+  saveColumnVisibilityStatus(allColumnCheckboxes: NodeListOf<HTMLDivElement>): boolean[] {
+    const columnsVisibilityStatus: boolean[] = [];
+    allColumnCheckboxes.forEach((columnCheckbox) => {
+      columnsVisibilityStatus.push(columnCheckbox.getAttribute("data-column-checkbox-checked") === "true");
+    });
+    localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
+    this.columnVisibilityRules = columnsVisibilityStatus;
+    return columnsVisibilityStatus;
+  }
+  saveSortInformation(mappedSortOptions: SortRule[]): void {
+    localStorage.setItem("sortInformation", JSON.stringify(mappedSortOptions));
+    this.sortingRules = mappedSortOptions;
   }
   
   clearSortInformation(): void {
-    localStorage.removeItem("sortInformation");
+    localStorage.setItem("sortInformation", JSON.stringify([]));
   }
-  clearColumnVisibilityInformation(): void {
-    localStorage.removeItem("columnVisibilityInformation");
+  saveUserFilterInput(inputValue: string, userInput: string): void {
+    localStorage.setItem("filterInformation", inputValue);
+    localStorage.setItem("userFilterInput", userInput);
+    this.filteringRule = inputValue;
   }
 }
 
-console.log(SortingRule);
-console.log(ColumnHider);
+

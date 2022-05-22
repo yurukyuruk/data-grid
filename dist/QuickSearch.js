@@ -1,3 +1,4 @@
+import { CustomEventName } from "./types/enums.js";
 const { template } = {
     template: `
       <style>  
@@ -48,8 +49,8 @@ const { template } = {
       </form>       
       `
 };
-export class SearchButton extends HTMLElement {
-    static TAG = "search-button";
+export class QuickSearch extends HTMLElement {
+    static TAG = "quick-search";
     input;
     searchButton;
     shadowRoot;
@@ -70,7 +71,7 @@ export class SearchButton extends HTMLElement {
         };
         this.input.addEventListener("keyup", debounce(() => {
             const inputValue = this.input.value.toLowerCase();
-            const toFilterData = new CustomEvent("to-filter-data", {
+            const toFilterData = new CustomEvent(CustomEventName.TO_FILTER_DATA, {
                 bubbles: true,
                 composed: true,
                 detail: {
@@ -92,5 +93,5 @@ export class SearchButton extends HTMLElement {
         this.searchButton = this.shadowRoot.querySelector(".search-button");
     }
 }
-customElements.define(SearchButton.TAG, SearchButton);
-//# sourceMappingURL=SearchButton.js.map
+customElements.define(QuickSearch.TAG, QuickSearch);
+//# sourceMappingURL=QuickSearch.js.map

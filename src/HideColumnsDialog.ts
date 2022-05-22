@@ -1,5 +1,4 @@
-import { config } from "./configExport.js";
-import { sortModel } from "./index.js";
+import { CustomEventName } from "./types/enums.js";
 const { template } = {
   template: `
     <style>  
@@ -121,7 +120,9 @@ const { template } = {
     td[data-column-checkbox-checked="false"] {
       display: none;
     }
-    
+    .blured {
+      filter: blur(2px);
+    }
   </style>
 <div class="column-hider-button-area" data-column-hider-button-area-visible="true">
   <input class="column-hider-button" type="button" value="HIDE COLUMN">
@@ -138,18 +139,16 @@ const { template } = {
     `
 };
 
-export class ColumnHider extends HTMLElement {
-  static TAG = "column-hider";
+export class HideColumnsDialog extends HTMLElement {
+  static TAG = "hide-columns-dialog";
   public readonly shadowRoot: ShadowRoot;
   private readonly columnHiderButtonArea: HTMLDivElement;
-  private readonly columnHiderButton: HTMLInputElement;
+  columnHiderButton: HTMLInputElement;
   private readonly columnCheckboxesArea: HTMLDivElement;
   private readonly columnHiderCloseButton: HTMLInputElement;
   private columnCheckboxes: HTMLDivElement;
   private readonly resetButton: HTMLInputElement;
-  private allColumnCheckboxes!: NodeListOf<HTMLDivElement>;
-  private table!: HTMLTableElement;
-
+  private checkboxHolders!: NodeListOf<HTMLDivElement>;
   constructor() {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
@@ -161,78 +160,117 @@ export class ColumnHider extends HTMLElement {
     this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes") as HTMLDivElement;
     this.resetButton = this.shadowRoot.querySelector(".reset-button") as HTMLInputElement;
     this.initilizeListeners();
+    this.getElementReferences();
   }
-  createAndSetCheckboxes(columnNames: string[]): void {
+  createAndSetCheckboxes = (columnNames: string[], reset?: string): void => {
+    this.columnCheckboxes.innerHTML = "";
     for (let i = 0; i < columnNames.length; i++) {
       const checkboxHolder: HTMLDivElement = document.createElement("div");
       checkboxHolder.classList.add("column-checkbox");
-      checkboxHolder.setAttribute("data-column-checkbox-checked", "true");
+      if(reset === "reset") {
+        const toResetCheckboxHolderAttribute: CustomEvent = new CustomEvent(CustomEventName.TO_RESET_CHECKBOXHOLDER_ATTRIBUTE, {
+          bubbles: true,
+          composed: true,
+          detail: {
+            i : i,
+            checkboxHolder: checkboxHolder,
+          }
+        });
+        this.shadowRoot.dispatchEvent(toResetCheckboxHolderAttribute);
+      } else {
+        const toSetCheckboxHolderAttribute: CustomEvent = new CustomEvent(CustomEventName.TO_SET_CHECKBOXHOLDER_ATTRIBUTE, {
+          bubbles: true,
+          composed: true,
+          detail: {
+            i : i,
+            checkboxHolder: checkboxHolder,
+          }
+        });
+        this.shadowRoot.dispatchEvent(toSetCheckboxHolderAttribute);
+      }
       const checkbox: HTMLInputElement = document.createElement("input");
       checkbox.setAttribute("type", "checkbox");
       checkbox.classList.add("checkbox");
-      checkbox.setAttribute("checked", "checked");
       checkbox.addEventListener("click", (): void => {
-        const wholeColumnData: NodeListOf<Element> = document.querySelectorAll("." + columnNames[i]);
-        const wholeColumnHeaders = document.querySelectorAll("." + columnNames[i] + "-header");
-        const checkboxElementsStateChange: boolean =
-          wholeColumnData[0].getAttribute("data-column-checkbox-checked") === "true" ? false : true;
-        wholeColumnData.forEach((data) => data.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
-        wholeColumnHeaders.forEach((header) => header.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString()));
-        checkboxHolder.setAttribute("data-column-checkbox-checked", checkboxElementsStateChange.toString());
-
+        const toClickCheckbox: CustomEvent = new CustomEvent(CustomEventName.TO_CLICK_CHECKBOX, {
+          bubbles: true,
+          composed: true,
+          detail: {
+            i : i,
+            checkboxHolder: checkboxHolder,
+            checkboxHolders: this.checkboxHolders,
+            checkbox: checkbox
+          }
+        });
+        this.shadowRoot.dispatchEvent(toClickCheckbox);
       });
-
+      if (checkboxHolder.getAttribute("data-column-checkbox-checked") === "false") {
+        checkbox.removeAttribute("checked");
+      } else {
+        checkbox.setAttribute("checked", "checked");
+      }
       const checkboxLabel: HTMLLabelElement = document.createElement("label");
-      checkboxLabel.textContent = config.columns[i].displayName;
+      const toSetCheckboxTextcontent: CustomEvent = new CustomEvent(CustomEventName.TO_SET_CHECKBOX_TEXTCONTENT, {
+        bubbles: true,
+        composed: true,
+        detail: {
+          checkboxLabel: checkboxLabel,
+          i : i
+        }
+      });
+      this.shadowRoot.dispatchEvent(toSetCheckboxTextcontent);
       checkboxHolder.appendChild(checkbox);
       checkboxHolder.appendChild(checkboxLabel);
       this.columnCheckboxes.appendChild(checkboxHolder);
     }
+    this.checkboxHolders = this.shadowRoot.querySelectorAll(".column-checkbox");
   }
 
   initilizeListeners() {
     this.columnHiderButton.addEventListener("click", (): void => {
-      this.createAndSetCheckboxes(config.getHtmlClassNamesOfColumns());
-      this.getElementReferences();
-      this.table.classList.toggle("blured");
+      const toClickColumnHiderButton: CustomEvent = new CustomEvent(CustomEventName.TO_CLICK_COLUMN_HIDER_BUTTON, {
+        bubbles: true,
+        composed: true,
+        detail: {
+          createAndSetCheckboxes: this.createAndSetCheckboxes
+        }
+      });
+      this.shadowRoot.dispatchEvent(toClickColumnHiderButton);
       this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "false");
       this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
-      const columnVisibilityInformation: string[] = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "[]") as string[];
-      this.allColumnCheckboxes = this.shadowRoot.querySelectorAll(".column-checkbox");
-      if (localStorage.getItem("columnVisibilityInformation") !== null) {
-        for (let i = 0; i < this.allColumnCheckboxes.length; i++) {
-          this.allColumnCheckboxes[i].setAttribute("data-column-checkbox-checked", columnVisibilityInformation[i]);
-          if (this.allColumnCheckboxes[i].getAttribute("data-column-checkbox-checked") === "false") {
-            this.allColumnCheckboxes[i].firstElementChild?.removeAttribute("checked");
-          }
-        }
-      }
     });
     this.columnHiderCloseButton.addEventListener("click", (): void => {
-      this.table.classList.toggle("blured");
-      sortModel.sortDataButton.classList.toggle("blured");
-      config.saveColumnVisibilityStatus(this.allColumnCheckboxes);
+      const toCloseColumnHiderButton: CustomEvent = new CustomEvent(CustomEventName.TO_CLOSE_COLUMN_HIDER_BUTTON, {
+        bubbles: true,
+        composed: true,
+        detail: {
+          checkboxHolders: this.checkboxHolders
+        }
+      });
+      this.shadowRoot.dispatchEvent(toCloseColumnHiderButton);
       this.columnHiderButtonArea.setAttribute("data-column-hider-button-area-visible", "true");
       this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "false");
       this.columnCheckboxes.innerHTML = "";
     });
 
     this.resetButton.addEventListener("click", (): void => {
-      if (this.allColumnCheckboxes === undefined) {
+      if (this.checkboxHolders === undefined) {
         return void 0;
       }
-      this.columnCheckboxes.innerHTML = "";
-      this.createAndSetCheckboxes(config.getHtmlClassNamesOfColumns());
-      const wholeColumnData: NodeListOf<Element> = document.querySelectorAll("[data-column-checkbox-checked]");
-      wholeColumnData.forEach((data) => data.setAttribute("data-column-checkbox-checked", "true"));
-      this.allColumnCheckboxes.forEach((data) => data.setAttribute("data-column-checkbox-checked", "true"));
-      config.clearColumnVisibilityInformation();
+      const toResetColumnHider: CustomEvent = new CustomEvent(CustomEventName.TO_RESET_COLUMN_HIDER, {
+        bubbles: true,
+        composed: true,
+        detail: {
+          createAndSetCheckboxes: this.createAndSetCheckboxes
+        }
+      });
+      this.shadowRoot.dispatchEvent(toResetColumnHider);
+     
     });
   }
 
   getElementReferences() {
     this.columnCheckboxes = this.shadowRoot.querySelector(".column-checkboxes") as HTMLDivElement;
-    this.table = document.querySelector("#data-table") as HTMLTableElement;
   }
 }
-customElements.define(ColumnHider.TAG, ColumnHider);
+customElements.define(HideColumnsDialog.TAG, HideColumnsDialog);

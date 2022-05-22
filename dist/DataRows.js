@@ -2,7 +2,7 @@ export class DataRows {
     rows = [];
     visibleRows = [];
     constructor() { }
-    fetchData(dataUrl) {
+    async fetchData(dataUrl) {
         return fetch(dataUrl)
             .then((response) => response.json())
             .then((rows) => {
@@ -13,5 +13,8 @@ export class DataRows {
             throw new Error("Couldnt' fetch data rows");
         });
     }
+    getVisibleRows = () => {
+        return this.visibleRows;
+    };
 }
 //# sourceMappingURL=DataRows.js.map

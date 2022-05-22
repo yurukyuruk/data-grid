@@ -1,16 +1,20 @@
-import { config, DATA_ROWS } from "./configExport.js";
 import { RowRecord } from "./types/interfaces.js";
 import { SortRule } from "./types/interfaces.js";
 import { ColumnType, SortDirection } from "./types/enums.js";
 
 export class SortingService {
-  constructor() {}
+  getColumnTypeFromColumnId: (columnName: string) => string | undefined;
+  getVisibleRows: () => RowRecord[];
+  constructor(getVisibleRows: () => RowRecord[], getColumnTypeFromColumnId: (columnName: string) => string | undefined) {
+    this.getVisibleRows = getVisibleRows;
+    this.getColumnTypeFromColumnId = getColumnTypeFromColumnId;
+  }
 
   sortData(sortRules: SortRule[]) {
     const compareRows = (rowA: RowRecord, rowB: RowRecord) => {
         let result = 0;
         for (const sortRule of sortRules) {
-            const fieldType = config.getColumnTypeFromColumnId(sortRule.id);
+            const fieldType = this.getColumnTypeFromColumnId(sortRule.id);
             let comparator = null;
             if (fieldType === ColumnType.STRING) {
                 comparator = this.getStringComparator(sortRule.id, sortRule.direction)
@@ -26,21 +30,9 @@ export class SortingService {
         }
         return result;
     }
-    return DATA_ROWS.visibleRows.sort(compareRows);
+    return this.getVisibleRows().sort(compareRows);
 }
-  /*sortData(sortConfigDatas: SortRule[]): RowRecord[] {
-    for (const sortRule of sortConfigDatas) {
-      const fieldType = config.getColumnTypeFromColumnDisplayName(sortRule.id);
-      if (fieldType === ColumnType.STRING) {
-        DATA_ROWS.visibleRows.sort(this.sortStringComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
-      } else if (fieldType === ColumnType.NUMBER) {
-        DATA_ROWS.visibleRows.sort(this.sortNumberComparator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
-      } else {
-        DATA_ROWS.visibleRows.sort(this.sortDateComperator(config.getColumnIdFromColumnDisplayName(sortRule.id), sortRule.direction));
-      }
-    }
-    return DATA_ROWS.visibleRows;
-  }*/
+
   getStringComparator(sortField: string, sortDirection: SortDirection) {
     return (a: RowRecord, b: RowRecord): number => {
       let result = 0;

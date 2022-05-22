@@ -7,8 +7,8 @@ export class DataRows {
   visibleRows: RowRecord[] = [];
   
   constructor() {}
-  
-  fetchData(dataUrl: string): Promise<void> {
+
+  public async fetchData(dataUrl: string): Promise<void> {
     return fetch(dataUrl)
       .then((response: Response) => response.json())
       .then((rows: RowRecord[]) => {
@@ -18,5 +18,9 @@ export class DataRows {
       .catch(() => {
         throw new Error("Couldnt' fetch data rows");
       });
+  }
+  
+  getVisibleRows = (): RowRecord[] => {
+    return this.visibleRows
   }
 }
