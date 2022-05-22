@@ -1,3 +1,4 @@
+import { CustomEventName } from "./types/enums.js";
 const { template } = {
   template: `
     <style>  
@@ -167,7 +168,7 @@ export class HideColumnsDialog extends HTMLElement {
       const checkboxHolder: HTMLDivElement = document.createElement("div");
       checkboxHolder.classList.add("column-checkbox");
       if(reset === "reset") {
-        const toResetCheckboxHolderAttribute: CustomEvent = new CustomEvent("to-reset-checkboxholder-attribute", {
+        const toResetCheckboxHolderAttribute: CustomEvent = new CustomEvent(CustomEventName.TO_RESET_CHECKBOXHOLDER_ATTRIBUTE, {
           bubbles: true,
           composed: true,
           detail: {
@@ -177,7 +178,7 @@ export class HideColumnsDialog extends HTMLElement {
         });
         this.shadowRoot.dispatchEvent(toResetCheckboxHolderAttribute);
       } else {
-        const toSetCheckboxHolderAttribute: CustomEvent = new CustomEvent("to-set-checkboxholder-attribute", {
+        const toSetCheckboxHolderAttribute: CustomEvent = new CustomEvent(CustomEventName.TO_SET_CHECKBOXHOLDER_ATTRIBUTE, {
           bubbles: true,
           composed: true,
           detail: {
@@ -191,7 +192,7 @@ export class HideColumnsDialog extends HTMLElement {
       checkbox.setAttribute("type", "checkbox");
       checkbox.classList.add("checkbox");
       checkbox.addEventListener("click", (): void => {
-        const toClickCheckbox: CustomEvent = new CustomEvent("to-click-checkbox", {
+        const toClickCheckbox: CustomEvent = new CustomEvent(CustomEventName.TO_CLICK_CHECKBOX, {
           bubbles: true,
           composed: true,
           detail: {
@@ -209,7 +210,7 @@ export class HideColumnsDialog extends HTMLElement {
         checkbox.setAttribute("checked", "checked");
       }
       const checkboxLabel: HTMLLabelElement = document.createElement("label");
-      const toSetCheckboxTextcontent: CustomEvent = new CustomEvent("to-set-checkbox-textcontent", {
+      const toSetCheckboxTextcontent: CustomEvent = new CustomEvent(CustomEventName.TO_SET_CHECKBOX_TEXTCONTENT, {
         bubbles: true,
         composed: true,
         detail: {
@@ -227,7 +228,7 @@ export class HideColumnsDialog extends HTMLElement {
 
   initilizeListeners() {
     this.columnHiderButton.addEventListener("click", (): void => {
-      const toClickColumnHiderButton: CustomEvent = new CustomEvent("to-click-column-hider-button", {
+      const toClickColumnHiderButton: CustomEvent = new CustomEvent(CustomEventName.TO_CLICK_COLUMN_HIDER_BUTTON, {
         bubbles: true,
         composed: true,
         detail: {
@@ -239,7 +240,7 @@ export class HideColumnsDialog extends HTMLElement {
       this.columnCheckboxesArea.setAttribute("data-column-checkboxes-area-visible", "true");
     });
     this.columnHiderCloseButton.addEventListener("click", (): void => {
-      const toCloseColumnHiderButton: CustomEvent = new CustomEvent("to-close-column-hider-button", {
+      const toCloseColumnHiderButton: CustomEvent = new CustomEvent(CustomEventName.TO_CLOSE_COLUMN_HIDER_BUTTON, {
         bubbles: true,
         composed: true,
         detail: {
@@ -256,7 +257,7 @@ export class HideColumnsDialog extends HTMLElement {
       if (this.checkboxHolders === undefined) {
         return void 0;
       }
-      const toResetColumnHider: CustomEvent = new CustomEvent("to-reset-column-hider", {
+      const toResetColumnHider: CustomEvent = new CustomEvent(CustomEventName.TO_RESET_COLUMN_HIDER, {
         bubbles: true,
         composed: true,
         detail: {

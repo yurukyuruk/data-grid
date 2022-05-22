@@ -1,3 +1,4 @@
+import { CustomEventName } from "./types/enums.js";
 const { template } = {
     template: `
       <style>  
@@ -70,7 +71,7 @@ export class QuickSearch extends HTMLElement {
         };
         this.input.addEventListener("keyup", debounce(() => {
             const inputValue = this.input.value.toLowerCase();
-            const toFilterData = new CustomEvent("to-filter-data", {
+            const toFilterData = new CustomEvent(CustomEventName.TO_FILTER_DATA, {
                 bubbles: true,
                 composed: true,
                 detail: {

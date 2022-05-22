@@ -1,5 +1,6 @@
 import { SortingRule } from "./SortingRule.js";
 import { SortDirection } from "./types/enums.js";
+import { CustomEventName } from "./types/enums.js";
 const { template } = {
     template: `
   <style>  
@@ -197,7 +198,7 @@ export class SortRowsDialog extends HTMLElement {
             this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "false");
             this.sortDataButton.setAttribute("data-sort-button-visible", "false");
             this.sortingArea.setAttribute("data-sort-fields-visible", "true");
-            const toBlur = new CustomEvent("to-blur", {
+            const toBlur = new CustomEvent(CustomEventName.TO_BLUR, {
                 bubbles: true,
                 composed: true,
             });
@@ -210,7 +211,7 @@ export class SortRowsDialog extends HTMLElement {
                 }
                 this.sortOptions[0].sortField.append(sortFieldOption);
             }
-            const toClickSortDataButton = new CustomEvent("to-click-sort-data-button", {
+            const toClickSortDataButton = new CustomEvent(CustomEventName.TO_CLICK_SORT_DATA_BUTTON, {
                 bubbles: true,
                 composed: true,
                 detail: {
@@ -226,7 +227,7 @@ export class SortRowsDialog extends HTMLElement {
             this.sortDataButtonArea.setAttribute("data-sort-button-area-visible", "true");
             this.sortDataButton.setAttribute("data-sort-button-visible", "true");
             this.sortingArea.setAttribute("data-sort-fields-visible", "false");
-            const toBlur = new CustomEvent("to-blur", {
+            const toBlur = new CustomEvent(CustomEventName.TO_BLUR, {
                 bubbles: true,
                 composed: true,
             });
@@ -243,7 +244,7 @@ export class SortRowsDialog extends HTMLElement {
             this.sortOptions = [];
             this.createNewSortLine();
             this.sortOptions[0].sortDirection.disabled = true;
-            const toResetSorting = new CustomEvent("to-reset-sorting", {
+            const toResetSorting = new CustomEvent(CustomEventName.TO_RESET_SORTING, {
                 bubbles: true,
                 composed: true,
             });
@@ -253,7 +254,7 @@ export class SortRowsDialog extends HTMLElement {
             this.resetButton.disabled = true;
         });
         this.submitButton.addEventListener("click", () => {
-            const toSortData = new CustomEvent("to-sort-data", {
+            const toSortData = new CustomEvent(CustomEventName.TO_SORT_DATA, {
                 bubbles: true,
                 composed: true,
                 detail: {
@@ -289,7 +290,6 @@ export class SortRowsDialog extends HTMLElement {
     }
     getRemainingFields() {
         const previousChosenField = this.getPreviousChosenFields();
-        console.log(this.allFields.filter((field) => !previousChosenField.includes(field)));
         return this.allFields.filter((field) => !previousChosenField.includes(field));
     }
     canAddNewSortingRule() {

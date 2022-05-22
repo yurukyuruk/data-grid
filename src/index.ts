@@ -6,6 +6,7 @@ import { isRowRecord } from "./types/typeGuards.js";
 import { DataRows } from "./DataRows.js";
 import { SortingService } from "./sortingService.js";
 import { FilteringService } from "./FilteringService.js"
+import { CustomEventName } from "./types/enums.js";
 const { template } = {
   template: `
   <style>  
@@ -125,19 +126,16 @@ class DataGrid extends HTMLElement {
   }
  
   initializeListeners(): void {
-    this.addEventListener("to-fetch-data", (e) => {
-      return this.DATA_ROWS.fetchData((<CustomEvent>e).detail.url);
-    })
-    this.addEventListener("to-set-checkbox-textcontent", (e) => {
+    this.addEventListener(CustomEventName.TO_SET_CHECKBOX_TEXTCONTENT, (e) => {
       (<CustomEvent>e).detail.checkboxLabel.textContent = this.config.columns[(<CustomEvent>e).detail.i].displayName;
     })
-    this.addEventListener("to-click-column-hider-button", (e) => {
+    this.addEventListener(CustomEventName.TO_CLICK_COLUMN_HIDER_BUTTON, (e) => {
       (<CustomEvent>e).detail.createAndSetCheckboxes(this.config.getHtmlClassNamesOfColumns());
       this.table.classList.toggle("blured");
       this.sortModel.sortDataButton.classList.toggle("blured");
       this.quickSearch.classList.toggle("blured");
     })
-    this.addEventListener("to-click-checkbox", (e) => {
+    this.addEventListener(CustomEventName.TO_CLICK_CHECKBOX, (e) => {
       const wholeColumnData: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i]);
         const wholeColumnHeaders = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i] + "-header");
         const checkboxElementsStateChange: boolean =
@@ -152,14 +150,14 @@ class DataGrid extends HTMLElement {
           (<CustomEvent>e).detail.checkbox.setAttribute("checked", "checked");
         }
     })
-    this.addEventListener("to-set-checkboxholder-attribute", (e) => {
+    this.addEventListener(CustomEventName.TO_SET_CHECKBOXHOLDER_ATTRIBUTE, (e) => {
       const wholeColumnData: NodeListOf<Element> = this.shadowRoot.querySelectorAll("." + this.config.getHtmlClassNamesOfColumns()[(<CustomEvent>e).detail.i]);
       (<CustomEvent>e).detail.checkboxHolder.setAttribute("data-column-checkbox-checked",  wholeColumnData[0].getAttribute("data-column-checkbox-checked"));    
     })
-    this.addEventListener("to-reset-checkboxholder-attribute", (e) => {
+    this.addEventListener(CustomEventName.TO_RESET_CHECKBOXHOLDER_ATTRIBUTE, (e) => {
       (<CustomEvent>e).detail.checkboxHolder.setAttribute("data-column-checkbox-checked",   this.config.getColumnVisibilityStatus("reset")[(<CustomEvent>e).detail.i].toString());    
     })
-    this.addEventListener("to-close-column-hider-button", () => {
+    this.addEventListener(CustomEventName.TO_CLOSE_COLUMN_HIDER_BUTTON, () => {
       this.table.classList.toggle("blured");
       this.quickSearch.classList.toggle("blured");
       this.sortModel.sortDataButton.classList.toggle("blured"); 
@@ -168,14 +166,14 @@ class DataGrid extends HTMLElement {
       this.createRows();
       this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
     })
-    this.addEventListener("to-reset-column-hider", (e) => {
+    this.addEventListener(CustomEventName.TO_RESET_COLUMN_HIDER, (e) => {
       this.config.getColumnVisibilityStatus("reset");
       (<CustomEvent>e).detail.createAndSetCheckboxes(this.config.getHtmlClassNamesOfColumns(), "reset");
         this.createDataHeaders();
         this.createRows(); 
         this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
     })
-    this.addEventListener("to-click-sort-data-button", (e) => {
+    this.addEventListener(CustomEventName.TO_CLICK_SORT_DATA_BUTTON, (e) => {
       if(this.config.sortingRules.length === 0) {
         (<CustomEvent>e).detail.sortAddingButton.disabled = true;
         (<CustomEvent>e).detail.submitButton.disabled = true;
@@ -198,24 +196,24 @@ class DataGrid extends HTMLElement {
         }
       }
     })
-    this.addEventListener("to-reset-sorting", () => {
+    this.addEventListener(CustomEventName.TO_RESET_SORTING, () => {
       this.config.sortingRules = [];
       this.config.clearSortInformation();
       this.createDataHeaders();
       this.createRows("reset"); 
       this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
     })
-    this.addEventListener("to-sort-data", (e) => {
+    this.addEventListener(CustomEventName.TO_SORT_DATA, (e) => {
       this.config.saveSortInformation((<CustomEvent>e).detail.mappedSortOptions);
       this.createRows();
       this.setChildrensVisibilityStatus(this.classOfColumnHeaderElements);
     })
-    this.addEventListener("to-blur", () => {
+    this.addEventListener(CustomEventName.TO_BLUR, () => {
       this.table.classList.toggle("blured");
       this.quickSearch.classList.toggle("blured");
       this.hideColumnsDialog.columnHiderButton.classList.toggle("blured");
     })
-    this.addEventListener("to-filter-data", (e) => {
+    this.addEventListener(CustomEventName.TO_FILTER_DATA, (e) => {
       this.config.saveUserFilterInput((<CustomEvent>e).detail.inputValue, (<CustomEvent>e).detail.userInput);
       this.DATA_ROWS.visibleRows = this.filteringService.filterRows(this.DATA_ROWS.rows, (<CustomEvent>e).detail.inputValue);
       this.createRows();
