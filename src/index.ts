@@ -332,29 +332,32 @@ class DataGrid extends HTMLElement {
   setChildrensVisibilityStatus(columnClassNames: string[]) {
     for(let i = 0; i < columnClassNames.length; i++) {
       let state;
-      if(localStorage.getItem(columnClassNames[i]) === null) {
+      const columnState = localStorage.getItem(columnClassNames[i]);
+      if(columnState === null) {
         state = "false";
       } else {
-        state = localStorage.getItem(columnClassNames[i]);
+        state = columnState;
       }
-      const headerColumn = this.shadowRoot.querySelector(`.${columnClassNames[i]}`);
-      if (state === "true") {
-        headerColumn.rowSpan = 1;
-        headerColumn.colSpan = this.config.getChildrens(headerColumn.id).length || 1;
-      } else {
-        headerColumn.rowSpan = 2;
-        headerColumn.colSpan = 1;
-      }
-      headerColumn.setAttribute("data-header-expanded", state);
-      const childrens = [
-        ...Array.from(this.columnHeaderSection.querySelectorAll(`.${headerColumn.id}`)),
-        ...Array.from(this.dataRows.querySelectorAll(`.${headerColumn.id}`))
-      ];
-      for (const children of childrens) {
-        if (children.getAttribute("data-header-expanded")) {
-          children.setAttribute("data-header-expanded", state);
+      const headerColumn: HTMLTableCellElement | null = this.shadowRoot.querySelector(`.${columnClassNames[i]}`);
+      if(headerColumn !== null) {
+        if (state === "true") {
+          headerColumn.rowSpan = 1;
+          headerColumn.colSpan = this.config.getChildrens(headerColumn.id).length || 1;
         } else {
-          children.setAttribute("data-section-expanded", state);
+          headerColumn.rowSpan = 2;
+          headerColumn.colSpan = 1;
+        }
+        headerColumn.setAttribute("data-header-expanded", state);
+        const childrens = [
+          ...Array.from(this.columnHeaderSection.querySelectorAll(`.${headerColumn.id}`)),
+          ...Array.from(this.dataRows.querySelectorAll(`.${headerColumn.id}`))
+        ];
+        for (const children of childrens) {
+          if (children.getAttribute("data-header-expanded")) {
+            children.setAttribute("data-header-expanded", state);
+          } else {
+            children.setAttribute("data-section-expanded", state);
+          }
         }
       }
     }

@@ -6,11 +6,14 @@ export class ConfigService {
   columns!: Column[];
   sortingRules!: SortRule[];
   filteringRule: string;
-  userFilterInput: string;
+  userFilterInput!: string;
   columnVisibilityRules!: boolean[];
   constructor() {
     this.filteringRule = localStorage.getItem("filterInformation") ?? "";
-    this.userFilterInput = localStorage.getItem("userFilterInput" ?? "");
+    const filterInformation = localStorage.getItem("filterInformation");
+    if(filterInformation !== null) {
+      this.userFilterInput = filterInformation;
+    }
   }
   async fetchConfig(): Promise<string> {
     return fetch(
@@ -22,12 +25,12 @@ export class ConfigService {
         if(localStorage.getItem("sortInformation") === null) {
           this.sortingRules = sortingRules;
         } else {
-          this.sortingRules = JSON.parse(localStorage.getItem("sortInformation"));
+          this.sortingRules = JSON.parse(localStorage.getItem("sortInformation") ?? "");
         } 
         if(localStorage.getItem("columnVisibilityInformation") === null) {
           this.columnVisibilityRules = this.getColumnVisibilityStatus();
         } else {
-          this.columnVisibilityRules = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+          this.columnVisibilityRules = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "");
         }
         return dataUrl;
       })
@@ -99,7 +102,7 @@ export class ConfigService {
     if(localStorage.getItem("columnVisibilityInformation") === null) {
       columnsVisibility = this.getColumnVisibilityStatus();
     } else {
-      columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+      columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "");
     }
     let visibleColumnIds = [];
     for(let i = 0; i < columnsVisibility.length; i++) {
@@ -112,7 +115,7 @@ export class ConfigService {
   getColumnVisibilityStatus(reset?: string): boolean[] {
     const columnsVisibilityStatus: boolean[] = [];
     if(reset === "reset") {
-      this.columns.forEach(column => {
+      this.columns.forEach(() => {
           columnsVisibilityStatus.push(true);  
       })
       localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));

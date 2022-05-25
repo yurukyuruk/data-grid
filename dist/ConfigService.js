@@ -7,7 +7,10 @@ export class ConfigService {
     columnVisibilityRules;
     constructor() {
         this.filteringRule = localStorage.getItem("filterInformation") ?? "";
-        this.userFilterInput = localStorage.getItem("userFilterInput" ?? "");
+        const filterInformation = localStorage.getItem("filterInformation");
+        if (filterInformation !== null) {
+            this.userFilterInput = filterInformation;
+        }
     }
     async fetchConfig() {
         return fetch("https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json")
@@ -18,13 +21,13 @@ export class ConfigService {
                 this.sortingRules = sortingRules;
             }
             else {
-                this.sortingRules = JSON.parse(localStorage.getItem("sortInformation"));
+                this.sortingRules = JSON.parse(localStorage.getItem("sortInformation") ?? "");
             }
             if (localStorage.getItem("columnVisibilityInformation") === null) {
                 this.columnVisibilityRules = this.getColumnVisibilityStatus();
             }
             else {
-                this.columnVisibilityRules = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+                this.columnVisibilityRules = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "");
             }
             return dataUrl;
         });
@@ -94,7 +97,7 @@ export class ConfigService {
             columnsVisibility = this.getColumnVisibilityStatus();
         }
         else {
-            columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation"));
+            columnsVisibility = JSON.parse(localStorage.getItem("columnVisibilityInformation") ?? "");
         }
         let visibleColumnIds = [];
         for (let i = 0; i < columnsVisibility.length; i++) {
@@ -107,7 +110,7 @@ export class ConfigService {
     getColumnVisibilityStatus(reset) {
         const columnsVisibilityStatus = [];
         if (reset === "reset") {
-            this.columns.forEach(column => {
+            this.columns.forEach(() => {
                 columnsVisibilityStatus.push(true);
             });
             localStorage.setItem("columnVisibilityInformation", JSON.stringify(columnsVisibilityStatus));
