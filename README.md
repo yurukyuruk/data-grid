@@ -84,7 +84,7 @@ Each columns can be hidden or displayed via **HIDE COLUMN** modal. All user need
        - **type**:
        Type needs to be written in uppercase and type of the data can be a **"STRING"**, **"NUMBER"** or a **"DATE"**.
        - **columnIndex**:
-       Order of displayed columns can be arranged by assigning an index number for each column.
+       Order of displayed columns can be arranged by assigning an index number for each column. This feature will be added soon.
        - **visible**:
        This is an optional feature. Column can be displayed or hidden by default by editing this. "visible" can be **true** or **false**. If visible is undefined, it will be true.
        - **summary**:
