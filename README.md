@@ -97,7 +97,7 @@ Each columns can be hidden or displayed via **HIDE COLUMN** modal. All user need
        - **id**:
        id needs to be id of column to be sorted by default.
        - **direction**:
-       direction can be ascencending(**"ASC"**) or descending (**"DESC"**).
+       direction can be ascending(**"ascending"**) or descending (**"descending"**).
    ```typescript
    interface GridConfig {
      dataUrl: string;
