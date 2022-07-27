@@ -77,6 +77,7 @@ const { template } = {
 };
 class DataGrid extends HTMLElement {
     static TAG = "data-grid";
+    static observedAttributes = ["config-url"];
     shadowRoot;
     dataRows;
     columnHeaderSection;
@@ -91,18 +92,17 @@ class DataGrid extends HTMLElement {
     classOfColumnHeaderElements;
     hideColumnsDialog;
     sortRowsDialog;
-    constructor() {
+    constructor(configUrl) {
         super();
         this.shadowRoot = this.attachShadow({ mode: "open" });
         this.shadowRoot.innerHTML = template;
         this.getElementReferences();
         this.initializeListeners();
         this.DATA_ROWS = new DataRows();
-        this.config = new ConfigService();
-        this.quickSearch = this.shadowRoot.querySelector(QuickSearch.TAG);
-        this.hideColumnsDialog = this.shadowRoot.querySelector(HideColumnsDialog.TAG);
-        this.sortRowsDialog = this.shadowRoot.querySelector(SortRowsDialog.TAG);
-        this.initizaleApp();
+        this.config = new ConfigService(configUrl);
+        if (configUrl) {
+            this.initizaleApp();
+        }
     }
     // KK
     async initizaleApp() {
@@ -366,10 +366,22 @@ class DataGrid extends HTMLElement {
             }
         }
     }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) {
+            return void 0;
+        }
+        else if (name === "config-url") {
+            this.config.configUrl = newValue;
+        }
+        this.initizaleApp();
+    }
     getElementReferences() {
         this.columnHeaderSection = this.shadowRoot?.querySelector("thead");
         this.sortModel = this.shadowRoot?.querySelector(SortRowsDialog.TAG); //export edilmiş
         this.table = this.shadowRoot.querySelector("#data-table");
+        this.quickSearch = this.shadowRoot.querySelector(QuickSearch.TAG);
+        this.hideColumnsDialog = this.shadowRoot.querySelector(HideColumnsDialog.TAG);
+        this.sortRowsDialog = this.shadowRoot.querySelector(SortRowsDialog.TAG);
     }
 }
 customElements.define(DataGrid.TAG, DataGrid);

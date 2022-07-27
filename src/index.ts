@@ -78,6 +78,7 @@ const { template } = {
 
 class DataGrid extends HTMLElement {
   static TAG = "data-grid";
+  static observedAttributes = ["config-url"];
   readonly shadowRoot: ShadowRoot;
   private dataRows!: HTMLTableSectionElement;
   private columnHeaderSection!: HTMLTableSectionElement;
@@ -87,23 +88,23 @@ class DataGrid extends HTMLElement {
   private sortingService!: SortingService;
   private table!: HTMLTableElement;
   private filteringService!: FilteringService;
-  private quickSearch: QuickSearch;
+  private quickSearch!: QuickSearch;
   private dataHeaders!: HTMLTableSectionElement;
   private classOfColumnHeaderElements!: string[];
-  private hideColumnsDialog: HideColumnsDialog;
-  private sortRowsDialog: SortRowsDialog;
-  constructor() {
+  private hideColumnsDialog!: HideColumnsDialog;
+  private sortRowsDialog!: SortRowsDialog;
+
+  constructor(configUrl?: string) {
     super();
     this.shadowRoot = this.attachShadow({ mode: "open" });
-    this.shadowRoot.innerHTML = template;
+    this.shadowRoot.innerHTML = template; 
     this.getElementReferences();
     this.initializeListeners();
     this.DATA_ROWS = new DataRows();
-    this.config = new ConfigService();
-    this.quickSearch = this.shadowRoot.querySelector(QuickSearch.TAG) as QuickSearch;
-    this.hideColumnsDialog = this.shadowRoot.querySelector(HideColumnsDialog.TAG) as HideColumnsDialog;
-    this.sortRowsDialog = this.shadowRoot.querySelector(SortRowsDialog.TAG) as SortRowsDialog;
-    this.initizaleApp();
+    this.config = new ConfigService(configUrl);
+    if(configUrl) {
+      this.initizaleApp();
+    }  
   }
 
   // KK
@@ -362,6 +363,14 @@ class DataGrid extends HTMLElement {
       }
     }
   }
+  attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+    if(oldValue === newValue) {
+      return void 0;
+    } else if(name === "config-url") {
+      this.config.configUrl = newValue;
+    }
+    this.initizaleApp();
+  }
   
 
   getElementReferences() {
@@ -369,18 +378,10 @@ class DataGrid extends HTMLElement {
     this.columnHeaderSection = this.shadowRoot?.querySelector("thead") as HTMLTableSectionElement;
     this.sortModel = this.shadowRoot?.querySelector(SortRowsDialog.TAG) as unknown as SortRowsDialog;//export edilmiş
     this.table = this.shadowRoot.querySelector("#data-table") as HTMLTableElement;
+    this.quickSearch = this.shadowRoot.querySelector(QuickSearch.TAG) as QuickSearch;
+    this.hideColumnsDialog = this.shadowRoot.querySelector(HideColumnsDialog.TAG) as HideColumnsDialog;
+    this.sortRowsDialog = this.shadowRoot.querySelector(SortRowsDialog.TAG) as SortRowsDialog;
   }
 }
 
 customElements.define(DataGrid.TAG, DataGrid);
-
-
-
-
-
-
-
-
-
-
-

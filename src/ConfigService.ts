@@ -8,7 +8,11 @@ export class ConfigService {
   filteringRule: string;
   userFilterInput!: string;
   columnVisibilityRules!: boolean[];
-  constructor() {
+  configUrl: string | undefined;
+  constructor(configUrl?: string) {
+    if(configUrl) {
+      this.configUrl = configUrl;
+    }
     this.filteringRule = localStorage.getItem("filterInformation") ?? "";
     const filterInformation = localStorage.getItem("filterInformation");
     if(filterInformation !== null) {
@@ -16,9 +20,10 @@ export class ConfigService {
     }
   }
   async fetchConfig(): Promise<string> {
-    return fetch(
-      "https://raw.githubusercontent.com/kanow-blog/kanow-school-javascript-basics/master/projects/project-2/datasets/dataset-2/config.json"
-    )
+    if(this.configUrl === undefined) {
+      throw new Error("Can not fetch config")
+    }
+    return fetch(this.configUrl)
       .then((response) => response.json())
       .then(({ columns, dataUrl, sortingRules }: GridConfig) => {
         this.columns = columns;
